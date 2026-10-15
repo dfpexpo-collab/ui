@@ -41,6 +41,7 @@ Confident, modern, clear. Short sentences, concrete outcomes ("Sell off-plan wit
 ## Using the assets
 
 - Logos: `assets/logo/voom-logo-full-white.png`, `voom-logo-full-black.png` (with tagline), `voom-wordmark-white.png`, `voom-wordmark-black.png` (no tagline, for small sizes). Transparent PNG, 3000px+ wide.
+- Fonts: `assets/fonts/` (Gabarito, IBM Plex Sans Arabic, Poppins TTFs, OFL). Install before rendering or opening SVG/AI files.
 - Tokens: `tokens/voom.css` (import in any HTML), `tokens/voom-tokens.json` (design/motion handoff).
 - Templates: `templates/post-square.html`, `templates/story-vertical.html`, `templates/feature-sheet.html`, `templates/storyboard.md`, `templates/storyboard.html`.
 - Visual reference: `reference/brand-book/` and `reference/features/` (page renders of the source PDFs). Open them to match look and feel.
