@@ -26,6 +26,7 @@ Copied as-is into `.claude/skills/` so Claude can build the animation as HTML + 
 | `animation-principles`, `motion-art-direction`, `logo-animation`, `motion-background`, `color-motion`, `shot-composition`, `beat-sync-editing` | [iart-ai/motion-design-skills](https://github.com/iart-ai/motion-design-skills) @ `3c129f7` | MIT |
 | `kinetic-typography` | [iart-ai/kinetic-typography-skills](https://github.com/iart-ai/kinetic-typography-skills) @ `fccc94b` | MIT |
 | `launch-video`, `ad-creative-video` | [iart-ai/ad-video-skills](https://github.com/iart-ai/ad-video-skills) @ `0de0f2a` | MIT |
+| `motion-prompt-playbook` (written here) | Distilled from [yihui-dev/awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos) (MIT); verbatim prompts credited to their authors | MIT |
 | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-performance`, `gsap-utils`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks` | [greensock/gsap-skills](https://github.com/greensock/gsap-skills) @ `aed9cfd` | MIT |
 
 Update with `npx hyperframes skills update` / `npx skills add https://github.com/greensock/gsap-skills`.
