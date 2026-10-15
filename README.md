@@ -28,6 +28,7 @@ Copied as-is into `.claude/skills/` so Claude can build the animation as HTML + 
 | `launch-video`, `ad-creative-video` | [iart-ai/ad-video-skills](https://github.com/iart-ai/ad-video-skills) @ `0de0f2a` | MIT |
 | `motion-prompt-playbook` (written here) | Distilled from [yihui-dev/awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos) (MIT); verbatim prompts credited to their authors | MIT |
 | `prompt-motion-templates` (written here) | Inspired by [prompt-motion.com](https://prompt-motion.com/templates) templates and [eastling/awesome-opus-5.5-video-prompts](https://github.com/eastling/awesome-opus-5.5-video-prompts) (CC0 notes) | — |
+| `product-film` | [Rieranthony/product-film-skill](https://github.com/Rieranthony/product-film-skill) @ `fe11efc` | MIT |
 | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-performance`, `gsap-utils`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks` | [greensock/gsap-skills](https://github.com/greensock/gsap-skills) @ `aed9cfd` | MIT |
 
 Update with `npx hyperframes skills update` / `npx skills add https://github.com/greensock/gsap-skills`.
