@@ -3,13 +3,16 @@
 | Path | What |
 |---|---|
 | `STORYBOARD.md` | Shot table: VO, timing, visuals, motion, SFX |
-| `frames/F01.svg` … `F19.svg` | Editable 1920×1080 frames. Each top-level `<g id="L##_NAME">` is one AE layer |
+| `frames_outlined/F01.svg` … `F19.svg` | **Use these in Illustrator.** Text converted to shapes (exact look, no broken Arabic), one group per word |
+| `frames/F01.svg` … `F19.svg` | Same frames with live (editable) text |
 | `previews/` | JPG renders + `_contact-sheet.jpg` |
-| `build_frames.py` | Regenerates all SVGs (`python3 build_frames.py`, needs Pillow) |
+| `build_frames.py` | Regenerates all SVGs (`python3 build_frames.py`, needs `pip install pillow uharfbuzz fonttools`) |
 
 ## Layer naming
 
-`L01_BG` background · `L02–L09` elements (cards, device, pills, cursor) · `L10+` headline/text · `L90_CHROME` small wordmark + footer · `L95_NOTE_DELETE` notes, delete before animating.
+Top level (one AE layer each): `L01_BG` background · `L02–L09` elements (cards, device, pills, cursor) · `L10+` headline/text · `L90_CHROME` small wordmark + footer · `L95_NOTE_DELETE` notes, delete before animating.
+
+Inside each layer every part is its own named group/object, e.g. `GLASS`, `CHART_LINE`, `CHART_AREA`, `CHART_DOT`, `CURSOR`, `TAP_PING`, `ICON_TILE_users`, `PILL_Live_inventory`, `UNIT_GRID`, `TILE`, `GLOW_MAIN`, `HORIZON_ARC`, `VIGNETTE`. Text groups are `TXT_<text>` and, in `frames_outlined`, contain one group per word: `TXT_…__w01_<word>`, `__w02_…` (logical reading order, right to left for Arabic).
 
 ## SVG → After Effects
 
