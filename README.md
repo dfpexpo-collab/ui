@@ -23,6 +23,9 @@ Copied as-is into `.claude/skills/` so Claude can build the animation as HTML + 
 |---|---|---|
 | `hyperframes`, `hyperframes-core`, `hyperframes-animation`, `hyperframes-cli`, `hyperframes-creative`, `hyperframes-keyframes`, `motion-graphics`, `product-launch-video`, `general-video` | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) @ `76222e4` | Apache-2.0 |
 | `remotion-motion-graphics` (skill folder only, demos left out) | [haidrrrry/claude-remotion-skill](https://github.com/haidrrrry/claude-remotion-skill) @ `1dcbe5e` | MIT |
+| `animation-principles`, `motion-art-direction`, `logo-animation`, `motion-background`, `color-motion`, `shot-composition`, `beat-sync-editing` | [iart-ai/motion-design-skills](https://github.com/iart-ai/motion-design-skills) @ `3c129f7` | MIT |
+| `kinetic-typography` | [iart-ai/kinetic-typography-skills](https://github.com/iart-ai/kinetic-typography-skills) @ `fccc94b` | MIT |
+| `launch-video`, `ad-creative-video` | [iart-ai/ad-video-skills](https://github.com/iart-ai/ad-video-skills) @ `0de0f2a` | MIT |
 | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-performance`, `gsap-utils`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks` | [greensock/gsap-skills](https://github.com/greensock/gsap-skills) @ `aed9cfd` | MIT |
 
 Update with `npx hyperframes skills update` / `npx skills add https://github.com/greensock/gsap-skills`.
