@@ -1,0 +1,58 @@
+{
+  "$description": "Voom brand tokens. Source: Voom Brand Guidelines 2026 (colors, type, grid, logo) + derived motion tokens (marked proposed).",
+  "color": {
+    "blue":       { "hex": "#0012d6", "role": "Primary brand blue. Mid stop of the signature gradient, solid brand fills." },
+    "lightBlue":  { "hex": "#00b3ff", "role": "Accent / highlight words / glow / partnership diamond / light end of gradient." },
+    "deepBlue":   { "hex": "#000024", "role": "Darkest brand tone. Dark end of gradient, dark backgrounds, text on light." },
+    "offWhite":   { "hex": "#f1f1f1", "role": "Text on blue, light backgrounds, logo on dark. Never pure white for the logo." },
+    "black":      { "hex": "#000000", "role": "Monochrome logo only (off-palette backgrounds)." }
+  },
+  "gradient": {
+    "signature": "linear-gradient(135deg, #000024 0%, #0012d6 55%, #00b3ff 100%)",
+    "signatureReverse": "linear-gradient(315deg, #000024 0%, #0012d6 55%, #00b3ff 100%)",
+    "blueToLight": "linear-gradient(135deg, #0012d6 0%, #00b3ff 100%)",
+    "spotlight": "radial-gradient(ellipse at 50% 100%, #00b3ff 0%, #0012d6 35%, #000024 75%)",
+    "note": "Cover/divider slides run deep blue (bottom-left) to light blue (top-right). Product sheets use a deep-blue field with a blue/light-blue glow."
+  },
+  "status": {
+    "_note": "Product UI status colors seen in CRM sync screens. Use only when depicting product states, never as brand colors.",
+    "available": "#2fb344", "sold": "#e03131", "reserved": "#e8c200", "unlaunched": "#7a7a7a", "cta": "#d8140e"
+  },
+  "font": {
+    "latinHeading": "Gabarito",
+    "latinBody": "Gabarito",
+    "latinDisplayAlt": "Poppins",
+    "arabic": "IBM Plex Sans Arabic",
+    "weights": { "heading": 600, "subheading": 500, "body": 400, "poppinsDisplay": 700 }
+  },
+  "type": {
+    "_note": "Sizes are the book's reference at 1920x1080. Scale proportionally for other canvases. Tracking is in 1/1000 em.",
+    "heading":    { "weight": 600, "case": "sentence", "sizePt": 144, "leading": 0.9, "tracking": -30 },
+    "subheading": { "weight": 500, "case": "sentence", "sizePt": 48,  "leading": 1.0, "tracking": -20 },
+    "body":       { "weight": 400, "case": "sentence", "sizePt": 18,  "leading": 1.3, "tracking": -10 }
+  },
+  "grid": {
+    "vertical":   { "cols": 9,  "rows": 12 },
+    "square":     { "cols": 9,  "rows": 9 },
+    "horizontal": { "cols": 12, "rows": 9 },
+    "textMargin": "centre of the first grid square (half a cell from the edge)"
+  },
+  "logo": {
+    "safeZone": "X = 1/4 of the logo height, on all four sides",
+    "colorways": ["offWhite on gradient/deepBlue/blue", "deepBlue-black on offWhite", "pure black or white on any off-palette surface"],
+    "smallSizes": "75% / 50% / 25% scale references drop the tagline and use the wordmark only"
+  },
+  "motion": {
+    "_status": "PROPOSED. The brand book has no motion chapter. These are derived from the rocket symbol and the gradient glow language. Confirm with the brand owner before treating as official.",
+    "easing": {
+      "launch":  "cubic-bezier(0.16, 1, 0.3, 1)",
+      "settle":  "cubic-bezier(0.22, 1, 0.36, 1)",
+      "glide":   "cubic-bezier(0.45, 0, 0.15, 1)",
+      "exit":    "cubic-bezier(0.55, 0, 1, 0.45)"
+    },
+    "duration": { "micro": 0.15, "ui": 0.3, "element": 0.6, "scene": 0.9, "hero": 1.4 },
+    "stagger": 0.08,
+    "fps": 30,
+    "holdMin": 0.6
+  }
+}

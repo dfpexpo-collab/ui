@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Voom story / reel cover - 1080x1920</title>
+<meta name="viewport" content="width=1080">
+<link rel="stylesheet" href="../tokens/voom.css">
+<style>
+  /* 1080x1920. Keep key content out of top 250px and bottom 340px (platform UI). */
+  html,body{margin:0;background:#000}
+  .story{position:relative;width:1080px;height:1920px;overflow:hidden;--u:.5625px;background:var(--voom-gradient-reverse)}
+  .story::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 35% at 50% 70%,rgba(0,179,255,.5),transparent 70%)}
+  .logo{position:absolute;left:50%;top:270px;width:300px;transform:translateX(-50%)}
+  .headline{position:absolute;left:60px;right:60px;top:470px;text-align:center;font-weight:600;font-size:110px;line-height:.9;letter-spacing:-.03em}
+  .hero{position:absolute;left:120px;right:120px;top:880px;height:600px;border-radius:36px;border:2px solid var(--voom-glass-stroke);background:var(--voom-glass-fill);
+        display:grid;place-items:center;color:rgba(241,241,241,.7);font-size:24px}
+  .cta{position:absolute;left:50%;bottom:380px;transform:translateX(-50%);padding:22px 56px;border-radius:999px;border:2px solid rgba(241,241,241,.8);
+       background:rgba(0,0,36,.35);font-size:34px;font-weight:500;letter-spacing:-.01em;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="story voom">
+  <img class="logo voom-logo" src="../assets/logo/voom-logo-full-white.png" alt="Voom">
+  <div class="headline">Walk through it <span class="voom-accent">before it's built</span></div>
+  <div class="hero">[ hero: phone on podium / screen recording ]</div>
+  <div class="cta">www.voomproptech.com</div>
+</div>
+</body>
+</html>

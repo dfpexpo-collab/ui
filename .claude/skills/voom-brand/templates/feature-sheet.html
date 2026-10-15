@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Voom feature sheet - 1600x1500</title>
+<meta name="viewport" content="width=1600">
+<link rel="stylesheet" href="../tokens/voom.css">
+<style>
+  /* Pattern from the Voom "New Features" sheets: deep-blue field, centered Poppins title, device hero, glass callouts. */
+  html,body{margin:0;background:#000}
+  .sheet{position:relative;width:1600px;height:1500px;overflow:hidden;font-family:var(--voom-font-display);
+         background:radial-gradient(90% 60% at 50% 105%,#0012d6 0%,#00007a 45%,#000024 85%)}
+  .arc{position:absolute;left:-20%;right:-20%;top:46%;height:900px;border-radius:50%;border-top:3px solid rgba(0,179,255,.35);
+       background:radial-gradient(60% 60% at 50% 0%,rgba(0,179,255,.25),transparent 70%)}
+  .title{position:absolute;top:150px;left:0;right:0;text-align:center;font-weight:700;font-size:112px;letter-spacing:-.03em;color:#e6e6e6}
+  .subtitle{position:absolute;top:310px;left:200px;right:200px;text-align:center;font-weight:400;font-size:36px;line-height:1.3;letter-spacing:-.01em;color:var(--voom-off-white)}
+  .hero{position:absolute;left:300px;right:300px;top:560px;height:700px;border-radius:32px;background:linear-gradient(180deg,#10163f,#06092a);border:10px solid #1b1f3a;
+        display:grid;place-items:center;color:rgba(241,241,241,.6);font-size:26px;box-shadow:0 60px 120px rgba(0,0,60,.6),0 0 120px rgba(0,179,255,.25)}
+  .pill{position:absolute;font-size:34px}
+  .pill.l{left:90px;top:640px}.pill.r{right:90px;top:900px}
+  .dash{position:absolute;left:150px;top:470px;width:260px;height:260px;border-radius:50%;border:3px dashed rgba(60,90,255,.8)}
+  .ghost{position:absolute;left:0;right:0;top:420px;text-align:center;font-weight:700;font-size:260px;letter-spacing:-.04em;color:rgba(255,255,255,.07);white-space:nowrap}
+  .logo{position:absolute;left:50%;top:60px;width:210px;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="sheet voom">
+  <div class="arc"></div>
+  <div class="ghost">FEATURE</div>
+  <img class="logo voom-logo" src="../assets/logo/voom-logo-full-white.png" alt="Voom">
+  <div class="title" style="top:200px">Smart Search Engine</div>
+  <div class="subtitle" style="top:350px">A smart search engine that filters units based on your criteria, showing availability and suggesting the closest matches.</div>
+  <div class="dash"></div>
+  <div class="hero">[ hero: device mockup of the real product ]</div>
+  <div class="pill l voom-pill"><span class="tile">&#9906;</span>Filter by price</div>
+  <div class="pill r voom-pill"><span class="tile">&#10003;</span>Live availability</div>
+</div>
+</body>
+</html>

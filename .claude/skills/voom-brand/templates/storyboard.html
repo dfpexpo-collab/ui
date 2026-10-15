@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Voom storyboard board</title>
+<meta name="viewport" content="width=1600">
+<link rel="stylesheet" href="../tokens/voom.css">
+<style>
+  /* Visual board: each shot = a branded frame (gradient, safe zone, thirds) + notes. Duplicate .shot blocks and edit.
+     Change .frame aspect-ratio for 9:16 (9/16), 1:1 (1/1) or 16:9 (16/9). */
+  body{margin:0;background:var(--voom-deep-blue);font-family:var(--voom-font);color:var(--voom-off-white);padding:48px;width:1504px}
+  h1{font-weight:600;font-size:56px;letter-spacing:-.03em;margin:0 0 6px}
+  .meta{opacity:.8;margin-bottom:32px;font-size:20px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  .shot{background:rgba(255,255,255,.04);border:1px solid rgba(0,179,255,.35);border-radius:20px;padding:16px}
+  .frame{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:var(--voom-gradient)}
+  .frame::after{content:"";position:absolute;inset:5%;border:1px dashed rgba(241,241,241,.35)}            /* safe zone */
+  .frame .thirds{position:absolute;inset:0;background:
+     linear-gradient(to right,transparent 33.2%,rgba(241,241,241,.12) 33.3%,transparent 33.5%,transparent 66.5%,rgba(241,241,241,.12) 66.6%,transparent 66.8%),
+     linear-gradient(to bottom,transparent 33.2%,rgba(241,241,241,.12) 33.3%,transparent 33.5%,transparent 66.5%,rgba(241,241,241,.12) 66.6%,transparent 66.8%)}
+  .frame .txt{position:absolute;left:8%;right:8%;top:50%;transform:translateY(-50%);font-weight:600;font-size:26px;line-height:.95;letter-spacing:-.03em}
+  .frame .logo{position:absolute;right:7%;bottom:7%;width:22%}
+  .num{display:inline-block;background:var(--voom-light-blue);color:var(--voom-deep-blue);font-weight:700;border-radius:999px;padding:2px 12px;margin:12px 8px 8px 0}
+  .t{opacity:.8;font-size:16px}
+  dl{margin:6px 0 0;font-size:16px;line-height:1.35} dt{color:var(--voom-light-blue);font-weight:600;float:left;clear:left;width:92px} dd{margin:0 0 4px 100px}
+</style>
+</head>
+<body>
+<h1>Storyboard - &lt;title&gt;</h1>
+<div class="meta">Goal: ... | Format: 9:16 / 30 fps | Duration: 15 s | Languages: AR + EN</div>
+<div class="grid">
+  <div class="shot">
+    <div class="frame"><div class="thirds"></div><div class="txt">Too much paper?</div></div>
+    <span class="num">01</span><span class="t">0.0-2.5 s</span>
+    <dl><dt>Visual</dt><dd>Desk piled with brochures</dd><dt>Motion</dt><dd>Slow push-in</dd><dt>Text</dt><dd>EN / AR</dd><dt>VO / SFX</dt><dd>Paper rustle</dd><dt>Cut</dt><dd>Rocket whip</dd></dl>
+  </div>
+  <div class="shot">
+    <div class="frame"><div class="thirds"></div><div class="txt">Everything changes with <span class="voom-accent">Voom</span></div></div>
+    <span class="num">02</span><span class="t">2.5-6.5 s</span>
+    <dl><dt>Visual</dt><dd>Phone rises on podium</dd><dt>Motion</dt><dd>Device rise, glow</dd><dt>Text</dt><dd>EN / AR</dd><dt>VO / SFX</dt><dd>Shimmer</dd><dt>Cut</dt><dd>Through the screen</dd></dl>
+  </div>
+  <div class="shot">
+    <div class="frame"><div class="thirds"></div><img class="logo" src="../assets/logo/voom-logo-full-white.png" alt="Voom"></div>
+    <span class="num">03</span><span class="t">12-15 s</span>
+    <dl><dt>Visual</dt><dd>Logo end card + URL</dd><dt>Motion</dt><dd>Streak reveal, hold</dd><dt>Text</dt><dd>www.voomproptech.com</dd><dt>SFX</dt><dd>Logo thud</dd></dl>
+  </div>
+</div>
+</body>
+</html>

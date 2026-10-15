@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Voom post - square 1080x1080</title>
+<meta name="viewport" content="width=1080">
+<link rel="stylesheet" href="../tokens/voom.css">
+<style>
+  /* Canvas 1080x1080, 9x9 grid, 120px cell, 60px margin (half a cell). */
+  html,body{margin:0;background:#000}
+  .post{position:relative;width:1080px;height:1080px;overflow:hidden;--u:.5625px; /* 1080/1920 */
+        background:var(--voom-gradient);}
+  .post::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 105%,rgba(0,179,255,.55),transparent 70%)}
+  .logo{position:absolute;left:60px;top:60px;width:230px}
+  .tag{position:absolute;right:60px;top:70px;font-size:22px;opacity:.85}
+  .headline{position:absolute;left:60px;right:60px;top:210px;font-weight:600;font-size:92px;line-height:.9;letter-spacing:-.03em}
+  .sub{position:absolute;left:60px;right:240px;top:470px;font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-.02em;opacity:.95}
+  .hero{position:absolute;left:60px;right:60px;bottom:140px;height:320px;border-radius:28px;border:2px solid var(--voom-glass-stroke);
+        background:var(--voom-glass-fill);display:grid;place-items:center;color:rgba(241,241,241,.7);font-size:22px;backdrop-filter:blur(8px)}
+  .footer{position:absolute;left:60px;right:60px;bottom:54px;display:flex;justify-content:space-between;align-items:center;font-size:22px;letter-spacing:-.01em}
+  .icons{display:flex;gap:18px}.icons i{width:26px;height:26px;border:2px solid var(--voom-off-white);border-radius:50%;display:block}
+  /* RTL variant: add dir="rtl" lang="ar" on .post, text-align:right, swap footer sides */
+  .post[dir=rtl]{font-family:var(--voom-font-ar)} .post[dir=rtl] .headline,.post[dir=rtl] .sub{letter-spacing:0;line-height:1.25}
+</style>
+</head>
+<body>
+<div class="post voom">
+  <img class="logo voom-logo" src="../assets/logo/voom-logo-full-white.png" alt="Voom - Proptech & Digital Twin Innovation">
+  <div class="tag">2026</div>
+  <div class="headline">Sell off-plan with <span class="voom-accent">full visibility</span></div>
+  <div class="sub">Explore every unit, floor plan and view from one link.</div>
+  <div class="hero">[ hero: device mockup / 3D render / concept visual ]</div>
+  <div class="footer"><span>@voomproptech</span><span class="icons"><i></i><i></i><i></i><i></i></span></div>
+</div>
+</body>
+</html>
