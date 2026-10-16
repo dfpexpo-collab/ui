@@ -261,6 +261,7 @@ def bg_signature():
 
 def chrome(dark=True):
     """Small SaaS-style frame furniture: wordmark top-right (RTL), URL bottom-left."""
+    return ""  # removed at the client's request (no corner wordmark / footer lines)
     img = WM_W if dark else WM_B
     w = 120
     h = w / WM_R
