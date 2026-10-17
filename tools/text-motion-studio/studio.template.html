@@ -97,7 +97,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
         <select id="direction"><option value="right">Right</option><option value="left">Left</option><option value="up">Above</option><option value="down">Below</option><option value="none">In place</option></select></div>
       <div class="row"><label for="distance">Distance</label><input id="distance" type="range" min="0" max="200" step="2"><output data-for="distance"></output></div>
       <div class="row"><label for="duration">Speed (s)</label><input id="duration" type="range" min="0.2" max="1.6" step="0.05"><output data-for="duration"></output></div>
-      <div class="row"><label for="blur">Blur</label><input id="blur" type="range" min="0" max="40" step="1"><output data-for="blur"></output></div>
+      <div class="row"><label for="blur">Word blur</label><input id="blur" type="range" min="0" max="40" step="1"><output data-for="blur"></output></div>
       <div class="row"><label for="delay">Delay (s)</label><input id="delay" type="range" min="-1" max="1" step="0.05"><output data-for="delay"></output></div>
       <div class="row full"><label for="ease">Ease</label>
         <select id="ease"><option value="expo.out">Launch (fast, long settle)</option><option value="power3.out">Settle</option><option value="power2.inOut">Smooth</option><option value="back.out(1.4)">Small overshoot</option></select></div>
@@ -109,6 +109,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
       <div class="row full"><label for="echoColorLight">Colour (light)</label><input id="echoColorLight" type="color"></div>
       <div class="row"><label for="ghosts">Copies</label><input id="ghosts" type="range" min="0" max="6" step="1"><output data-for="ghosts"></output></div>
       <div class="row"><label for="ghostGap">Gap (frames)</label><input id="ghostGap" type="range" min="0" max="6" step="1"><output data-for="ghostGap"></output></div>
+      <div class="row"><label for="echoBlur">Echo blur</label><input id="echoBlur" type="range" min="0" max="50" step="1"><output data-for="echoBlur"></output></div>
       <div class="row"><label for="ghostOpacity">Opacity</label><input id="ghostOpacity" type="range" min="0" max="1" step="0.05"><output data-for="ghostOpacity"></output></div>
       <div class="row"><label for="lead">Lead (frames)</label><input id="lead" type="range" min="0" max="12" step="1"><output data-for="lead"></output></div>
       <div class="row"><label for="glow">Glow</label><input id="glow" type="range" min="0" max="1" step="0.05"><output data-for="glow"></output></div>
@@ -156,7 +157,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
 const SCENES = __SCENES_JSON__;
 const TOTAL = SCENES[SCENES.length - 1].end;
 // headline controls use their key as the element id; field controls are prefixed "f_"
-const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','ghostOpacity','lead','glow','glowStay','tint'];
+const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','echoBlur','ghostOpacity','lead','glow','glowStay','tint'];
 const FKEYS = ['preset','typeSpeed','stagger','delay','cursor','cursorColor','cursorColorLight'];
 const HDEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
 const FDEF = Object.assign({}, TextFX.TYPE_DEFAULTS);

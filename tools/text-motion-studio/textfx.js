@@ -19,6 +19,7 @@
     ghosts: 3,             // number of echo copies
     ghostGap: 2,           // frames between echo copies
     ghostOpacity: 0.55,
+    echoBlur: 18,          // px blur of the echo copies (separate from the word's blur)
     lead: 3,               // frames the first echo copy leads the word
     glow: 0.35,            // glow opacity at its peak (0 = off)
     glowStay: 0.12,        // glow opacity it settles to
@@ -91,8 +92,8 @@
           w.parentNode.insertBefore(gh, w);
           const op = s.ghostOpacity * (1 - (k - 1) / (s.ghosts + 1));
           const t0 = t - lead - (s.ghosts - k) * gap;
-          tl.fromTo(gh, { opacity: 0, x: dx, y: dy, filter: `blur(${blur}px)` },
-            { opacity: op, x: 0, y: 0, filter: `blur(${blur * 0.35}px)`, duration: s.duration * 0.8, ease: s.ease }, t0);
+          tl.fromTo(gh, { opacity: 0, x: dx, y: dy, filter: `blur(${s.echoBlur}px)` },
+            { opacity: op, x: 0, y: 0, filter: `blur(${s.echoBlur * 0.4}px)`, duration: s.duration * 0.8, ease: s.ease }, t0);
           tl.to(gh, { opacity: 0, duration: s.duration * 0.5, ease: 'power1.out' }, t + s.duration * 0.55);
         }
       }

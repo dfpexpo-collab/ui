@@ -1596,7 +1596,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
         <select id="direction"><option value="right">Right</option><option value="left">Left</option><option value="up">Above</option><option value="down">Below</option><option value="none">In place</option></select></div>
       <div class="row"><label for="distance">Distance</label><input id="distance" type="range" min="0" max="200" step="2"><output data-for="distance"></output></div>
       <div class="row"><label for="duration">Speed (s)</label><input id="duration" type="range" min="0.2" max="1.6" step="0.05"><output data-for="duration"></output></div>
-      <div class="row"><label for="blur">Blur</label><input id="blur" type="range" min="0" max="40" step="1"><output data-for="blur"></output></div>
+      <div class="row"><label for="blur">Word blur</label><input id="blur" type="range" min="0" max="40" step="1"><output data-for="blur"></output></div>
       <div class="row"><label for="delay">Delay (s)</label><input id="delay" type="range" min="-1" max="1" step="0.05"><output data-for="delay"></output></div>
       <div class="row full"><label for="ease">Ease</label>
         <select id="ease"><option value="expo.out">Launch (fast, long settle)</option><option value="power3.out">Settle</option><option value="power2.inOut">Smooth</option><option value="back.out(1.4)">Small overshoot</option></select></div>
@@ -1608,6 +1608,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
       <div class="row full"><label for="echoColorLight">Colour (light)</label><input id="echoColorLight" type="color"></div>
       <div class="row"><label for="ghosts">Copies</label><input id="ghosts" type="range" min="0" max="6" step="1"><output data-for="ghosts"></output></div>
       <div class="row"><label for="ghostGap">Gap (frames)</label><input id="ghostGap" type="range" min="0" max="6" step="1"><output data-for="ghostGap"></output></div>
+      <div class="row"><label for="echoBlur">Echo blur</label><input id="echoBlur" type="range" min="0" max="50" step="1"><output data-for="echoBlur"></output></div>
       <div class="row"><label for="ghostOpacity">Opacity</label><input id="ghostOpacity" type="range" min="0" max="1" step="0.05"><output data-for="ghostOpacity"></output></div>
       <div class="row"><label for="lead">Lead (frames)</label><input id="lead" type="range" min="0" max="12" step="1"><output data-for="lead"></output></div>
       <div class="row"><label for="glow">Glow</label><input id="glow" type="range" min="0" max="1" step="0.05"><output data-for="glow"></output></div>
@@ -1671,6 +1672,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
     ghosts: 3,             // number of echo copies
     ghostGap: 2,           // frames between echo copies
     ghostOpacity: 0.55,
+    echoBlur: 18,          // px blur of the echo copies (separate from the word's blur)
     lead: 3,               // frames the first echo copy leads the word
     glow: 0.35,            // glow opacity at its peak (0 = off)
     glowStay: 0.12,        // glow opacity it settles to
@@ -1743,8 +1745,8 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
           w.parentNode.insertBefore(gh, w);
           const op = s.ghostOpacity * (1 - (k - 1) / (s.ghosts + 1));
           const t0 = t - lead - (s.ghosts - k) * gap;
-          tl.fromTo(gh, { opacity: 0, x: dx, y: dy, filter: `blur(${blur}px)` },
-            { opacity: op, x: 0, y: 0, filter: `blur(${blur * 0.35}px)`, duration: s.duration * 0.8, ease: s.ease }, t0);
+          tl.fromTo(gh, { opacity: 0, x: dx, y: dy, filter: `blur(${s.echoBlur}px)` },
+            { opacity: op, x: 0, y: 0, filter: `blur(${s.echoBlur * 0.4}px)`, duration: s.duration * 0.8, ease: s.ease }, t0);
           tl.to(gh, { opacity: 0, duration: s.duration * 0.5, ease: 'power1.out' }, t + s.duration * 0.55);
         }
       }
@@ -1820,7 +1822,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
 const SCENES = [{"id":"F01","start":0,"end":1.95,"vo":[0.35,1.85]},{"id":"F02","start":1.95,"end":3.3,"vo":[1.95,2.85]},{"id":"F03","start":3.3,"end":4.45,"vo":[3.38,4.35]},{"id":"F04","start":4.45,"end":6.75,"vo":[4.45,6.5]},{"id":"F05","start":6.75,"end":8.55,"vo":[6.84,8.3]},{"id":"F06","start":8.55,"end":10.2,"vo":[8.7,9.95]},{"id":"F07","start":10.2,"end":12.25,"vo":[10.28,12.1]},{"id":"F08","start":12.25,"end":13.3},{"id":"F09","start":13.3,"end":15.15,"vo":[13.3,15]},{"id":"F10","start":15.15,"end":18.85,"vo":[15.17,18.5]},{"id":"F11","start":18.85,"end":21.6,"vo":[18.95,21.4]},{"id":"F12","start":21.6,"end":24.65,"vo":[21.73,24.3]},{"id":"F13","start":24.65,"end":29.7,"vo":[24.88,29.4]},{"id":"F14","start":29.7,"end":30.9},{"id":"SLATE","start":30.9,"end":32.9},{"id":"F15","start":32.9,"end":35.4,"vo":[33.12,35.1]},{"id":"F16","start":35.4,"end":38.35,"vo":[36.4,38.1]},{"id":"F17","start":38.35,"end":40.15,"vo":[38.51,39.95]},{"id":"F18","start":40.15,"end":43.4,"words":[41.28,41.62,42.38,42.72]},{"id":"F19","start":43.4,"end":46.4}];
 const TOTAL = SCENES[SCENES.length - 1].end;
 // headline controls use their key as the element id; field controls are prefixed "f_"
-const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','ghostOpacity','lead','glow','glowStay','tint'];
+const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','echoBlur','ghostOpacity','lead','glow','glowStay','tint'];
 const FKEYS = ['preset','typeSpeed','stagger','delay','cursor','cursorColor','cursorColorLight'];
 const HDEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
 const FDEF = Object.assign({}, TextFX.TYPE_DEFAULTS);
