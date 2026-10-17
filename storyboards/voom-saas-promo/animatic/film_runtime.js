@@ -100,7 +100,7 @@
     tl.set(el, { visibility: 'hidden' }, end + 0.6);
     tl.set(whip, { opacity: 0 }, start - 0.6);
     const pw = prev && prev.whip;
-    if (!prev || tin === 'cut') tl.set(whip, { opacity: 1 }, T);
+    if (!prev || tin === 'cut') { tl.set(whip, { opacity: 1 }, T); if (prev) tl.set(pw, { opacity: 0 }, T); }
     else if (tin === 'fade') { tl.fromTo(whip, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.inOut' }, T - 0.2); tl.to(pw, { opacity: 0, duration: 0.4 }, T - 0.2); }
     else if (tin === 'push') {
       const [dx, dy] = PUSH_DIR[sc.id] || [0, 1];
