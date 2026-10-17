@@ -42,6 +42,9 @@
     F10: 'pixel', F11: 'push', F12: 'zoom', F13: 'push', F14: 'morph', SLATE: 'cut', F15: 'push', F16: 'zoom', F17: 'fade', F18: 'dissolve', F19: 'zoom' };
   const PUSH_DIR = { F03: [0, 1], F09: [1, 0], F11: [-1, 0], F13: [0, 1], F15: [1, 0] };
   const MORPH = { F05: ['L05_CARD_UNITS', 'L05_DASHBOARD'], F07: ['L06_DASHBOARD', 'L05_TOGGLE'], F14: ['L05_STAT_CARDS', 'L05_DEVICE'] };
+  const OUT = { push: 0.45, zoom: 0.45, pixel: 0.45, dissolve: 0.5, morph: 0.35, fade: 0.3, cut: 0 };   // when the old scene starts leaving, before the cut
+  const HOLD = 0.35, TEXT_REPORT = []; window.TEXT_REPORT = TEXT_REPORT;
+  const LEAD = { pixel: 0.4, dissolve: 0.45, zoom: 0.3, push: 0.3, morph: 0.12, fade: 0.2, cut: 0 };   // how early elements start entering before the cut
   const PIXEL_FROM = { F04: [960, 540], F10: [440, 660] };
   // click visual effects (from the reference): halftone ripple or glowing pixels
   const CLICK_FX = { F02: 'halftone', F05: 'halftone', F07: 'halftone', F09: 'glow', F10: 'glow', F17: 'glow' };
@@ -96,29 +99,31 @@
     const { el, whip, cam, svg } = sc, start = sc.start, end = sc.end, dur = end - start;
     const next = SCENES[i + 1], tin = TRANS[sc.id] || 'fade';
     const prev = SCENES[i - 1], T = start;
-    tl.set(el, { visibility: 'visible', zIndex: tin === 'dissolve' ? 2 * i : 2 * i + 2 }, start - 0.6);
+    tl.set(el, { visibility: 'visible', zIndex: tin === 'dissolve' ? 2 * i - 1 : 2 * i + 2 }, start - 0.6);
     tl.set(el, { visibility: 'hidden' }, end + 0.6);
     tl.set(whip, { opacity: 0 }, start - 0.6);
     const pw = prev && prev.whip;
     if (!prev || tin === 'cut') { tl.set(whip, { opacity: 1 }, T); if (prev) tl.set(pw, { opacity: 0 }, T); }
-    else if (tin === 'fade') { tl.fromTo(whip, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.inOut' }, T - 0.2); tl.to(pw, { opacity: 0, duration: 0.4 }, T - 0.2); }
+    else if (tin === 'fade') { tl.fromTo(whip, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power1.inOut' }, T - 0.3); tl.to(pw, { opacity: 0, duration: 0.6, ease: 'power1.inOut' }, T - 0.3); }
     else if (tin === 'push') {
       const [dx, dy] = PUSH_DIR[sc.id] || [0, 1];
-      tl.to(pw, { x: -dx * 220, y: -dy * 160, opacity: 0, filter: 'blur(16px)', duration: 0.42, ease: 'power3.in' }, T - 0.34);
-      tl.fromTo(whip, { x: dx * 260, y: dy * 200, opacity: 0, filter: 'blur(16px)' }, { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, ease: 'expo.out' }, T - 0.08);
+      tl.to(pw, { x: -dx * 180, y: -dy * 130, opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.inOut' }, T - 0.45);
+      tl.fromTo(whip, { x: dx * 220, y: dy * 170, opacity: 0, filter: 'blur(14px)' }, { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, T - 0.15);
     } else if (tin === 'zoom') {
-      tl.to(pw, { scale: 2.6, opacity: 0, filter: 'blur(18px)', transformOrigin: prev.focus || '50% 50%', duration: 0.45, ease: 'power3.in' }, T - 0.38);
-      tl.fromTo(whip, { scale: 0.78, opacity: 0, filter: 'blur(14px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.75, ease: 'expo.out' }, T - 0.06);
+      tl.to(pw, { scale: 2.2, opacity: 0, filter: 'blur(16px)', transformOrigin: prev.focus || '50% 50%', duration: 0.6, ease: 'power2.in' }, T - 0.45);
+      tl.fromTo(whip, { scale: 0.82, opacity: 0, filter: 'blur(12px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, T - 0.1);
     } else if (tin === 'morph') {
-      tl.to(pw, { opacity: 0, duration: 0.25, ease: 'power1.in' }, T - 0.2);
-      tl.fromTo(whip, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out' }, T + 0.12);
+      tl.to(pw, { opacity: 0, duration: 0.4, ease: 'power1.inOut' }, T - 0.3);
+      tl.fromTo(whip, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }, T + 0.15);
       MORPHS.push({ sc, prev, T });
     } else if (tin === 'pixel') {
-      tl.set(whip, { opacity: 1 }, T - 0.4);
-      FX.push(pixelReveal(sc, T, PIXEL_FROM[sc.id] || [960, 540]));
-    } else if (tin === 'dissolve') {
       tl.set(whip, { opacity: 1 }, T - 0.45);
+      FX.push(pixelReveal(sc, T, PIXEL_FROM[sc.id] || [960, 540]));
+      tl.set(pw, { opacity: 0 }, T + 0.59);   // the mask comes off after the reveal: the old scene must not come back
+    } else if (tin === 'dissolve') {
+      tl.set(whip, { opacity: 1 }, T - 0.5);
       FX.push(dissolve(prev, T, prev.clickAt || [960, 540]));
+      tl.set(pw, { opacity: 0 }, T + 0.64);
     }
     if (!svg) {   // slate
       tl.from(el.querySelectorAll('.slate > *'), { opacity: 0, y: 30, duration: 0.6, ease: LAUNCH, stagger: 0.15 }, start + 0.1);
@@ -129,7 +134,7 @@
     if (c) { gsap.set(cam, { transformOrigin: c[0] }); tl.fromTo(cam, c[1], Object.assign({ duration: dur + 0.35, ease: GLIDE }, c[2]), start - 0.05); }
 
     const layers = Array.from(svg.children).filter(n => n.tagName === 'g' && /^L\d/.test(n.id));
-    const layerAt = {};
+    const layerAt = {}, enter = start - (LEAD[tin] ?? 0.2);
     let ei = 0;
     const cells = wrapCells(svg);
 
@@ -143,7 +148,7 @@
       }
       if (/FLOAT/.test(id)) {    // F01: feature words glitch in, then float
         Array.from(layer.children).forEach((w, k) => {
-          const op = Math.min(1, 1.8 * +(w.getAttribute('opacity') || 1)), at = start + 0.15 + k * 0.08;
+          const op = Math.min(1, 1.8 * +(w.getAttribute('opacity') || 1)), at = enter + 0.15 + k * 0.08;
           tl.set(w, { opacity: 0 }, start - 0.3);
           tl.to(w, { keyframes: [{ opacity: op, x: -14, duration: 0.04 }, { opacity: op * 0.15, x: 10, duration: 0.04 }, { opacity: op, x: -5, duration: 0.05 }, { opacity: op * 0.4, x: 4, duration: 0.04 }, { opacity: op, x: 0, duration: 0.05 }] }, at);
           tl.fromTo(w, { y: 0 }, { y: (k % 2 ? -1 : 1) * (14 + k * 3), duration: dur, ease: GLIDE }, at + 0.22);
@@ -151,7 +156,7 @@
         return;
       }
       if (/ORBIT/.test(id)) {
-        tl.from(layer, { opacity: 0, duration: 0.6 }, start);
+        tl.from(layer, { opacity: 0, duration: 0.6 }, enter);
         q(layer, '[id^="ORBIT_DASHED"]').forEach((o, k) => tl.fromTo(o, { rotation: 0 }, { rotation: (k % 2 ? -1 : 1) * dur * 9, svgOrigin: '960 520', duration: dur + 0.4, ease: 'none' }, start));
         return;
       }
@@ -174,18 +179,18 @@
         const cp = document.createElementNS(NS, 'clipPath'); cp.id = 'logoclip' + i;
         const r = document.createElementNS(NS, 'rect'); r.setAttribute('x', b.x - 10); r.setAttribute('y', b.y - 20); r.setAttribute('height', b.height + 40);
         cp.appendChild(r); svg.appendChild(cp); img.setAttribute('clip-path', `url(#${cp.id})`);
-        tl.fromTo(r, { attr: { width: 0 } }, { attr: { width: b.width + 20 }, duration: 0.85, ease: LAUNCH }, start + 0.12);
+        tl.fromTo(r, { attr: { width: 0 } }, { attr: { width: b.width + 20 }, duration: 0.85, ease: LAUNCH }, enter + 0.12);
         tl.fromTo(layer, { scale: 0.97, transformOrigin: '50% 50%' }, { scale: 1.02, duration: dur, ease: GLIDE }, start);
         return;
       }
       if (/WALL/.test(id)) {     // F16/F17 project wall: tiles fly in with depth
-        if (sc.id === 'F16') tl.from(cells.map(c => c.inner), { opacity: 0, scale: 0.55, y: 90, transformOrigin: '50% 50%', duration: 0.7, ease: LAUNCH, stagger: { amount: 0.9, from: 'center' } }, start);
+        if (sc.id === 'F16') tl.from(cells.map(c => c.inner), { opacity: 0, scale: 0.55, y: 90, transformOrigin: '50% 50%', duration: 0.7, ease: LAUNCH, stagger: { amount: 0.9, from: 'center' } }, enter);
         tl.fromTo(layer, { x: 50, y: 20 }, { x: -50, y: -20, duration: dur + 0.4, ease: 'none' }, start);
         layerAt[id] = start;
         return;
       }
       if (id === 'L05_TOGGLE' && sc.id === 'F07') {
-        tl.from(layer, { opacity: 0, y: 50, filter: 'blur(10px)', duration: 0.8, ease: LAUNCH }, start + 0.05);
+        tl.from(layer, { opacity: 0, y: 50, filter: 'blur(10px)', duration: 0.8, ease: LAUNCH }, enter + 0.05);
         const knob = layer.querySelector('#TOGGLE_KNOB'), off = layer.querySelector('#OPT_OFFLINE'), on = layer.querySelector('#OPT_ONLINE');
         const T = CLICK.F07 + 0.05, move = -(800 / 2 - 14);
         tl.to(knob, { x: move, duration: 0.45, ease: 'back.out(1.2)' }, T);
@@ -197,7 +202,7 @@
         return;
       }
       // generic element entrance, varied by role
-      const at = start + 0.06 + ei * 0.1; ei++;
+      const at = enter + 0.06 + ei * 0.1; ei++;
       layerAt[id] = at;
       let from;
       if (/STATUS_PILL/.test(id) && sc.id === 'F07') { const T = CLICK.F07 + 0.45; layerAt[id] = T; tl.from(layer, { opacity: 0, scale: 0.85, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(1.7)' }, T); return; }
@@ -258,18 +263,31 @@
     sc.wrap = document.createElementNS(NS, 'g');
     Array.from(svg.childNodes).filter(n => !(n.tagName === 'defs' || n.tagName === 'clipPath')).forEach(n => sc.wrap.appendChild(n));
     svg.appendChild(sc.wrap); sc.fx = document.createElementNS(NS, 'g'); svg.appendChild(sc.fx);
+    // the scene may only start leaving once all its text is on screen and has been read for HOLD seconds
+    const deadline = (next ? next.start - (OUT[TRANS[next.id]] ?? 0.3) : end) - HOLD;
+    let done = 0;
     items.forEach(it => {
-      const s = eff(it.key, it.kind), la = (layerAt[it.layer] ?? start) + 0.3;
+      const s = Object.assign({}, eff(it.key, it.kind)), la = (layerAt[it.layer] ?? start) + 0.3;
       if (it.kind === 'count') {
         const at = it.inHead ? (sc.big != null ? sc.big : vt[0]) : Math.max(la, start + 0.25 + it.idx * SET.fields.stagger);
-        TextFX.countUp(tl, it.g, Math.max(start, at + s.delay), s);
+        let t0 = Math.max(start, at + s.delay);
+        if (t0 + s.duration > deadline) t0 = Math.max(start - 0.1, deadline - s.duration);
+        if (t0 + s.duration > deadline) s.duration = Math.max(0.35, deadline - t0);   // short shot: count faster
+        TextFX.countUp(tl, it.g, t0, s); done = Math.max(done, t0 + s.duration);
       } else if (it.kind === 'field') {
-        TextFX.typewrite(tl, it.g, Math.max(la, start + 0.25 + it.idx * s.stagger) + s.delay, s, sc.light);
+        let t0 = Math.max(la, start + 0.25 + it.idx * s.stagger) + s.delay;
+        const n = Math.max(1, it.g.id.replace(/^TXT_/, '').replace(/_\d+$/, '').replace(/_/g, '').length);
+        if (t0 > deadline - 0.35) t0 = Math.max(start - 0.2, deadline - 0.35);
+        if (t0 + n / s.typeSpeed > deadline) s.typeSpeed = n / Math.max(0.3, deadline - t0);   // type faster rather than leave early
+        TextFX.typewrite(tl, it.g, t0, s, sc.light); done = Math.max(done, t0 + n / s.typeSpeed);
       } else {
-        const times = it.words.map(w => Math.max(start, vt[headWords.indexOf(w)] + s.delay));
-        TextFX.apply(tl, it.words, times, s, sc.light);
+        let times = it.words.map(w => Math.max(start, vt[headWords.indexOf(w)] + s.delay));
+        const last = Math.max(...times), lim = deadline - s.duration;
+        if (last > lim) { const a = Math.min(times[0], lim), k = last > a ? (lim - a) / (last - times[0] || 1) : 0; times = times.map(x => a + (x - times[0]) * Math.max(0, k)); }
+        TextFX.apply(tl, it.words, times, s, sc.light); done = Math.max(done, Math.max(...times) + s.duration);
       }
     });
+    TEXT_REPORT.push({ id: sc.id, done: +done.toFixed(2), leaves: +(deadline + HOLD).toFixed(2), ok: done <= deadline + 0.01 });
   });
 
   // ---- per-frame effects (transitions + click FX): each is { a, b, init, render(t), reset }, built lazily, driven by runFx(t)
@@ -281,7 +299,7 @@
   // new scene grows out of a pixelated disc of glass squares (reference 0:15)
   function pixelReveal(sc, T, [ox, oy]) {
     const CELL = 64, cells = [], id = 'pxm' + (uid++);
-    return { a: T - 0.4, b: T + 0.45,
+    return { a: T - 0.45, b: T + 0.6,
       init() {
         const r = rng(7), m = mk('mask', { id, maskUnits: 'userSpaceOnUse', x: -400, y: -300, width: 2720, height: 1680 }, sc.svg);
         mk('rect', { x: -400, y: -300, width: 2720, height: 1680, fill: '#000' }, m);
@@ -298,7 +316,7 @@
         }
       },
       render(t) {
-        const p = c01((t - this.a) / 0.85), R = Math.pow(p, 1.7) * 2700;
+        const p = c01((t - this.a) / 1.05), R = Math.pow(p, 1.6) * 2700;
         sc.wrap.setAttribute('mask', `url(#${id})`); this.prev.wrap.setAttribute('mask', `url(#${id}o)`); this.ring.style.display = '';
         cells.forEach(c => {
           const e = R - c.d - c.n * 150;
@@ -313,9 +331,9 @@
 
   // old scene breaks into particles that blow away from the click (reference 0:12.5)
   function dissolve(sc, T, [ox, oy]) {
-    const CELL = 20, holes = [], parts = [], id = 'dsm' + (uid++), t0 = T - 0.45, LEN = 0.85, SPAN = 2600, JIT = 220;
+    const CELL = 20, holes = [], parts = [], id = 'dsm' + (uid++), t0 = T - 0.5, LEN = 1.1, SPAN = 2600, JIT = 220;
     const frontAt = d => t0 + LEN * Math.pow(Math.max(0, d) / SPAN, 1 / 1.3);
-    return { a: t0, b: T + 0.5,
+    return { a: t0, b: T + 0.65,
       init() {
         const r = rng(11), m = mk('mask', { id, maskUnits: 'userSpaceOnUse', x: -400, y: -300, width: 2720, height: 1680 }, sc.svg);
         mk('rect', { x: -400, y: -300, width: 2720, height: 1680, fill: '#fff' }, m);
@@ -392,7 +410,7 @@
   const fxtop = document.getElementById('fxtop');
   MORPHS.forEach(({ sc, prev, T }) => {
     const [A, B] = MORPH[sc.id];
-    FX.push({ a: T - 0.32, b: T + 0.4,
+    FX.push({ a: T - 0.35, b: T + 0.5,
       init() {
         const ea = prev.svg.querySelector('#' + A), eb = sc.svg.querySelector('#' + B);
         this.ba = ea.getBBox(); this.bb = eb.getBBox();
@@ -400,7 +418,7 @@
         this.r = mk('rect', { fill: lt ? 'rgba(255,255,255,0.92)' : 'rgba(10,30,200,0.55)', stroke: LBLUE, 'stroke-width': 2, style: `filter:drop-shadow(0 20px 40px ${lt ? 'rgba(0,18,214,.18)' : 'rgba(0,179,255,.35)'})` }, fxtop);
       },
       render(t) {
-        const p = c01((t - this.a) / 0.62), e = gsap.parseEase('power3.inOut')(p), A_ = this.ba, B_ = this.bb, L = (u, v) => u + (v - u) * e;
+        const p = c01((t - this.a) / 0.85), e = gsap.parseEase('power3.inOut')(p), A_ = this.ba, B_ = this.bb, L = (u, v) => u + (v - u) * e;
         Object.entries({ x: L(A_.x, B_.x), y: L(A_.y, B_.y), width: L(A_.width, B_.width), height: L(A_.height, B_.height), rx: 26 }).forEach(([k, v]) => this.r.setAttribute(k, v.toFixed(1)));
         this.r.setAttribute('opacity', Math.min(c01(p / 0.15), c01((1 - p) / 0.35)).toFixed(3)); this.r.style.display = '';
       },
