@@ -27,6 +27,8 @@ header .spacer { flex: 1; }
 .slate b { font-size: clamp(14px, 4vw, 44px); font-weight: 600; direction: rtl; }
 .slate span { font: 500 clamp(9px, 1.2vw, 14px) var(--mono); color: #00b3ff; letter-spacing: .25em; }
 .transport { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.loop { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; cursor: pointer; }
+.loop input { accent-color: var(--accent); }
 .transport output { font: 500 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; min-width: 92px; }
 .scrub { position: relative; flex: 1; min-width: 200px; }
 .scrub input { width: 100%; }
@@ -1568,7 +1570,8 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
 </div></div>
     <div class="transport">
       <button class="btn primary" id="play" type="button">Play</button>
-      <button class="btn" id="replay" type="button" title="Replay the selected text">Replay text</button>
+      <button class="btn" id="replay" type="button" title="Replay the current scene">Replay scene</button>
+      <label class="loop"><input id="loop" type="checkbox" checked> Loop scene</label>
       <output id="clock">0.00 / 0.00</output>
       <div class="scrub">
         <input id="scrub" type="range" min="0" max="100" step="0.01" value="0" aria-label="Timeline">
@@ -1751,7 +1754,7 @@ const TOTAL = SCENES[SCENES.length - 1].end;
 const KEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostSpacing','ghostOpacity','lead','glow','glowStay','tint'];
 const DEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
 let settings = { global: Object.assign({}, DEF), overrides: {} };
-let tl = null, playing = false, t = 0, clockStart = 0, selected = '*';
+let tl = null, playing = false, t = 0, clockStart = 0, selected = '*', range = null;
 const $ = id => document.getElementById(id);
 const stage = $('stage'), audio = $('vo');
 
@@ -1819,12 +1822,17 @@ function show(time) {
 function tick() {
   if (!playing) return;
   const now = audio.readyState >= 2 && !audio.paused ? audio.currentTime : t0Clock();
+  if (range && now >= range[1]) {
+    if ($('loop').checked) { play(range[0], range); return; }
+    show(range[1]); stop(); return;
+  }
   show(now);
   if (now >= TOTAL) { stop(); return; }
   requestAnimationFrame(tick);
 }
 function t0Clock() { return (performance.now() - clockStart) / 1000; }
-function play(from) {
+function play(from, r) {
+  range = r || null;
   playing = true; $('play').textContent = 'Pause';
   show(from ?? t);
   clockStart = performance.now() - t * 1000;
@@ -1833,12 +1841,14 @@ function play(from) {
 }
 function stop() { playing = false; $('play').textContent = 'Play'; try { audio.pause(); } catch (e) {} }
 $('play').addEventListener('click', () => playing ? stop() : play(t >= TOTAL ? 0 : t));
+$('loop').addEventListener('change', () => { if (!$('loop').checked) range = null; });
 $('scrub').addEventListener('input', e => { const v = e.target.value / 100 * TOTAL; if (playing) stop(); show(v); });
-$('replay').addEventListener('click', () => {
+function currentScene() {
   const it = ITEMS.find(i => i.key === selected);
-  const sc = it ? it.scene : SCENES.find(s => t >= s.start && t < s.end) || SCENES[0];
-  play(Math.max(0, sc.start - 0.05));
-});
+  return it ? it.scene : SCENES.find(s => t >= s.start && t < s.end) || SCENES[0];
+}
+function replayScene() { const sc = currentScene(); play(Math.max(0, sc.start - 0.05), [Math.max(0, sc.start - 0.05), sc.end]); }
+$('replay').addEventListener('click', replayScene);
 const marks = $('marks');
 SCENES.forEach(sc => {
   const b = document.createElement('button');
@@ -1890,7 +1900,7 @@ function onEdit() {
     KEYS.forEach(k => { if (vals[k] !== settings.global[k]) diff[k] = vals[k]; });
     if (Object.keys(diff).length) settings.overrides[selected] = diff; else delete settings.overrides[selected];
   }
-  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(eff(selected)); }, 120);
+  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(eff(selected)); if (!playing || !range) replayScene(); }, 150);
   markDirty();
 }
 KEYS.forEach(k => $(k).addEventListener('input', onEdit));
