@@ -211,8 +211,8 @@
         return;
       }
       // generic element entrance, varied by role
-      if (sc.morphTarget === id) { layerAt[id] = start - 0.1; return; }
-      const at = enter + 0.06 + ei * 0.1; ei++;
+      const morphed = sc.morphTarget === id;   // its shape arrived by morph: skip the layer entrance, keep the inner build (starts as the shape lands)
+      const at = morphed ? start + 0.35 : enter + 0.06 + ei * 0.1; if (!morphed) ei++;
       layerAt[id] = at;
       let from;
       if (/STATUS_PILL/.test(id) && sc.id === 'F07') { const T = byId('F07').click + 0.45; layerAt[id] = T; tl.from(layer, { opacity: 0, scale: 0.85, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(1.7)' }, T); return; }
@@ -222,8 +222,8 @@
       else if (/DASHBOARD|DATA/.test(id)) from = { opacity: 0, x: 80, filter: 'blur(10px)', ease: LAUNCH, duration: 0.85 };
       else if (/LINK|LEADER|ARROWS/.test(id)) from = { opacity: 0, duration: 0.4, ease: 'none' };
       else from = [{ opacity: 0, y: 60, filter: 'blur(10px)' }, { opacity: 0, scale: 0.92, filter: 'blur(10px)', transformOrigin: '50% 50%' }, { opacity: 0, y: -40, filter: 'blur(10px)' }][ei % 3];
-      tl.from(layer, Object.assign({ ease: LAUNCH, duration: 0.85 }, from), at);
-      if (from.filter) tl.set(layer, { filter: 'none' }, at + (from.duration || 0.85) + 0.02);
+      if (!morphed) tl.from(layer, Object.assign({ ease: LAUNCH, duration: 0.85 }, from), at);
+      if (!morphed && from.filter) tl.set(layer, { filter: 'none' }, at + (from.duration || 0.85) + 0.02);
       // inner parts
       q(layer, '[id^="ICON_TILE"]').forEach((t, k) => tl.from(t, { scale: 0, transformOrigin: '50% 50%', duration: 0.45, ease: 'back.out(2)' }, at + 0.25 + k * 0.06));
       q(layer, 'circle').filter(cn => +cn.getAttribute('r') <= 10 && !cn.id).forEach((cn, k) => tl.from(cn, { scale: 0, transformOrigin: '50% 50%', duration: 0.35, ease: 'back.out(2.5)' }, at + 0.3 + (k % 14) * 0.03));

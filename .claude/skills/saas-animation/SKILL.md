@@ -42,6 +42,7 @@ The method we use to turn a storyboard into a SaaS promo film. It is built from 
   - When a shot is short, type faster, count faster or pull the headline words earlier. Never cut text off.
   - `TEXT_REPORT` in the page lists every shot's text-done time against its leave time, so check it without rendering.
   - If a shot still can't fit, give it room: run `retime.py cues.json <t>:<gap>` at a VO silence (`ffmpeg -af silencedetect=n=-38dB:d=0.06`). It shifts every later time and splits the audio there. The user allows extra pauses so the motion can breathe.
+- **No dead air.** Once the last beat of a shot lands (text done or click), the transition starts within about 0.3–0.5s.
 - **Transitions are relaxed, not snappy.** The old scene leaves over about 0.6s (`power2.inOut` / `power2.in`) and the new one settles over about 0.95s (`power3.out`). Pixel and dissolve run about 1.05–1.1s, and the morph about 0.85s.
 - **Elements start entering before the cut.** Use `LEAD` per transition (pixel 0.4, dissolve 0.45, zoom/push 0.3, morph 0.12) so the incoming scene is never empty.
 - **Small squares (unit grids):** build in a wave from one corner. Each square goes from scale 0.3 to 1 with `back.out`, plus a brightness and glow flash that settles. Never use random steps.

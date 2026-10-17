@@ -2,6 +2,12 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-17: preview review 3
+- **Wrong:** the morph target lost its inner build (the unit squares).
+  **Rule:** a morphed layer skips only its own entrance. Its inner animations still run, starting as the shape lands.
+- **Wrong:** F05 held still for too long before the transition (an inserted pause sat at the end of the shot).
+  **Rule:** a shot leaves soon after its last beat (text done or click), within about 0.3–0.5s. Put the breathing room where the motion happens, not as dead air at the end.
+
 ## 2026-10-17: preview review 2
 - **Wrong:** the morph stretched the content and duplicated the card in the middle.
   **Rule:** a morph is a shape morph. The card's outline rect (position, size, corner radius) is keyed from A's on-screen rect to B's, read live every frame so camera moves are respected. The shape is empty while it travels: the old content leaves first, and the new content fills in after the shape lands.
