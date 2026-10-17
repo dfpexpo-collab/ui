@@ -26,6 +26,8 @@
     tint: true,            // word starts in the echo colour and turns to its own colour
     ease: [0.16, 1, 0.3, 1],   // word motion curve (cubic-bezier handles)
     echoEase: [0.22, 1, 0.36, 1], // echo motion curve
+    bounce: false,             // word lands with a bounce
+    bounces: 2,                // how many bounces
     stagger: 0.09,         // s between words when no spoken timing is given
   };
   const FPS = 30;
@@ -45,6 +47,8 @@
     };
   }
   const easeOf = e => Array.isArray(e) ? bezier(...e) : e;
+  // landing bounce: the element drops onto its spot and bounces n times, each smaller (never past the spot)
+  const bounceEase = n => p => p >= 1 ? 1 : 1 - Math.abs(Math.cos(p * Math.PI * (n + 0.5))) * Math.pow(1 - p, 2.2);
   const SVGNS = 'http://www.w3.org/2000/svg';
 
   function vec(dir, d) {
@@ -117,8 +121,15 @@
       }
 
       // the word itself
-      tl.fromTo(w, { opacity: 0, x: dx, y: dy, filter: `blur(${blur}px)` },
-        { opacity: 1, x: 0, y: 0, filter: 'blur(0px)', duration: s.duration, ease }, t);
+      if (s.bounce) {
+        // position bounces; fade and blur keep the graph curve so the word stays readable
+        tl.fromTo(w, { x: dx, y: dy || (s.direction === 'none' ? -s.distance * 0.5 : 0) },
+          { x: 0, y: 0, duration: s.duration * 1.4, ease: bounceEase(s.bounces) }, t);
+        tl.fromTo(w, { opacity: 0, filter: `blur(${blur}px)` }, { opacity: 1, filter: 'blur(0px)', duration: s.duration, ease }, t);
+      } else {
+        tl.fromTo(w, { opacity: 0, x: dx, y: dy, filter: `blur(${blur}px)` },
+          { opacity: 1, x: 0, y: 0, filter: 'blur(0px)', duration: s.duration, ease }, t);
+      }
       if (useEcho && s.tint) {
         paths.forEach(p => {
           if (/^url\(/.test(p.dataset.fill)) return;   // gradient fills keep their paint
@@ -175,7 +186,7 @@
   }
 
   // ---- count-up for numbers and prices, with motion blur that clears as the value settles
-  const COUNT_DEFAULTS = { preset: 'count', duration: 0.9, blur: 10, rise: 14, delay: 0, ease: [0.16, 1, 0.3, 1] };
+  const COUNT_DEFAULTS = { preset: 'count', duration: 0.9, blur: 10, rise: 14, delay: 0, ease: [0.16, 1, 0.3, 1], bounce: false, bounces: 2 };
   const NUM = /^([+\u00d7]?)(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(\s?(?:x|\u00d7|%|M|K|m\u00b2|units))?$/;
   const isCount = txt => NUM.test((txt || '').trim());
 
@@ -202,8 +213,13 @@
     g.parentNode.insertBefore(tx, g.nextSibling);
     g.setAttribute('data-tfx-hide', ''); g.style.visibility = 'hidden';
     const ease = easeOf(s.ease), box = { v: 0 };
-    tl.fromTo(tx, { opacity: 0, y: s.rise, filter: `blur(${s.blur}px)` },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: s.duration, ease }, t);
+    if (s.bounce) {
+      tl.fromTo(tx, { y: -Math.max(s.rise, 20) }, { y: 0, duration: s.duration * 1.3, ease: bounceEase(s.bounces) }, t);
+      tl.fromTo(tx, { opacity: 0, filter: `blur(${s.blur}px)` }, { opacity: 1, filter: 'blur(0px)', duration: s.duration, ease }, t);
+    } else {
+      tl.fromTo(tx, { opacity: 0, y: s.rise, filter: `blur(${s.blur}px)` },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: s.duration, ease }, t);
+    }
     tl.fromTo(box, { v: 0 }, { v: target, duration: s.duration, ease, onUpdate: () => { tx.textContent = fmt(box.v); } }, t);
   }
 
