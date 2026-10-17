@@ -126,7 +126,10 @@ def outline_text(tag, inner):
 
     text_words = "".join(c for c, _ in chars).split()
     gid_base = a.get("id", "TXT")
-    out = [f'<g id="{gid_base}"' + (f' opacity="{a["opacity"]}"' if "opacity" in a else "") + ">"]
+    meta = {"text": "".join(c for c, _ in chars), "font": family, "weight": weight, "size": size, "x": x, "y": y,
+            "anchor": anchor, "fill": a["fill"], "ls": ls, "rtl": int(rtl)}
+    data = "".join(f' data-{k}="{html.escape(str(v), quote=True)}"' for k, v in meta.items())
+    out = [f'<g id="{gid_base}"' + data + (f' opacity="{a["opacity"]}"' if "opacity" in a else "") + ">"]
     for w in sorted(words):
         label = re.sub(r"[^\w]+", "", text_words[w] if w < len(text_words) else "") or "w"
         out.append(f'<g id="{gid_base}__w{w+1:02d}_{label}">')

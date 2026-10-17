@@ -605,7 +605,7 @@ def f13():
         x = 1290 - i * 400
         out += glass(x, 360, 360, 220)
         out += f'<circle cx="{x+320}" cy="{404}" r="9" fill="{col}"/>' + text(x + 300, 414, lab, 30, 500, OFF, "start")
-        out += text(x + 320, 530, num, 96, 600, OFF, "start", LAT, False)
+        out += text(x + 180, 532, num, 96, 600, OFF, "middle", LAT, False)
     ch = glass(490, 620, 1160, 300)
     pts = [(530 + i * 80, 860 - v) for i, v in enumerate([40, 60, 50, 90, 80, 120, 110, 150, 140, 175, 170, 200, 210, 220])]
     d = "M" + " L".join(f"{x} {y}" for x, y in pts)

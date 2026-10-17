@@ -43,6 +43,6 @@ const html = tpl
   .replace('__SCENES__', () => scenes)
   .replace('__AUDIO__', () => audio)
   .replace('__TEXTFX__', () => fs.readFileSync(path.join(HERE, 'textfx.js'), 'utf8'))
-  .replace('__SCENES_JSON__', () => JSON.stringify(cues.scenes.map(({ id, start, end, vo, words }) => ({ id, start, end, vo, words }))));
+  .replace('__SCENES_JSON__', () => JSON.stringify(cues.scenes.map(({ id, start, end, vo, words, big }) => ({ id, start, end, vo, words, big }))));
 fs.writeFileSync(args.out, html);
 console.log('wrote', args.out, (html.length / 1048576).toFixed(2) + ' MB');

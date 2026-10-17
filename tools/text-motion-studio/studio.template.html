@@ -1,7 +1,7 @@
 <title>__TITLE__</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700&family=Poppins:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Layout: an editing bay — the stage and its timeline on the left, an inspector column on the right; stacks on phones. Deliberately single dark look, like a motion app. */
 :root {
@@ -55,6 +55,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .status { font-size: 12px; color: var(--muted); min-height: 1.4em; }
 .status.ok { color: var(--ok); }
+.graphwrap { display: grid; gap: 6px; }
+.graphwrap > label { color: var(--muted); font-size: 12px; }
+.graph svg { width: 100%; height: auto; display: block; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; touch-action: none; }
+.graph .grid line { stroke: var(--line); stroke-width: 1; }
+.graph .axis { stroke: var(--muted); stroke-width: 1; opacity: .5; }
+.graph .curve { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.graph .arm { stroke: var(--muted); stroke-width: 1.2; }
+.graph .h { fill: var(--fg); stroke: var(--accent); stroke-width: 2; cursor: grab; }
+.graph .h:active { cursor: grabbing; }
+.graph .presets { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.graph .presets button { font: 500 11px var(--ui); color: var(--fg); background: var(--raised); border: 1px solid var(--line); border-radius: 5px; padding: 3px 7px; cursor: pointer; }
+.graph .presets button:hover { border-color: var(--muted); }
+.graph .val { font: 11px var(--mono); color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
 textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--raised); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; font: 11px var(--mono); }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
 </style>
@@ -99,8 +112,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
       <div class="row"><label for="duration">Speed (s)</label><input id="duration" type="range" min="0.2" max="1.6" step="0.05"><output data-for="duration"></output></div>
       <div class="row"><label for="blur">Word blur</label><input id="blur" type="range" min="0" max="40" step="1"><output data-for="blur"></output></div>
       <div class="row"><label for="delay">Delay (s)</label><input id="delay" type="range" min="-1" max="1" step="0.05"><output data-for="delay"></output></div>
-      <div class="row full"><label for="ease">Ease</label>
-        <select id="ease"><option value="expo.out">Launch (fast, long settle)</option><option value="power3.out">Settle</option><option value="power2.inOut">Smooth</option><option value="back.out(1.4)">Small overshoot</option></select></div>
+      <div class="graphwrap"><label>Word motion graph</label><div class="graph" id="ease" tabindex="0" aria-label="Word motion curve"></div></div>
     </div>
 
     <div class="group">
@@ -114,8 +126,22 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
       <div class="row"><label for="lead">Lead (frames)</label><input id="lead" type="range" min="0" max="12" step="1"><output data-for="lead"></output></div>
       <div class="row"><label for="glow">Glow</label><input id="glow" type="range" min="0" max="1" step="0.05"><output data-for="glow"></output></div>
       <div class="row"><label for="glowStay">Glow stays</label><input id="glowStay" type="range" min="0" max="0.6" step="0.02"><output data-for="glowStay"></output></div>
+      <div class="graphwrap"><label>Echo motion graph</label><div class="graph" id="echoEase" tabindex="0" aria-label="Echo motion curve"></div></div>
       <div class="row full"><label for="tint">Colour fade</label>
         <select id="tint"><option value="1">Word starts in echo colour</option><option value="0">Word keeps its colour</option></select></div>
+    </div>
+    </div>
+
+    <div id="countCtl" hidden>
+    <div class="group">
+      <h2>Numbers (count up)</h2>
+      <div class="row full"><label for="c_preset">Effect</label>
+        <select id="c_preset"><option value="count">Count up from zero</option><option value="none">No animation</option></select></div>
+      <div class="row"><label for="c_duration">Speed (s)</label><input id="c_duration" type="range" min="0.2" max="3" step="0.05"><output data-for="c_duration"></output></div>
+      <div class="row"><label for="c_blur">Motion blur</label><input id="c_blur" type="range" min="0" max="40" step="1"><output data-for="c_blur"></output></div>
+      <div class="row"><label for="c_rise">Rise (px)</label><input id="c_rise" type="range" min="0" max="80" step="1"><output data-for="c_rise"></output></div>
+      <div class="row"><label for="c_delay">Delay (s)</label><input id="c_delay" type="range" min="-1" max="1.5" step="0.05"><output data-for="c_delay"></output></div>
+      <div class="graphwrap"><label>Count graph</label><div class="graph" id="c_ease" tabindex="0" aria-label="Count curve"></div></div>
     </div>
     </div>
 
@@ -157,15 +183,71 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
 const SCENES = __SCENES_JSON__;
 const TOTAL = SCENES[SCENES.length - 1].end;
 // headline controls use their key as the element id; field controls are prefixed "f_"
-const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','echoBlur','ghostOpacity','lead','glow','glowStay','tint'];
+const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoEase','echoColor','echoColorLight','ghosts','ghostGap','echoBlur','ghostOpacity','lead','glow','glowStay','tint'];
 const FKEYS = ['preset','typeSpeed','stagger','delay','cursor','cursorColor','cursorColorLight'];
+const CKEYS = ['preset','duration','blur','rise','delay','ease'];
 const HDEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
 const FDEF = Object.assign({}, TextFX.TYPE_DEFAULTS);
-const fresh = () => ({ global: Object.assign({}, HDEF), fields: Object.assign({}, FDEF), overrides: {} });
+const CDEF = Object.assign({}, TextFX.COUNT_DEFAULTS);
+const fresh = () => ({ global: Object.assign({}, HDEF), fields: Object.assign({}, FDEF), counts: Object.assign({}, CDEF), overrides: {} });
 let settings = fresh();
 let tl = null, playing = false, t = 0, clockStart = 0, selected = '*', range = null;
 const $ = id => document.getElementById(id);
 const stage = $('stage'), audio = $('vo');
+
+// ---- After Effects-style value graph: drag the two bezier handles; presets below
+const EASE_PRESETS = { 'Easy Ease': [0.33, 0, 0.67, 1], 'Launch': [0.16, 1, 0.3, 1], 'Settle': [0.22, 1, 0.36, 1], 'Ease out': [0, 0, 0.2, 1], 'Linear': [0, 0, 1, 1], 'Overshoot': [0.34, 1.56, 0.64, 1] };
+const GRAPHS = {};
+function makeGraph(el) {
+  const W = 260, H = 200, P = 18, Y0 = -0.4, Y1 = 1.5;      // visible value range allows overshoot
+  const sx = x => P + x * (W - 2 * P), sy = y => H - P - (y - Y0) / (Y1 - Y0) * (H - 2 * P);
+  const ix = px => Math.min(1, Math.max(0, (px - P) / (W - 2 * P))), iy = py => Math.min(Y1, Math.max(Y0, Y0 + (H - P - py) / (H - 2 * P) * (Y1 - Y0)));
+  const NS = 'http://www.w3.org/2000/svg', mk = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const svg = mk('svg', { viewBox: `0 0 ${W} ${H}` });
+  const grid = mk('g', { class: 'grid' });
+  for (let i = 0; i <= 4; i++) { grid.appendChild(mk('line', { x1: sx(i / 4), y1: sy(Y0), x2: sx(i / 4), y2: sy(Y1) })); }
+  [0, 0.5, 1].forEach(v => grid.appendChild(mk('line', { x1: sx(0), y1: sy(v), x2: sx(1), y2: sy(v) })));
+  svg.appendChild(grid);
+  svg.appendChild(mk('line', { class: 'axis', x1: sx(0), y1: sy(0), x2: sx(1), y2: sy(0) }));
+  svg.appendChild(mk('line', { class: 'axis', x1: sx(0), y1: sy(1), x2: sx(1), y2: sy(1) }));
+  const curve = mk('path', { class: 'curve' }), a1 = mk('line', { class: 'arm' }), a2 = mk('line', { class: 'arm' });
+  const h1 = mk('circle', { class: 'h', r: 7 }), h2 = mk('circle', { class: 'h', r: 7 });
+  [curve, a1, a2, h1, h2].forEach(n => svg.appendChild(n));
+  el.appendChild(svg);
+  const val = document.createElement('div'); val.className = 'val'; el.appendChild(val);
+  const pres = document.createElement('div'); pres.className = 'presets'; el.appendChild(pres);
+  let v = [0.16, 1, 0.3, 1];
+  function draw() {
+    const [x1, y1, x2, y2] = v;
+    curve.setAttribute('d', `M${sx(0)} ${sy(0)} C${sx(x1)} ${sy(y1)} ${sx(x2)} ${sy(y2)} ${sx(1)} ${sy(1)}`);
+    a1.setAttribute('x1', sx(0)); a1.setAttribute('y1', sy(0)); a1.setAttribute('x2', sx(x1)); a1.setAttribute('y2', sy(y1));
+    a2.setAttribute('x1', sx(1)); a2.setAttribute('y1', sy(1)); a2.setAttribute('x2', sx(x2)); a2.setAttribute('y2', sy(y2));
+    h1.setAttribute('cx', sx(x1)); h1.setAttribute('cy', sy(y1)); h2.setAttribute('cx', sx(x2)); h2.setAttribute('cy', sy(y2));
+    val.textContent = 'cubic-bezier(' + v.map(n => n.toFixed(2)).join(', ') + ')';
+  }
+  const emit = () => el.dispatchEvent(new Event('input', { bubbles: true }));
+  function drag(which) {
+    return e => {
+      e.preventDefault(); const r = svg.getBoundingClientRect();
+      const move = ev => {
+        const px = (ev.clientX - r.left) / r.width * W, py = (ev.clientY - r.top) / r.height * H;
+        const x = +ix(px).toFixed(3), y = +iy(py).toFixed(3);
+        if (which === 1) { v[0] = x; v[1] = y; } else { v[2] = x; v[3] = y; }
+        draw(); emit();
+      };
+      const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+      window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+    };
+  }
+  h1.addEventListener('pointerdown', drag(1)); h2.addEventListener('pointerdown', drag(2));
+  Object.entries(EASE_PRESETS).forEach(([name, pv]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = name;
+    b.addEventListener('click', () => { v = pv.slice(); draw(); emit(); }); pres.appendChild(b);
+  });
+  draw();
+  return { get: () => v.slice(), set: nv => { v = (Array.isArray(nv) ? nv : [0.16, 1, 0.3, 1]).slice(); draw(); } };
+}
+['ease', 'echoEase', 'c_ease'].forEach(k => GRAPHS[k] = makeGraph(document.getElementById(k)));
 
 // ---- collect every text. Headlines (L1x layers, big numbers) get echo + blur; text in bars, sheets and fields types.
 const ITEMS = [];
@@ -183,7 +265,7 @@ SCENES.forEach((sc, i) => {
       if (g.id.includes('__w')) return;
       const words = Array.from(g.querySelectorAll(':scope > g[id*="__w"]'));
       if (!words.length) return;
-      const item = { key: sc.id + '/' + g.id, scene: sc, g, label: g.id.replace(/^TXT_/, '').replace(/_\d+$/, '').replace(/_/g, ' '), words, kind: head ? 'head' : 'field', idx: head ? 0 : fieldIdx++ };
+      const item = { key: sc.id + '/' + g.id, scene: sc, g, label: g.id.replace(/^TXT_/, '').replace(/_\d+$/, '').replace(/_/g, ' '), words, kind: TextFX.isCount(g.dataset.text) ? 'count' : head ? 'head' : 'field', inHead: head, idx: head ? 0 : fieldIdx++ };
       if (head) headWords.push(...words);
       ITEMS.push(item);
     });
@@ -197,9 +279,10 @@ function voTimes(sc, n) {
   const span = Math.max(0.1, (b - a) * 0.85);
   return Array.from({ length: n }, (_, i) => a + (n > 1 ? span * i / (n - 1) : 0));
 }
-const kindOf = sel => sel === '*' ? 'head' : sel === '#' ? 'field' : (ITEMS.find(i => i.key === sel) || {}).kind;
-const base = kind => kind === 'field' ? settings.fields : settings.global;
-function eff(key) { const k = kindOf(key); if (key === '*' || key === '#') return base(k); return Object.assign({}, base(k), settings.overrides[key] || {}); }
+const kindOf = sel => sel === '*' ? 'head' : sel === '#' ? 'field' : sel === '%' ? 'count' : (ITEMS.find(i => i.key === sel) || {}).kind;
+const GROUPS = { '*': 'head', '#': 'field', '%': 'count' };
+const base = kind => kind === 'field' ? settings.fields : kind === 'count' ? settings.counts : settings.global;
+function eff(key) { const k = kindOf(key); if (GROUPS[key]) return base(k); return Object.assign({}, base(k), settings.overrides[key] || {}); }
 
 // ---- build the timeline from the current settings
 function build() {
@@ -213,7 +296,10 @@ function build() {
     const vt = voTimes(sc, sc.headWords.length);
     ITEMS.filter(it => it.scene === sc).forEach(it => {
       const s = eff(it.key);
-      if (it.kind === 'field') {
+      if (it.kind === 'count') {
+        const at = it.inHead ? (sc.big != null ? sc.big : voTimes(sc, 1)[0]) : sc.start + 0.25 + it.idx * settings.fields.stagger;
+        TextFX.countUp(tl, it.g, Math.max(sc.start, at + s.delay), s);
+      } else if (it.kind === 'field') {
         TextFX.typewrite(tl, it.g, Math.max(sc.start, sc.start + 0.25 + it.idx * s.stagger + s.delay), s, sc.light);
       } else {
         const times = it.words.map(w => Math.max(sc.start, vt[sc.headWords.indexOf(w)] + s.delay));
@@ -273,16 +359,17 @@ SCENES.forEach(sc => {
 
 // ---- inspector
 const target = $('target');
-const keysFor = kind => kind === 'field' ? FKEYS : HKEYS;
-const idFor = (kind, k) => kind === 'field' ? 'f_' + k : k;
+const keysFor = kind => kind === 'field' ? FKEYS : kind === 'count' ? CKEYS : HKEYS;
+const idFor = (kind, k) => kind === 'field' ? 'f_' + k : kind === 'count' ? 'c_' + k : k;
 function fillTargets() {
   target.innerHTML = '';
   target.add(new Option('All headlines (echo + blur)', '*'));
   target.add(new Option('All fields (typewriter)', '#'));
+  target.add(new Option('All numbers (count up)', '%'));
   SCENES.forEach(sc => {
     const its = ITEMS.filter(i => i.scene === sc); if (!its.length) return;
     const og = document.createElement('optgroup'); og.label = sc.id;
-    its.forEach(it => og.appendChild(new Option((settings.overrides[it.key] ? '● ' : '') + (it.kind === 'field' ? '⌨ ' : '') + it.label, it.key)));
+    its.forEach(it => og.appendChild(new Option((settings.overrides[it.key] ? '● ' : '') + (it.kind === 'field' ? '⌨ ' : it.kind === 'count' ? '# ' : '') + it.label, it.key)));
     target.appendChild(og);
   });
   target.value = selected;
@@ -290,7 +377,9 @@ function fillTargets() {
 function readUI(kind) {
   const o = {};
   keysFor(kind).forEach(k => {
-    const el = $(idFor(kind, k)); let v = el.value;
+    const el = $(idFor(kind, k));
+    if (GRAPHS[idFor(kind, k)]) { o[k] = GRAPHS[idFor(kind, k)].get(); return; }
+    let v = el.value;
     if (el.type === 'range') v = parseFloat(v);
     if (k === 'tint' || k === 'cursor') v = v === '1';
     o[k] = v;
@@ -299,15 +388,17 @@ function readUI(kind) {
 }
 function writeUI() {
   const kind = kindOf(selected), s = eff(selected);
-  $('headCtl').hidden = kind === 'field'; $('fieldCtl').hidden = kind !== 'field';
+  $('headCtl').hidden = kind !== 'head'; $('fieldCtl').hidden = kind !== 'field'; $('countCtl').hidden = kind !== 'count';
   keysFor(kind).forEach(k => {
     const id = idFor(kind, k), el = $(id);
+    if (GRAPHS[id]) { GRAPHS[id].set(s[k]); return; }
     el.value = (k === 'tint' || k === 'cursor') ? (s[k] ? '1' : '0') : s[k];
     const out = document.querySelector(`output[data-for="${id}"]`); if (out) out.value = s[k];
   });
   const it = ITEMS.find(i => i.key === selected);
   $('scope').textContent = selected === '*' ? 'Editing every headline without its own settings.' :
     selected === '#' ? 'Editing every text inside bars, sheets and fields.' :
+    selected === '%' ? 'Editing every number and price.' :
     (settings.overrides[selected] ? 'This text has its own settings.' : 'Using its group settings. Change anything to give it its own.') + ' · ' + it.scene.id;
 }
 let pending = null;
@@ -316,9 +407,10 @@ function onEdit() {
   keysFor(kind).forEach(k => { const out = document.querySelector(`output[data-for="${idFor(kind, k)}"]`); if (out) out.value = vals[k]; });
   if (selected === '*') settings.global = Object.assign({}, settings.global, vals);
   else if (selected === '#') settings.fields = Object.assign({}, settings.fields, vals);
+  else if (selected === '%') settings.counts = Object.assign({}, settings.counts, vals);
   else {
     const b = base(kind), diff = {};
-    keysFor(kind).forEach(k => { if (vals[k] !== b[k]) diff[k] = vals[k]; });
+    keysFor(kind).forEach(k => { if (JSON.stringify(vals[k]) !== JSON.stringify(b[k])) diff[k] = vals[k]; });
     if (Object.keys(diff).length) settings.overrides[selected] = diff; else delete settings.overrides[selected];
   }
   clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(); }, 250);
@@ -326,19 +418,20 @@ function onEdit() {
 }
 HKEYS.forEach(k => $(k).addEventListener('input', onEdit));
 FKEYS.forEach(k => $('f_' + k).addEventListener('input', onEdit));
+CKEYS.forEach(k => $('c_' + k).addEventListener('input', onEdit));
 target.addEventListener('change', () => {
   selected = target.value; writeUI();
   const it = ITEMS.find(i => i.key === selected);
-  if (it) { stop(); show(Math.max(0, (it.kind === 'head' ? voTimes(it.scene, 1)[0] : it.scene.start) - 0.1)); }
+  if (it) { stop(); show(Math.max(0, (it.inHead ? voTimes(it.scene, 1)[0] : it.scene.start) - 0.1)); }
 });
 $('toAll').addEventListener('click', () => {
   const kind = kindOf(selected), s = Object.assign({}, eff(selected));
-  if (kind === 'field') settings.fields = s; else settings.global = s;
+  if (kind === 'field') settings.fields = s; else if (kind === 'count') settings.counts = s; else settings.global = s;
   ITEMS.filter(i => i.kind === kind).forEach(i => delete settings.overrides[i.key]);
-  build(); fillTargets(); writeUI(); markDirty(); status(kind === 'field' ? 'Applied to every field.' : 'Applied to every headline.');
+  build(); fillTargets(); writeUI(); markDirty(); status('Applied to the whole group.');
 });
 $('useGlobal').addEventListener('click', () => {
-  if (selected === '*' || selected === '#') return; delete settings.overrides[selected];
+  if (GROUPS[selected]) return; delete settings.overrides[selected];
   build(); fillTargets(); writeUI(); markDirty();
 });
 $('reset').addEventListener('click', () => {
@@ -373,7 +466,7 @@ fillTargets(); writeUI(); build(); show(0);
     const snap = await db.doc('textfx/current').get();
     if (snap.exists) {
       const d = snap.data(); const saved = JSON.parse(d.settings);
-      settings = { global: Object.assign({}, HDEF, saved.global), fields: Object.assign({}, FDEF, saved.fields), overrides: saved.overrides || {} };
+      settings = { global: Object.assign({}, HDEF, saved.global), fields: Object.assign({}, FDEF, saved.fields), counts: Object.assign({}, CDEF, saved.counts), overrides: saved.overrides || {} };
       fillTargets(); writeUI(); build(); show(t);
       status('Loaded the settings saved ' + new Date(d.savedAt).toLocaleString() + '.', true);
     }
