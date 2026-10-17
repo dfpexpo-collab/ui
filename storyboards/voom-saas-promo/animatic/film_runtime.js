@@ -37,10 +37,14 @@
     F18: ['50% 50%', { scale: 1.0 }, { scale: 1.06 }],
     F19: ['50% 50%', { scale: 1.05 }, { scale: 1.0 }],
   };
-  // how each scene comes in
-  const TRANS = { F02: 'whip', F03: 'wipe', F04: 'balls', F05: 'fade', F06: 'fade', F07: 'fade', F08: 'wipe', F09: 'whip',
-    F10: 'balls', F11: 'whip', F12: 'whip', F13: 'whip', F14: 'fade', SLATE: 'cut', F15: 'whip', F16: 'whip', F17: 'fade', F18: 'whip', F19: 'wipe' };
-  const BALL_FROM = { F04: [960, 560], F10: [510, 670] };
+  // how each scene comes in (varied: pixel reveal, particle dissolve, zoom-through, push + blur, element morph)
+  const TRANS = { F02: 'zoom', F03: 'push', F04: 'pixel', F05: 'morph', F06: 'dissolve', F07: 'morph', F08: 'zoom', F09: 'push',
+    F10: 'pixel', F11: 'push', F12: 'zoom', F13: 'push', F14: 'morph', SLATE: 'cut', F15: 'push', F16: 'zoom', F17: 'fade', F18: 'dissolve', F19: 'zoom' };
+  const PUSH_DIR = { F03: [0, 1], F09: [1, 0], F11: [-1, 0], F13: [0, 1], F15: [1, 0] };
+  const MORPH = { F05: ['L05_CARD_UNITS', 'L05_DASHBOARD'], F07: ['L06_DASHBOARD', 'L05_TOGGLE'], F14: ['L05_STAT_CARDS', 'L05_DEVICE'] };
+  const PIXEL_FROM = { F04: [960, 540], F10: [440, 660] };
+  // click visual effects (from the reference): halftone ripple or glowing pixels
+  const CLICK_FX = { F02: 'halftone', F05: 'halftone', F07: 'halftone', F09: 'glow', F10: 'glow', F17: 'glow' };
   // cursor: click time (absolute) per scene; default near the middle
   const CLICK = { F02: 2.95, F05: 7.9, F07: 11.35, F09: 14.75, F10: 17.4, F17: 39.25 };
 
@@ -76,28 +80,46 @@
   }
 
   // ---- scene build
-  const scEls = [];
+  const scEls = [], FX = [], MORPHS = [];
+  let uid = 0;
+  const clickPoint = svg => { const r = svg && svg.querySelector('#PING_RING_1'); if (r) return [+r.getAttribute('cx'), +r.getAttribute('cy')];
+    const c = svg && svg.querySelector('#CURSOR'); const m = c && /translate\(([\d.]+)[ ,]+([\d.]+)/.exec(c.getAttribute('transform') || ''); return m ? [+m[1], +m[2]] : null; };
   SCENES.forEach((sc, i) => {
     const el = document.getElementById('S' + i), whip = el.firstElementChild, cam = whip.firstElementChild, svg = cam.querySelector('svg');
     sc.el = el; sc.whip = whip; sc.cam = cam; sc.svg = svg; scEls.push(sc);
     const bg = svg && svg.querySelector('#BG_FILL rect'); sc.light = !!bg && /^#f1f1f1$/i.test(bg.getAttribute('fill') || '');
+    sc.brand = !!(svg && svg.querySelector('#BG_GRADIENT'));
+    sc.clickAt = clickPoint(svg); if (sc.clickAt) sc.focus = `${sc.clickAt[0] / 19.2}% ${sc.clickAt[1] / 10.8}%`;
   });
 
   SCENES.forEach((sc, i) => {
     const { el, whip, cam, svg } = sc, start = sc.start, end = sc.end, dur = end - start;
     const next = SCENES[i + 1], tin = TRANS[sc.id] || 'fade';
-    // visibility window (overlap for the incoming transition of the next scene)
-    tl.set(el, { visibility: 'visible', zIndex: i + 1 }, start - 0.3);
-    tl.set(el, { visibility: 'hidden' }, end + 0.35);
-    if (tin === 'fade') tl.fromTo(whip, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out' }, start - 0.05);
-    else tl.set(whip, { opacity: 1 }, start - 0.3);
-    if (tin === 'whip') {
-      tl.fromTo(whip, { x: 260, filter: 'blur(14px)' }, { x: 0, filter: 'blur(0px)', duration: 0.32, ease: 'power3.out' }, start);
-      const prev = SCENES[i - 1];
-      if (prev) tl.to(prev.whip, { x: -260, filter: 'blur(14px)', duration: 0.22, ease: 'power2.in' }, start - 0.22);
-      tl.set(el, { visibility: 'hidden' }, start - 0.3).set(el, { visibility: 'visible' }, start - 0.001);
+    const prev = SCENES[i - 1], T = start;
+    tl.set(el, { visibility: 'visible', zIndex: tin === 'dissolve' ? 2 * i : 2 * i + 2 }, start - 0.6);
+    tl.set(el, { visibility: 'hidden' }, end + 0.6);
+    tl.set(whip, { opacity: 0 }, start - 0.6);
+    const pw = prev && prev.whip;
+    if (!prev || tin === 'cut') tl.set(whip, { opacity: 1 }, T);
+    else if (tin === 'fade') { tl.fromTo(whip, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.inOut' }, T - 0.2); tl.to(pw, { opacity: 0, duration: 0.4 }, T - 0.2); }
+    else if (tin === 'push') {
+      const [dx, dy] = PUSH_DIR[sc.id] || [0, 1];
+      tl.to(pw, { x: -dx * 220, y: -dy * 160, opacity: 0, filter: 'blur(16px)', duration: 0.42, ease: 'power3.in' }, T - 0.34);
+      tl.fromTo(whip, { x: dx * 260, y: dy * 200, opacity: 0, filter: 'blur(16px)' }, { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, ease: 'expo.out' }, T - 0.08);
+    } else if (tin === 'zoom') {
+      tl.to(pw, { scale: 2.6, opacity: 0, filter: 'blur(18px)', transformOrigin: prev.focus || '50% 50%', duration: 0.45, ease: 'power3.in' }, T - 0.38);
+      tl.fromTo(whip, { scale: 0.78, opacity: 0, filter: 'blur(14px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.75, ease: 'expo.out' }, T - 0.06);
+    } else if (tin === 'morph') {
+      tl.to(pw, { opacity: 0, duration: 0.25, ease: 'power1.in' }, T - 0.2);
+      tl.fromTo(whip, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out' }, T + 0.12);
+      MORPHS.push({ sc, prev, T });
+    } else if (tin === 'pixel') {
+      tl.set(whip, { opacity: 1 }, T - 0.4);
+      FX.push(pixelReveal(sc, T, PIXEL_FROM[sc.id] || [960, 540]));
+    } else if (tin === 'dissolve') {
+      tl.set(whip, { opacity: 1 }, T - 0.45);
+      FX.push(dissolve(prev, T, prev.clickAt || [960, 540]));
     }
-    if (tin === 'cut') tl.set(el, { visibility: 'visible' }, start);
     if (!svg) {   // slate
       tl.from(el.querySelectorAll('.slate > *'), { opacity: 0, y: 30, duration: 0.6, ease: LAUNCH, stagger: 0.15 }, start + 0.1);
       return;
@@ -114,9 +136,8 @@
     layers.forEach(layer => {
       const id = layer.id;
       if (/^L9/.test(id)) { layer.style.display = id.startsWith('L95') ? 'none' : ''; return; }
-      if (id === 'L01_BG') {     // frame stays; the light inside moves
-        q(layer, '[id^="GLOW"]').forEach((g, k) => tl.fromTo(g, { x: k % 2 ? 60 : -60, y: k % 2 ? -30 : 30, scale: 1, transformOrigin: '50% 50%' },
-          { x: k % 2 ? -60 : 60, y: k % 2 ? 30 : -30, scale: 1.15, duration: dur + 0.4, ease: GLIDE }, start - 0.1));
+      if (id === 'L01_BG') {     // the live gradient canvas is the background; keep only line work
+        q(layer, '[id^="BG_"], [id^="GLOW"], [id^="VIGNETTE"]').forEach(g => g.style.display = 'none');
         q(layer, '[id^="GRID_FLOOR"]').forEach(g => tl.fromTo(g, { y: 0 }, { y: 18, duration: dur, ease: 'none' }, start));
         return;
       }
@@ -143,6 +164,7 @@
         q(layer, '[id^="TAP_PING"]').forEach(p => tl.fromTo(p, { scale: 0.2, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.4, ease: LAUNCH }, click));
         if (cur && cells.length) PROX.push({ sc, cur, cells, from: t0 });
         sc.click = click;
+        if (CLICK_FX[sc.id] && sc.clickAt) FX.push((CLICK_FX[sc.id] === 'glow' ? clickGlow : halftone)(sc, click, sc.clickAt));
         return;
       }
       if (/BIG_10X|COUNTER/.test(id)) { layerAt[id] = start; return; }   // counted by TextFX
@@ -196,9 +218,12 @@
       q(layer, '[id^="DATA_DOT"]').forEach((p, k) => tl.fromTo(p, { x: -40 }, { x: 40, duration: 0.7, ease: GLIDE, repeat: Math.max(1, Math.floor(dur / 0.7)), yoyo: true }, at + k * 0.12));
       q(layer, '[id^="SELECTED_UNIT"]').forEach(p => tl.from(p, { scale: 1.6, opacity: 0, transformOrigin: '50% 50%', duration: 0.5, ease: LAUNCH }, at + 0.5));
       // pixel build for small squares
-      q(layer, '[id^="UNIT_GRID"]').forEach(grid => {
-        const inners = cells.filter(cl => grid.contains(cl.w)).map(cl => cl.inner);
-        tl.from(inners, { opacity: 0, scale: 0.2, transformOrigin: '50% 50%', duration: 0.3, ease: 'steps(3)', stagger: { amount: Math.min(0.9, dur * 0.4), from: 'random' } }, at + 0.15);
+      q(layer, '[id^="UNIT_GRID"]').forEach(grid => {     // squares build in a wave from the corner, each with a glow flash
+        const cl = cells.filter(c => grid.contains(c.w)); if (!cl.length) return;
+        const x0 = Math.min(...cl.map(c => c.cx)), y0 = Math.min(...cl.map(c => c.cy));
+        const span = Math.max(...cl.map(c => c.cx - x0 + c.cy - y0)) || 1;
+        cl.forEach(c => tl.fromTo(c.inner, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%', filter: 'brightness(2.6) drop-shadow(0 0 8px #00b3ff)' },
+          { opacity: 1, scale: 1, filter: 'brightness(1) drop-shadow(0 0 0px #00b3ff)', duration: 0.5, ease: 'back.out(2.2)' }, at + 0.2 + 0.75 * (c.cx - x0 + c.cy - y0) / span));
       });
     });
 
@@ -229,6 +254,10 @@
       });
     });
     const vt = voTimes(sc, headWords.length);
+    // wrap the scene so transitions can mask it; fx layer sits on top, unmasked
+    sc.wrap = document.createElementNS(NS, 'g');
+    Array.from(svg.childNodes).filter(n => !(n.tagName === 'defs' || n.tagName === 'clipPath')).forEach(n => sc.wrap.appendChild(n));
+    svg.appendChild(sc.wrap); sc.fx = document.createElementNS(NS, 'g'); svg.appendChild(sc.fx);
     items.forEach(it => {
       const s = eff(it.key, it.kind), la = (layerAt[it.layer] ?? start) + 0.3;
       if (it.kind === 'count') {
@@ -239,48 +268,205 @@
       } else {
         const times = it.words.map(w => Math.max(start, vt[headWords.indexOf(w)] + s.delay));
         TextFX.apply(tl, it.words, times, s, sc.light);
-        if (!/F08|F18|F19/.test(sc.id) && next && TRANS[next.id] !== 'balls' && TRANS[next.id] !== 'wipe')
-          tl.to(it.words, { opacity: 0, y: -16, duration: 0.18, ease: 'power2.in', stagger: 0.02 }, end - 0.24);
       }
     });
   });
 
-  // ---- gradient wipe (dark ↔ light and into the logo)
-  const wipe = document.getElementById('wipe');
-  SCENES.forEach(sc => {
-    if (TRANS[sc.id] !== 'wipe') return;
-    tl.fromTo(wipe, { xPercent: -100, visibility: 'visible' }, { xPercent: 100, duration: 0.9, ease: 'power2.inOut' }, sc.start - 0.45);
-    tl.set(wipe, { visibility: 'hidden' }, sc.start + 0.46);
+  // ---- per-frame effects (transitions + click FX): each is { a, b, init, render(t), reset }, built lazily, driven by runFx(t)
+  function rng(seed) { return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+  const c01 = v => Math.max(0, Math.min(1, v));
+
+
+  // new scene grows out of a pixelated disc of glass squares (reference 0:15)
+  function pixelReveal(sc, T, [ox, oy]) {
+    const CELL = 64, cells = [], id = 'pxm' + (uid++);
+    return { a: T - 0.4, b: T + 0.45,
+      init() {
+        const r = rng(7), m = mk('mask', { id, maskUnits: 'userSpaceOnUse', x: -400, y: -300, width: 2720, height: 1680 }, sc.svg);
+        mk('rect', { x: -400, y: -300, width: 2720, height: 1680, fill: '#000' }, m);
+        this.prev = SCENES[SCENES.indexOf(sc) - 1];
+        const m2 = mk('mask', { id: id + 'o', maskUnits: 'userSpaceOnUse', x: -400, y: -300, width: 2720, height: 1680 }, this.prev.svg);
+        mk('rect', { x: -400, y: -300, width: 2720, height: 1680, fill: '#fff' }, m2);
+        this.ring = mk('g', {}, sc.fx);
+        for (let x = -384; x < 2304; x += CELL) for (let y = -320; y < 1400; y += CELL) {
+          const cx = x + CELL / 2, cy = y + CELL / 2, n = r();
+          cells.push({ d: Math.hypot(cx - ox, cy - oy), n, lit: r() > 0.72,
+            m: mk('rect', { x, y, width: CELL + 0.5, height: CELL + 0.5, fill: '#fff', visibility: 'hidden' }, m),
+            o: mk('rect', { x, y, width: CELL + 0.5, height: CELL + 0.5, fill: '#000', visibility: 'hidden' }, m2),
+            g: mk('rect', { x: x + 2, y: y + 2, width: CELL - 4, height: CELL - 4, rx: 6, fill: LBLUE, stroke: '#fff', 'stroke-width': 1.2, opacity: 0 }, this.ring) });
+        }
+      },
+      render(t) {
+        const p = c01((t - this.a) / 0.85), R = Math.pow(p, 1.7) * 2700;
+        sc.wrap.setAttribute('mask', `url(#${id})`); this.prev.wrap.setAttribute('mask', `url(#${id}o)`); this.ring.style.display = '';
+        cells.forEach(c => {
+          const e = R - c.d - c.n * 150;
+          c.m.setAttribute('visibility', e > 0 ? 'visible' : 'hidden'); c.o.setAttribute('visibility', e > 0 ? 'visible' : 'hidden');
+          const a = c01(1 - Math.abs(e - 40) / 120);
+          c.g.setAttribute('opacity', (a * (c.lit ? 0.85 : 0.45)).toFixed(3));
+          c.g.setAttribute('fill', c.lit ? '#cfeeff' : LBLUE);
+        });
+      },
+      reset() { sc.wrap.removeAttribute('mask'); this.prev.wrap.removeAttribute('mask'); this.ring.style.display = 'none'; } };
+  }
+
+  // old scene breaks into particles that blow away from the click (reference 0:12.5)
+  function dissolve(sc, T, [ox, oy]) {
+    const CELL = 20, holes = [], parts = [], id = 'dsm' + (uid++), t0 = T - 0.45, LEN = 0.85, SPAN = 2600, JIT = 220;
+    const frontAt = d => t0 + LEN * Math.pow(Math.max(0, d) / SPAN, 1 / 1.3);
+    return { a: t0, b: T + 0.5,
+      init() {
+        const r = rng(11), m = mk('mask', { id, maskUnits: 'userSpaceOnUse', x: -400, y: -300, width: 2720, height: 1680 }, sc.svg);
+        mk('rect', { x: -400, y: -300, width: 2720, height: 1680, fill: '#fff' }, m);
+        for (let x = -100; x < 2020; x += CELL) for (let y = -60; y < 1140; y += CELL) {
+          const n = r(); holes.push({ d: Math.hypot(x - ox, y - oy) + n * JIT, c: mk('circle', { cx: x, cy: y, r: 0, fill: '#000' }, m) });
+        }
+        const pal = sc.light ? [BLUE, LBLUE, '#6f8dff', DEEP, '#b9d9ff'] : [LBLUE, '#4d7cff', OFF, BLUE, '#9fe1ff'];
+        this.g = mk('g', {}, sc.fx);
+        for (let k = 0; k < 900; k++) {
+          const hx = r() * 1920, hy = r() * 1080, dx = hx - ox, dy = hy - oy, dl = Math.hypot(dx, dy) || 1, sp = 220 + r() * 520;
+          parts.push({ hx, hy, tb: frontAt(dl + r() * JIT), vx: dx / dl * sp + (r() - 0.5) * 160, vy: dy / dl * sp * 0.6 - 120 - r() * 260,
+            life: 0.35 + r() * 0.45, s: 2 + r() * 5.5, c: mk('circle', { r: 0, fill: pal[k % pal.length] }, this.g) });
+        }
+      },
+      render(t) {
+        const front = Math.pow(c01((t - t0) / LEN), 1.3) * SPAN;
+        sc.wrap.setAttribute('mask', `url(#${id})`); this.g.style.display = '';
+        holes.forEach(h => h.c.setAttribute('r', (c01((front - h.d) / 140) * CELL * 0.8).toFixed(2)));
+        parts.forEach(p => {
+          const a = t - p.tb, k = a / p.life;
+          if (a < 0 || k >= 1) { p.c.setAttribute('r', 0); return; }
+          p.c.setAttribute('cx', (p.hx + p.vx * a).toFixed(1)); p.c.setAttribute('cy', (p.hy + p.vy * a + 260 * a * a).toFixed(1));
+          p.c.setAttribute('r', (p.s * (1 - k * k)).toFixed(2)); p.c.setAttribute('opacity', (1 - k).toFixed(3));
+        });
+      },
+      reset() { sc.wrap.removeAttribute('mask'); this.g.style.display = 'none'; } };
+  }
+
+  // click: halftone dots ripple out from the cursor (reference 0:08)
+  function halftone(sc, tc, [ox, oy]) {
+    const dots = [], RAD = 560, STEP = 24;
+    return { a: tc, b: tc + 1.0,
+      init() {
+        this.g = mk('g', { fill: sc.light ? BLUE : LBLUE }, sc.fx);
+        for (let x = -RAD; x <= RAD; x += STEP) for (let y = -RAD; y <= RAD; y += STEP) {
+          const d = Math.hypot(x, y); if (d > RAD) continue;
+          dots.push({ d, c: mk('circle', { cx: ox + x, cy: oy + y, r: 0 }, this.g) });
+        }
+      },
+      render(t) {
+        const w = c01((t - tc) / 1.0), W = Math.pow(w, 0.7) * (RAD + 80);
+        this.g.style.display = '';
+        dots.forEach(o => o.c.setAttribute('r', (6.5 * c01(1 - Math.abs(o.d - W) / 120) * (1 - w) * (1 - 0.5 * o.d / RAD)).toFixed(2)));
+      },
+      reset() { this.g.style.display = 'none'; } };
+  }
+
+  // click: a cluster of glowing pixels flickers next to the cursor (reference 0:10.5)
+  function clickGlow(sc, tc, [ox, oy]) {
+    const px = [];
+    return { a: tc - 0.02, b: tc + 0.85,
+      init() {
+        if (!sc.svg.querySelector('#pxglow')) {
+          const f = mk('filter', { id: 'pxglow', x: '-100%', y: '-100%', width: '300%', height: '300%' }, sc.svg);
+          mk('feGaussianBlur', { stdDeviation: 7, result: 'b' }, f);
+          const mg = mk('feMerge', {}, f); mk('feMergeNode', { in: 'b' }, mg); mk('feMergeNode', { in: 'SourceGraphic' }, mg);
+        }
+        const r = rng(5); this.g = mk('g', { filter: 'url(#pxglow)' }, sc.fx);
+        const S = 24, used = new Set();
+        while (px.length < 18) {
+          const gx = Math.floor(r() * 7) - 6, gy = Math.floor(r() * 5) - 3, key = gx + ',' + gy;
+          if (used.has(key)) continue; used.add(key);
+          px.push({ dl: r() * 0.4, life: 0.22 + r() * 0.2, c: mk('rect', { x: ox + gx * (S + 3) - 10, y: oy + gy * (S + 3), width: S, height: S, rx: 3, fill: r() > 0.6 ? '#dff4ff' : LBLUE, opacity: 0 }, this.g) });
+        }
+      },
+      render(t) {
+        this.g.style.display = '';
+        px.forEach(p => { const k = (t - this.a - p.dl) / p.life; p.c.setAttribute('opacity', k < 0 || k > 1 ? 0 : Math.sin(k * Math.PI).toFixed(3)); });
+      },
+      reset() { this.g.style.display = 'none'; } };
+  }
+
+  // element morph: a glass card flies from an element of the old scene to the matching one of the new
+  const fxtop = document.getElementById('fxtop');
+  MORPHS.forEach(({ sc, prev, T }) => {
+    const [A, B] = MORPH[sc.id];
+    FX.push({ a: T - 0.32, b: T + 0.4,
+      init() {
+        const ea = prev.svg.querySelector('#' + A), eb = sc.svg.querySelector('#' + B);
+        this.ba = ea.getBBox(); this.bb = eb.getBBox();
+        const lt = sc.light;
+        this.r = mk('rect', { fill: lt ? 'rgba(255,255,255,0.92)' : 'rgba(10,30,200,0.55)', stroke: LBLUE, 'stroke-width': 2, style: `filter:drop-shadow(0 20px 40px ${lt ? 'rgba(0,18,214,.18)' : 'rgba(0,179,255,.35)'})` }, fxtop);
+      },
+      render(t) {
+        const p = c01((t - this.a) / 0.62), e = gsap.parseEase('power3.inOut')(p), A_ = this.ba, B_ = this.bb, L = (u, v) => u + (v - u) * e;
+        Object.entries({ x: L(A_.x, B_.x), y: L(A_.y, B_.y), width: L(A_.width, B_.width), height: L(A_.height, B_.height), rx: 26 }).forEach(([k, v]) => this.r.setAttribute(k, v.toFixed(1)));
+        this.r.setAttribute('opacity', Math.min(c01(p / 0.15), c01((1 - p) / 0.35)).toFixed(3)); this.r.style.display = '';
+      },
+      reset() { this.r.style.display = 'none'; } });
   });
 
-  // ---- dot-grid "ball" transitions
-  const balls = document.getElementById('balls'), BALLS = [];
-  const COLS = 48, ROWS = 27, CELL = 40, R = 30;
-  for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-    const e = document.createElementNS(NS, 'circle'); const x = c * CELL + CELL / 2, y = r * CELL + CELL / 2;
-    e.setAttribute('cx', x); e.setAttribute('cy', y); e.setAttribute('r', 0);
-    e.setAttribute('fill', [BLUE, LBLUE, BLUE, DEEP][(r * 7 + c * 3) % 4]);
-    balls.appendChild(e); BALLS.push({ e, x, y });
-  }
-  function ballFrame(ox, oy, p, closing) {
-    const maxd = Math.hypot(1920, 1080);
-    BALLS.forEach(b => {
-      const d = Math.hypot(b.x - ox, b.y - oy) / maxd;
-      let k = Math.min(1, Math.max(0, p * 1.7 - d * 0.7));
-      k = k * k * (3 - 2 * k);
-      b.e.setAttribute('r', (closing ? 1 - k : k) * R);
+  function runFx(t) {
+    FX.forEach(f => {
+      if (t >= f.a && t <= f.b) { if (!f.ready) { f.init(); f.ready = true; } f.render(t); f.on = true; }
+      else if (f.on) { f.reset(); f.on = false; }
     });
   }
-  // computed straight from t after each seek (no tween state to go stale)
-  const BALL_T = SCENES.filter(sc => TRANS[sc.id] === 'balls').map(sc => ({ T: sc.start, o: BALL_FROM[sc.id] || [960, 540] }));
-  let ballsOn = true;
-  function ballsAt(t) {
-    const b = BALL_T.find(x => t >= x.T - 0.42 && t <= x.T + 0.52);
-    if (!b) { if (ballsOn) { BALLS.forEach(x => x.e.setAttribute('r', 0)); ballsOn = false; } return; }
-    ballsOn = true;
-    if (t < b.T) ballFrame(b.o[0], b.o[1], gsap.parseEase('power1.in')((t - b.T + 0.42) / 0.42), false);
-    else ballFrame(b.o[0], b.o[1], gsap.parseEase('power1.out')(Math.min(1, (t - b.T) / 0.5)), true);
-  }
+
+  // ---- background: blurred brand gradient with an evolving turbulent displacement (AE: Gaussian Blur + Turbulent Displace, evolution keyed)
+  const BG = (() => {
+    const cv = document.getElementById('bg'), gl = cv.getContext('webgl', { preserveDrawingBuffer: true });
+    const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+    const PAL = { dark: ['#000024', '#000a6b', '#0012d6', '#0a8fff'], light: ['#f1f1f1', '#e4ecff', '#c2dbff', '#8fd6ff'], brand: ['#0012d6', '#0a28f5', '#000a8f', '#00b3ff'] };
+    Object.keys(PAL).forEach(k => PAL[k] = PAL[k].map(hex));
+    const kind = sc => sc.light ? 'light' : sc.brand ? 'brand' : 'dark';
+    const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+    const fs = `precision highp float;uniform vec2 R;uniform float T;uniform vec3 c0,c1,c2,c3;
+vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
+vec4 perm(vec4 x){return mod289(((x*34.)+1.)*x);}vec4 tis(vec4 r){return 1.79284291400159-.85373472095314*r;}
+float sn(vec3 v){const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
+i=mod289(i);vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+float n_=.142857142857;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);
+vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+vec4 nm=tis(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=nm.x;p1*=nm.y;p2*=nm.z;p3*=nm.w;
+vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
+return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}
+float fbm(vec3 p){float a=.55,s=0.;for(int i=0;i<3;i++){s+=a*sn(p);p*=1.9;a*=.42;}return s;}
+void main(){vec2 uv=gl_FragCoord.xy/R;vec2 p=(uv-.5)*vec2(R.x/R.y,1.);float t=T*.11;
+vec2 q=vec2(fbm(vec3(p*.55,t)),fbm(vec3(p*.55+vec2(5.2,1.3),t+3.1)));
+vec2 w=vec2(fbm(vec3(p*.5+1.3*q+vec2(1.7,9.2),t*1.3)),fbm(vec3(p*.5+1.3*q+vec2(8.3,2.8),t*1.3)));
+float f=fbm(vec3(p*.45+1.1*w,t*.7));
+vec3 col=mix(c0,c1,smoothstep(-.4,.5,f));
+col=mix(col,c2,smoothstep(.1,.85,length(q)*1.15)*.8);
+col=mix(col,c3,smoothstep(.35,.95,w.x*.8+f*.7)*.55);
+col*=1.-.22*dot(uv-.5,uv-.5);
+col+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-.5)/255.;
+gl_FragColor=vec4(col,1.);}`;
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = n => gl.getUniformLocation(pr, n), uc = ['c0', 'c1', 'c2', 'c3'].map(U);
+    gl.uniform2f(U('R'), cv.width, cv.height);
+    return { draw(t) {
+      let i = SCENES.findIndex(s => t < s.end); if (i < 0) i = SCENES.length - 1;
+      let pal = PAL[kind(SCENES[i])];
+      const nx = SCENES[i + 1], BL = 0.4;    // blend toward the next scene's palette across the cut
+      if (nx && t > SCENES[i].end - BL) {
+        const k = gsap.parseEase('sine.inOut')((t - SCENES[i].end + BL) / (2 * BL)), b = PAL[kind(nx)];
+        pal = pal.map((c, j) => c.map((v, m) => v + (b[j][m] - v) * k));
+      } else if (i > 0 && t < SCENES[i].start + BL) {
+        const k = gsap.parseEase('sine.inOut')(0.5 + (t - SCENES[i].start) / (2 * BL)), a = PAL[kind(SCENES[i - 1])];
+        pal = a.map((c, j) => c.map((v, m) => v + (pal[j][m] - v) * k));
+      }
+      uc.forEach((u, j) => gl.uniform3fv(u, pal[j]));
+      gl.uniform1f(U('T'), t); gl.drawArrays(gl.TRIANGLES, 0, 3);
+    } };
+  })();
 
   tl.set({}, {}, TOTAL);
 
@@ -302,5 +488,5 @@
   }
 
   window.TOTAL = TOTAL;
-  window.seek = t => { real.seek(t + PAD, false); proximity(t); ballsAt(t); };
+  window.seek = t => { real.seek(t + PAD, false); proximity(t); runFx(t); BG.draw(t); };
 })();

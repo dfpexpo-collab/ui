@@ -40,15 +40,14 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000024
 .scene{position:absolute;inset:0;visibility:hidden;overflow:hidden;perspective:1600px}
 .whip,.cam{position:absolute;inset:0;transform-style:preserve-3d}
 .scene svg{width:1920px;height:1080px;display:block;overflow:visible}
-#wipe{position:absolute;top:0;left:-50%;width:200%;height:1080px;z-index:98;visibility:hidden;pointer-events:none;
-  background:linear-gradient(90deg,rgba(0,18,214,0) 0%,#0012d6 22%,#00b3ff 40%,#f1f1f1 50%,#00b3ff 60%,#0012d6 78%,rgba(0,18,214,0) 100%)}
-#balls{position:absolute;inset:0;z-index:99;pointer-events:none}
+#bg{position:absolute;inset:0;z-index:0}
+#fxtop{position:absolute;inset:0;z-index:500;pointer-events:none}
 .slate{width:1920px;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
-  background:radial-gradient(ellipse at 50% 60%,#0012d6 0%,#000024 70%);color:#f1f1f1;font-family:'IBM Plex Sans Arabic'}
+  color:#f1f1f1;font-family:'IBM Plex Sans Arabic'}
 .slate .tag{font-family:Gabarito;font-weight:600;letter-spacing:.3em;color:#00b3ff;font-size:28px;border:2px dashed #00b3ff;padding:14px 34px;border-radius:999px}
 .slate .ar{font-size:96px;font-weight:600;direction:rtl}
 .slate .list{font-size:30px;opacity:.7;direction:rtl;max-width:1500px;text-align:center;line-height:1.6}
-</style></head><body>${scenesHtml}<div id="wipe"></div><svg id="balls" viewBox="0 0 1920 1080"></svg>
+</style></head><body>${scenesHtml}<canvas id="bg" width="1920" height="1080"></canvas><svg id="fxtop" viewBox="0 0 1920 1080"></svg>
 <script>${gsapSrc}</script><script>${textfx}</script>
 <script>window.FILM = ${JSON.stringify({ scenes: CUES.scenes, settings: SETTINGS })};</script>
 <script>${runtime}</script></body></html>`;
@@ -74,7 +73,7 @@ async function renderRange(browser, htmlPath, frames) {
   const n = Math.round(total * FPS);
   const only = process.env.ONLY ? process.env.ONLY.split(',').map(Number) : null;   // ONLY=frame,frame for spot checks
   const all = only || Array.from({ length: n }, (_, f) => f);
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const chunks = Array.from({ length: WORKERS }, (_, w) => all.filter((_, i) => i % WORKERS === w));
   await Promise.all(chunks.map(c => renderRange(browser, htmlPath, c)));
   await browser.close();
@@ -83,7 +82,7 @@ async function renderRange(browser, htmlPath, frames) {
   const video = path.join(OUT, 'video_only.mp4');
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-framerate', String(FPS), '-i', path.join(OUT, 'frames', '%05d.jpg'),
     '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', video]);
-  const mp4 = path.join(OUT, 'voom_saas-promo_film_16x9_ar_v02.mp4');
+  const mp4 = path.join(OUT, 'voom_saas-promo_film_16x9_ar_v03.mp4');
   if (VO) {
     const segs = CUES.audio.segments, fd = CUES.audio.fade;
     const parts = segs.map((s, i) => `[1:a]atrim=${s.from}:${s.to},asetpts=PTS-STARTPTS,afade=t=in:d=${fd},afade=t=out:st=${(s.to - s.from - fd).toFixed(3)}:d=${fd},adelay=${Math.round(s.at * 1000)}:all=1[a${i}]`);
