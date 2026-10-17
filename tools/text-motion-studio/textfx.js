@@ -17,9 +17,9 @@
     echoColor: '#00b3ff',  // echo/glow colour on dark scenes
     echoColorLight: '#0012d6', // echo/glow colour on light scenes
     ghosts: 3,             // number of echo copies
-    ghostSpacing: 0.5,     // gap between copies, as a fraction of the travel distance
+    ghostGap: 2,           // frames between echo copies
     ghostOpacity: 0.55,
-    lead: 2,               // frames the echo appears before the word
+    lead: 3,               // frames the first echo copy leads the word
     glow: 0.35,            // glow opacity at its peak (0 = off)
     glowStay: 0.12,        // glow opacity it settles to
     tint: true,            // word starts in the echo colour and turns to its own colour
@@ -79,22 +79,21 @@
           paint(glow, echo);
           w.parentNode.insertBefore(glow, w);
           tl.fromTo(glow, { opacity: 0, x: dx, y: dy, filter: 'blur(18px)' },
-            { opacity: s.glow, x: 0, y: 0, duration: s.duration, ease: s.ease }, t);
+            { opacity: s.glow, x: 0, y: 0, duration: s.duration, ease: s.ease }, t - s.lead / FPS);
           tl.to(glow, { opacity: s.glowStay, duration: s.duration * 1.2, ease: 'sine.out' }, t + s.duration);
         }
-        // echo trail: copies further back along the path, arriving a little later, then fading
-        const lead = s.lead / FPS;
+        // echo copies lead the word: each one starts a few frames earlier, lands first, then fades as the word arrives
+        const lead = s.lead / FPS, gap = s.ghostGap / FPS;
         for (let k = 1; k <= s.ghosts; k++) {
           const gh = w.cloneNode(true);
           gh.removeAttribute('id'); gh.setAttribute('data-tfx', 'ghost');
           paint(gh, echo);
           w.parentNode.insertBefore(gh, w);
-          const f = 1 + k * s.ghostSpacing;
           const op = s.ghostOpacity * (1 - (k - 1) / (s.ghosts + 1));
-          const t0 = t - lead + (k - 1) * 0.02;
-          tl.fromTo(gh, { opacity: 0, x: dx * f, y: dy * f, filter: `blur(${blur * 1.2}px)` },
-            { opacity: op, x: dx * f * 0.5, y: dy * f * 0.5, filter: `blur(${blur * 0.8}px)`, duration: s.duration * 0.45, ease: 'power2.out' }, t0);
-          tl.to(gh, { opacity: 0, x: 0, y: 0, filter: 'blur(0px)', duration: s.duration * 0.6, ease: 'power2.in' }, t0 + s.duration * 0.45);
+          const t0 = t - lead - (s.ghosts - k) * gap;
+          tl.fromTo(gh, { opacity: 0, x: dx, y: dy, filter: `blur(${blur}px)` },
+            { opacity: op, x: 0, y: 0, filter: `blur(${blur * 0.35}px)`, duration: s.duration * 0.8, ease: s.ease }, t0);
+          tl.to(gh, { opacity: 0, duration: s.duration * 0.5, ease: 'power1.out' }, t + s.duration * 0.55);
         }
       }
 

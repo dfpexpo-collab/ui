@@ -1606,9 +1606,9 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
       <div class="row full"><label for="echoColor">Colour (dark)</label><input id="echoColor" type="color"></div>
       <div class="row full"><label for="echoColorLight">Colour (light)</label><input id="echoColorLight" type="color"></div>
       <div class="row"><label for="ghosts">Copies</label><input id="ghosts" type="range" min="0" max="6" step="1"><output data-for="ghosts"></output></div>
-      <div class="row"><label for="ghostSpacing">Spacing</label><input id="ghostSpacing" type="range" min="0.1" max="1.5" step="0.05"><output data-for="ghostSpacing"></output></div>
+      <div class="row"><label for="ghostGap">Gap (frames)</label><input id="ghostGap" type="range" min="0" max="6" step="1"><output data-for="ghostGap"></output></div>
       <div class="row"><label for="ghostOpacity">Opacity</label><input id="ghostOpacity" type="range" min="0" max="1" step="0.05"><output data-for="ghostOpacity"></output></div>
-      <div class="row"><label for="lead">Lead (frames)</label><input id="lead" type="range" min="0" max="8" step="1"><output data-for="lead"></output></div>
+      <div class="row"><label for="lead">Lead (frames)</label><input id="lead" type="range" min="0" max="12" step="1"><output data-for="lead"></output></div>
       <div class="row"><label for="glow">Glow</label><input id="glow" type="range" min="0" max="1" step="0.05"><output data-for="glow"></output></div>
       <div class="row"><label for="glowStay">Glow stays</label><input id="glowStay" type="range" min="0" max="0.6" step="0.02"><output data-for="glowStay"></output></div>
       <div class="row full"><label for="tint">Colour fade</label>
@@ -1652,9 +1652,9 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
     echoColor: '#00b3ff',  // echo/glow colour on dark scenes
     echoColorLight: '#0012d6', // echo/glow colour on light scenes
     ghosts: 3,             // number of echo copies
-    ghostSpacing: 0.5,     // gap between copies, as a fraction of the travel distance
+    ghostGap: 2,           // frames between echo copies
     ghostOpacity: 0.55,
-    lead: 2,               // frames the echo appears before the word
+    lead: 3,               // frames the first echo copy leads the word
     glow: 0.35,            // glow opacity at its peak (0 = off)
     glowStay: 0.12,        // glow opacity it settles to
     tint: true,            // word starts in the echo colour and turns to its own colour
@@ -1714,22 +1714,21 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
           paint(glow, echo);
           w.parentNode.insertBefore(glow, w);
           tl.fromTo(glow, { opacity: 0, x: dx, y: dy, filter: 'blur(18px)' },
-            { opacity: s.glow, x: 0, y: 0, duration: s.duration, ease: s.ease }, t);
+            { opacity: s.glow, x: 0, y: 0, duration: s.duration, ease: s.ease }, t - s.lead / FPS);
           tl.to(glow, { opacity: s.glowStay, duration: s.duration * 1.2, ease: 'sine.out' }, t + s.duration);
         }
-        // echo trail: copies further back along the path, arriving a little later, then fading
-        const lead = s.lead / FPS;
+        // echo copies lead the word: each one starts a few frames earlier, lands first, then fades as the word arrives
+        const lead = s.lead / FPS, gap = s.ghostGap / FPS;
         for (let k = 1; k <= s.ghosts; k++) {
           const gh = w.cloneNode(true);
           gh.removeAttribute('id'); gh.setAttribute('data-tfx', 'ghost');
           paint(gh, echo);
           w.parentNode.insertBefore(gh, w);
-          const f = 1 + k * s.ghostSpacing;
           const op = s.ghostOpacity * (1 - (k - 1) / (s.ghosts + 1));
-          const t0 = t - lead + (k - 1) * 0.02;
-          tl.fromTo(gh, { opacity: 0, x: dx * f, y: dy * f, filter: `blur(${blur * 1.2}px)` },
-            { opacity: op, x: dx * f * 0.5, y: dy * f * 0.5, filter: `blur(${blur * 0.8}px)`, duration: s.duration * 0.45, ease: 'power2.out' }, t0);
-          tl.to(gh, { opacity: 0, x: 0, y: 0, filter: 'blur(0px)', duration: s.duration * 0.6, ease: 'power2.in' }, t0 + s.duration * 0.45);
+          const t0 = t - lead - (s.ghosts - k) * gap;
+          tl.fromTo(gh, { opacity: 0, x: dx, y: dy, filter: `blur(${blur}px)` },
+            { opacity: op, x: 0, y: 0, filter: `blur(${blur * 0.35}px)`, duration: s.duration * 0.8, ease: s.ease }, t0);
+          tl.to(gh, { opacity: 0, duration: s.duration * 0.5, ease: 'power1.out' }, t + s.duration * 0.55);
         }
       }
 
@@ -1751,7 +1750,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
 <script>
 const SCENES = [{"id":"F01","start":0,"end":1.95,"vo":[0.35,1.85]},{"id":"F02","start":1.95,"end":3.3,"vo":[1.95,2.85]},{"id":"F03","start":3.3,"end":4.45,"vo":[3.38,4.35]},{"id":"F04","start":4.45,"end":6.75,"vo":[4.45,6.5]},{"id":"F05","start":6.75,"end":8.55,"vo":[6.84,8.3]},{"id":"F06","start":8.55,"end":10.2,"vo":[8.7,9.95]},{"id":"F07","start":10.2,"end":12.25,"vo":[10.28,12.1]},{"id":"F08","start":12.25,"end":13.3},{"id":"F09","start":13.3,"end":15.15,"vo":[13.3,15]},{"id":"F10","start":15.15,"end":18.85,"vo":[15.17,18.5]},{"id":"F11","start":18.85,"end":21.6,"vo":[18.95,21.4]},{"id":"F12","start":21.6,"end":24.65,"vo":[21.73,24.3]},{"id":"F13","start":24.65,"end":29.7,"vo":[24.88,29.4]},{"id":"F14","start":29.7,"end":30.9},{"id":"SLATE","start":30.9,"end":32.9},{"id":"F15","start":32.9,"end":35.4,"vo":[33.12,35.1]},{"id":"F16","start":35.4,"end":38.35,"vo":[36.4,38.1]},{"id":"F17","start":38.35,"end":40.15,"vo":[38.51,39.95]},{"id":"F18","start":40.15,"end":43.4,"words":[41.28,41.62,42.38,42.72]},{"id":"F19","start":43.4,"end":46.4}];
 const TOTAL = SCENES[SCENES.length - 1].end;
-const KEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostSpacing','ghostOpacity','lead','glow','glowStay','tint'];
+const KEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','ghostOpacity','lead','glow','glowStay','tint'];
 const DEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
 let settings = { global: Object.assign({}, DEF), overrides: {} };
 let tl = null, playing = false, t = 0, clockStart = 0, selected = '*', range = null;
