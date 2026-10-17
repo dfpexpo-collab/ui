@@ -416,17 +416,61 @@ def f05():
 
 @frame("F06", "متصلة بالـ CRM بتاعك")
 def f06():
-    dash = dashboard(980, 380, 780, 480)
-    crm = glass(160, 460, 420, 320, 30, dark=False) + icon_tile(400, 490, 140, "users", dark=False)
-    crm += text(200, 560, "CRM", 64, 700, DEEP, "start", LAT, False)
-    for j, (lab, col) in enumerate([("Available", ST_AVAIL), ("Reserved", ST_RES), ("Sold", ST_SOLD)]):
-        yy = 670 + j * 40
-        crm += f'<circle cx="{212}" cy="{yy-8}" r="9" fill="{col}"/>' + text(236, yy, lab, 24, 500, DEEP, "start", LAT, False)
-    link = (f'<path id="LINK_PATH" d="M580 620 C 720 620, 840 620, 980 620" fill="none" stroke="{BLUE}" stroke-width="3" stroke-dasharray="10 10"/>'
-            + "".join(f'<circle id="DATA_DOT_{i+1}" cx="{x}" cy="620" r="7" fill="{LBLUE}"/>' for i, x in enumerate((650, 780, 910)))
-            + glass(730, 565, 110, 110, 55, dark=False) + icon("sync", 755, 590, 60, BLUE, 2.4))
-    return [bg_light(), g("L05_CRM_CARD", crm), g("L06_DASHBOARD", dash), g("L07_SYNC_LINK", link),
-            g("L10_HEADLINE", text(960, 250, "متصلة بالـ " + hl("CRM", BLUE) + " بتاعك", 104, 600, DEEP)),
+    # Spreadsheet CRM (Egyptian sample leads) syncing into the Voom dashboard.
+    X, Y, Wd = 90, 340, 820
+    XL = "#1d6f42"   # spreadsheet-app green: product depiction only
+    sheet = glass(X, Y, Wd, 600, 18, dark=False)
+    bar = rrect(X + 1, Y + 1, Wd - 2, 56, 17, fill="#f6f8fa")
+    bar += rrect(X + Wd - 64, Y + 12, 34, 34, 7, fill=XL)
+    bar += f'<path d="M{X+Wd-56} {Y+20}l18 18M{X+Wd-38} {Y+20}l-18 18" stroke="#fff" stroke-width="4"/>'
+    bar += text(X + Wd - 80, Y + 37, "CRM_Leads.xlsx", 20, 600, DEEP, "end", LAT, False)
+    bar += "".join(rrect(X + 24 + i * 26, Y + 22, 16, 16, 4, fill=DEEP, opacity=0.12) for i in range(3))
+    sheet += grp("SHEET_TOOLBAR", bar)
+    # columns right-to-left: row number, name, mobile, unit, status, source, agent
+    cols = [("#", 42), ("الاسم", 160), ("الموبايل", 160), ("الوحدة", 92), ("الحالة", 116), ("المصدر", 112), ("المسؤول", 110)]
+    rows = [
+        ("أحمد محمود", "0100 245 7831", "A-204", "محجوز", "فيسبوك", "سارة"),
+        ("منى عبد الرحمن", "0112 908 3417", "B-118", "مباع", "إحالة", "يوسف"),
+        ("محمد السيد", "0122 670 1954", "C-031", "متاح", "الموقع", "مريم"),
+        ("ياسمين فؤاد", "0155 312 8806", "A-412", "محجوز", "معرض", "سارة"),
+        ("كريم حسني", "0101 774 2290", "D-207", "مباع", "فيسبوك", "يوسف"),
+        ("هبة مصطفى", "0114 563 0718", "B-305", "متاح", "إحالة", "مريم"),
+        ("عمرو عادل", "0127 481 6625", "C-110", "محجوز", "الموقع", "سارة"),
+        ("نورهان سامي", "0150 239 4471", "A-019", "مباع", "معرض", "يوسف"),
+    ]
+    stc = {"متاح": ST_AVAIL, "محجوز": ST_RES, "مباع": ST_SOLD}
+    top, hh, rh = Y + 70, 46, 54
+    edges, x = [], X + Wd - 14
+    for _, w in cols:
+        edges.append((x - w, x)); x -= w
+    grid = rrect(X + 14, top, Wd - 28, hh, 0, fill="#eef2f6")
+    grid += rrect(edges[1][0], top + hh, edges[1][1] - edges[1][0], rh, 0, fill="none", stroke=XL, sw=2.5)  # selected cell
+    lines = [f'<line x1="{X+14}" y1="{top + hh + r*rh}" x2="{X+Wd-14}" y2="{top + hh + r*rh}"/>' for r in range(len(rows) + 1)]
+    lines += [f'<line x1="{a}" y1="{top}" x2="{a}" y2="{top + hh + len(rows)*rh}"/>' for a, _ in edges[:-1]]
+    grid += f'<g id="SHEET_GRID" stroke="{DEEP}" stroke-opacity="0.1" stroke-width="1">{"".join(lines)}</g>'
+    head = "".join(text((a + b) / 2, top + 31, lab, 19, 600, DEEP, "middle") for (lab, _), (a, b) in zip(cols, edges))
+    body = ""
+    for r, row in enumerate(rows):
+        cy = top + hh + r * rh + 35
+        cells = [str(r + 1)] + list(row)
+        for c, ((a, b), val) in enumerate(zip(edges, cells)):
+            mid = (a + b) / 2
+            if c == 4:
+                body += grp("STATUS_PILL", rrect(mid - 46, cy - 24, 92, 32, 16, fill=stc[val], opacity=0.16)
+                            + f'<circle cx="{mid+33}" cy="{cy-8}" r="6" fill="{stc[val]}"/>'
+                            + text(mid - 8, cy, val, 18, 600, DEEP, "middle"))
+            elif c in (0, 2, 3):
+                body += text(mid, cy, val, 18, 500 if c else 400, DEEP if c else "#7a8494", "middle", LAT, False)
+            else:
+                body += text(mid, cy, val, 18, 500, DEEP, "middle")
+    sheet += grp("SHEET_TABLE", grid + head + body)
+
+    dash = dashboard(1090, 400, 700, 440)
+    link = (f'<path id="LINK_PATH" d="M910 620 C 960 620, 1040 620, 1090 620" fill="none" stroke="{BLUE}" stroke-width="3" stroke-dasharray="10 10"/>'
+            + "".join(f'<circle id="DATA_DOT_{i+1}" cx="{x}" cy="620" r="7" fill="{LBLUE}"/>' for i, x in enumerate((935, 1065)))
+            + glass(945, 565, 110, 110, 55, dark=False) + icon("sync", 970, 590, 60, BLUE, 2.4))
+    return [bg_light(), g("L05_CRM_SHEET", sheet), g("L06_DASHBOARD", dash), g("L07_SYNC_LINK", link),
+            g("L10_HEADLINE", text(960, 230, "متصلة بالـ " + hl("CRM", BLUE) + " بتاعك", 104, 600, DEEP)),
             chrome(dark=False)]
 
 
