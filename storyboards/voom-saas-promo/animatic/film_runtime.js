@@ -38,18 +38,17 @@
     F19: ['50% 50%', { scale: 1.05 }, { scale: 1.0 }],
   };
   // how each scene comes in (varied: pixel reveal, particle dissolve, zoom-through, push + blur, element morph)
-  const TRANS = { F02: 'zoom', F03: 'push', F04: 'pixel', F05: 'morph', F06: 'dissolve', F07: 'morph', F08: 'zoom', F09: 'push',
-    F10: 'pixel', F11: 'push', F12: 'zoom', F13: 'push', F14: 'morph', SLATE: 'cut', F15: 'push', F16: 'zoom', F17: 'fade', F18: 'dissolve', F19: 'zoom' };
-  const PUSH_DIR = { F03: [0, 1], F09: [1, 0], F11: [-1, 0], F13: [0, 1], F15: [1, 0] };
-  const MORPH = { F05: ['L05_CARD_UNITS', 'L05_DASHBOARD'], F07: ['L06_DASHBOARD', 'L05_TOGGLE'], F14: ['L05_STAT_CARDS', 'L05_DEVICE'] };
+  const TRANS = { F02: 'zoom', F03: 'push', F04: 'pixel', F05: 'morph', F06: 'dissolve', F07: 'push', F08: 'zoom', F09: 'push',
+    F10: 'pixel', F11: 'push', F12: 'zoom', F13: 'push', F14: 'fade', SLATE: 'cut', F15: 'push', F16: 'zoom', F17: 'fade', F18: 'dissolve', F19: 'zoom' };
+  const PUSH_DIR = { F07: [0, -1], F03: [0, 1], F09: [1, 0], F11: [-1, 0], F13: [0, 1], F15: [1, 0] };
+  const MORPH = { F05: ['L05_CARD_UNITS', 'L05_DASHBOARD'] };
   const OUT = { push: 0.45, zoom: 0.45, pixel: 0.45, dissolve: 0.5, morph: 0.35, fade: 0.3, cut: 0 };   // when the old scene starts leaving, before the cut
   const HOLD = 0.35, TEXT_REPORT = []; window.TEXT_REPORT = TEXT_REPORT;
   const LEAD = { pixel: 0.4, dissolve: 0.45, zoom: 0.3, push: 0.3, morph: 0.12, fade: 0.2, cut: 0 };   // how early elements start entering before the cut
   const PIXEL_FROM = { F04: [960, 540], F10: [440, 660] };
   // click visual effects (from the reference): halftone ripple or glowing pixels
   const CLICK_FX = { F02: 'halftone', F05: 'halftone', F07: 'halftone', F09: 'glow', F10: 'glow', F17: 'glow' };
-  // cursor: click time (absolute) per scene; default near the middle
-  const CLICK = { F02: 2.95, F05: 7.9, F07: 11.35, F09: 14.75, F10: 17.4, F17: 39.25 };
+  // cursor click times live in cues.json (scene.click); default near the middle
 
   // ---- text settings (from Text Studio)
   const kindBase = k => k === 'field' ? SET.fields : k === 'count' ? SET.counts : SET.global;
@@ -115,18 +114,16 @@
       tl.fromTo(whip, { scale: 0.82, opacity: 0, filter: 'blur(12px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, T - 0.1);
       tl.set(whip, { filter: 'none' }, T + 0.87);
     } else if (tin === 'morph') {
-      // real morph: the old element itself flies and reshapes into the new one's box, then hands over
-      const [A, B] = MORPH[sc.id], ea = prev.svg.querySelector('#' + A), eb = svg.querySelector('#' + B);
-      const a = ea.getBBox(), b = eb.getBBox(), M = 0.85, t0 = T - 0.45;
+      // shape morph: the card's own shape (position, size, corner radius) is keyed to the next card's shape, empty while it travels;
+      // old content leaves first, new content fills in once the shape has landed
+      const [A, B] = MORPH[sc.id], ea = prev.svg.querySelector('#' + A), eb = svg.querySelector('#' + B), M = 0.9, t0 = T - 0.45;
       const others = Array.from(prev.wrap.children).filter(n => /^L\d/.test(n.id) && n !== ea && n.id !== 'L01_BG');
       tl.to(others, { opacity: 0, duration: 0.35, ease: 'power1.in' }, t0);
-      tl.to(ea, { x: b.x - a.x, y: b.y - a.y, scaleX: b.width / a.width, scaleY: b.height / a.height, svgOrigin: `${a.x} ${a.y}`, duration: M, ease: 'power3.inOut' }, t0);
-      tl.to(ea, { opacity: 0, duration: 0.3, ease: 'power1.in' }, t0 + M * 0.55);
+      tl.to(ea, { opacity: 0, duration: 0.12 }, t0 + 0.03);
       tl.set(pw, { opacity: 0 }, t0 + M);
       tl.set(whip, { opacity: 1 }, t0);
-      tl.fromTo(eb, { x: a.x - b.x, y: a.y - b.y, scaleX: a.width / b.width, scaleY: a.height / b.height, svgOrigin: `${b.x} ${b.y}` },
-        { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: M, ease: 'power3.inOut' }, t0);
-      tl.fromTo(eb, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power1.out' }, t0 + M * 0.4);
+      tl.fromTo(eb, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power1.out' }, t0 + M - 0.05);
+      FX.push(shapeMorph(mainShape(ea), mainShape(eb), t0, M, sc.light));
       sc.morphTarget = B;
     } else if (tin === 'pixel') {
       tl.set(whip, { opacity: 1 }, T - 0.45);
@@ -173,7 +170,7 @@
         return;
       }
       if (/CURSOR|TAP/.test(id)) {
-        const click = CLICK[sc.id] ?? start + dur * 0.55, t0 = Math.max(start + 0.15, click - 1.15);
+        const click = sc.click ?? start + dur * 0.55, t0 = Math.max(start + 0.15, click - 1.15);
         tl.fromTo(layer, { x: 360, y: 240, opacity: 0 }, { x: -170, y: -70, opacity: 1, duration: 0.7, ease: 'power2.inOut' }, t0);
         tl.to(layer, { x: 0, y: 0, duration: 0.45, ease: 'power3.out' }, t0 + 0.7);
         const cur = layer.querySelector('[id^="CURSOR"]');
@@ -204,7 +201,7 @@
       if (id === 'L05_TOGGLE' && sc.id === 'F07') {
         if (sc.morphTarget !== id) { tl.from(layer, { opacity: 0, y: 50, filter: 'blur(10px)', duration: 0.8, ease: LAUNCH }, enter + 0.05); tl.set(layer, { filter: 'none' }, enter + 0.85); }
         const knob = layer.querySelector('#TOGGLE_KNOB'), off = layer.querySelector('#OPT_OFFLINE'), on = layer.querySelector('#OPT_ONLINE');
-        const T = CLICK.F07 + 0.05, move = -(800 / 2 - 14);
+        const T = byId('F07').click + 0.05, move = -(800 / 2 - 14);
         tl.to(knob, { x: move, duration: 0.45, ease: 'back.out(1.2)' }, T);
         q(off, 'path').forEach(p => tl.to(p, { attr: p.getAttribute('stroke') ? { stroke: OFF } : { fill: OFF }, duration: 0.3 }, T + 0.05));
         q(on, 'path').forEach(p => tl.to(p, { attr: p.getAttribute('stroke') ? { stroke: DEEP } : { fill: DEEP }, duration: 0.3 }, T + 0.05));
@@ -218,7 +215,7 @@
       const at = enter + 0.06 + ei * 0.1; ei++;
       layerAt[id] = at;
       let from;
-      if (/STATUS_PILL/.test(id) && sc.id === 'F07') { const T = CLICK.F07 + 0.45; layerAt[id] = T; tl.from(layer, { opacity: 0, scale: 0.85, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(1.7)' }, T); return; }
+      if (/STATUS_PILL/.test(id) && sc.id === 'F07') { const T = byId('F07').click + 0.45; layerAt[id] = T; tl.from(layer, { opacity: 0, scale: 0.85, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(1.7)' }, T); return; }
       if (/CHIP|PILL|ICON_TILE/.test(id)) from = { opacity: 0, scale: 0.8, transformOrigin: '50% 50%', ease: 'back.out(1.7)', duration: 0.55 };
       else if (/DEVICE/.test(id)) from = { opacity: 0, y: 140, scale: 0.9, filter: 'blur(12px)', transformOrigin: '50% 100%', ease: LAUNCH, duration: 1.0 };
       else if (/SHEET|PLAN|CRM/.test(id)) from = { opacity: 0, x: -80, filter: 'blur(10px)', ease: LAUNCH, duration: 0.85 };
@@ -251,9 +248,9 @@
     if (sc.id === 'F17') {
       const tile = svg.querySelector('[id^="TILE_EMPTY"]');
       if (tile) {
-        tl.to(tile, { scale: 1.1, transformOrigin: '50% 50%', duration: 0.18, ease: 'power2.out' }, CLICK.F17);
-        tl.to(tile, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.45)' }, CLICK.F17 + 0.18);
-        q(tile, 'rect').slice(0, 1).forEach(r => tl.to(r, { attr: { 'fill-opacity': 0.6 }, duration: 0.2, yoyo: true, repeat: 1 }, CLICK.F17));
+        tl.to(tile, { scale: 1.1, transformOrigin: '50% 50%', duration: 0.18, ease: 'power2.out' }, byId('F17').click);
+        tl.to(tile, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.45)' }, byId('F17').click + 0.18);
+        q(tile, 'rect').slice(0, 1).forEach(r => tl.to(r, { attr: { 'fill-opacity': 0.6 }, duration: 0.2, yoyo: true, repeat: 1 }, byId('F17').click));
       }
     }
     if (sc.id === 'F14') tl.to(svg, { scale: 2.7, transformOrigin: '50% 50%', duration: 1.0, ease: 'power2.in' }, end - 1.0);
@@ -375,6 +372,27 @@
         });
       },
       reset() { sc.wrap.removeAttribute('mask'); this.g.style.display = 'none'; } };
+  }
+
+  // the card's outline rect: the biggest rect inside its GLASS group
+  function mainShape(layer) {
+    const rs = Array.from(layer.querySelectorAll('[id^="GLASS"] rect')); if (!rs.length) return layer;
+    return rs.reduce((a, r) => (r.width.baseVal.value * r.height.baseVal.value > a.width.baseVal.value * a.height.baseVal.value ? r : a));
+  }
+  // an empty shape tweens from A's on-screen rect to B's (both read live each frame, so camera moves are respected)
+  function shapeMorph(ra, rb, t0, M, light) {
+    const fxtop = document.getElementById('fxtop');
+    const box = el => { const r = el.getBoundingClientRect(), m = fxtop.getScreenCTM().inverse(), p = new DOMPoint(r.left, r.top).matrixTransform(m), q = new DOMPoint(r.right, r.bottom).matrixTransform(m);
+      const rx = +(el.getAttribute('rx') || 0) * (q.x - p.x) / (el.width ? el.width.baseVal.value || 1 : 1); return { x: p.x, y: p.y, w: q.x - p.x, h: q.y - p.y, rx }; };
+    return { a: t0, b: t0 + M + 0.3,
+      init() { this.r = mk('rect', { fill: light ? '#ffffff' : '#0a1aa8', stroke: light ? '#d4e2ff' : LBLUE, 'stroke-width': 1.5,
+        style: `filter:drop-shadow(0 24px 40px ${light ? 'rgba(0,18,214,.14)' : 'rgba(0,179,255,.3)'})` }, fxtop); },
+      render(t) {
+        const p = c01((t - t0) / M), e = gsap.parseEase('power3.inOut')(p), A_ = box(ra), B_ = box(rb), L = k => A_[k] + (B_[k] - A_[k]) * e;
+        [['x', L('x')], ['y', L('y')], ['width', L('w')], ['height', L('h')], ['rx', Math.min(L('rx'), L('h') / 2)]].forEach(([k, v]) => this.r.setAttribute(k, v.toFixed(2)));
+        this.r.setAttribute('opacity', t <= t0 + M ? 1 : c01(1 - (t - t0 - M) / 0.3).toFixed(3)); this.r.style.display = '';
+      },
+      reset() { this.r.style.display = 'none'; } };
   }
 
   // click: halftone dots ripple out from the cursor (reference 0:08)

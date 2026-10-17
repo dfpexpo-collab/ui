@@ -41,7 +41,7 @@ The method we use to turn a storyboard into a SaaS promo film. It is built from 
 - **A shot leaves only after all its text is on screen**, and the text holds for at least 0.35s before the outgoing transition starts.
   - When a shot is short, type faster, count faster or pull the headline words earlier. Never cut text off.
   - `TEXT_REPORT` in the page lists every shot's text-done time against its leave time, so check it without rendering.
-  - If a shot still can't fit, move the cut slightly (≤0.15s) in `cues.json`.
+  - If a shot still can't fit, give it room: run `retime.py cues.json <t>:<gap>` at a VO silence (`ffmpeg -af silencedetect=n=-38dB:d=0.06`). It shifts every later time and splits the audio there. The user allows extra pauses so the motion can breathe.
 - **Transitions are relaxed, not snappy.** The old scene leaves over about 0.6s (`power2.inOut` / `power2.in`) and the new one settles over about 0.95s (`power3.out`). Pixel and dissolve run about 1.05–1.1s, and the morph about 0.85s.
 - **Elements start entering before the cut.** Use `LEAD` per transition (pixel 0.4, dissolve 0.45, zoom/push 0.3, morph 0.12) so the incoming scene is never empty.
 - **Small squares (unit grids):** build in a wave from one corner. Each square goes from scale 0.3 to 1 with `back.out`, plus a brightness and glow flash that settles. Never use random steps.
@@ -52,7 +52,7 @@ The method we use to turn a storyboard into a SaaS promo film. It is built from 
 - **Text:**
   - Arabic headlines animate per word. Echo copies lead the word, then the word lands with blur.
   - Text inside bars, sheets and fields types letter by letter, with no `|` cursor.
-  - Numbers and prices count from 0 with motion blur and land on the exact value.
+  - Numbers and prices count from 0 with motion blur and land on the exact value. When the count lands, swap back to the outlined glyphs, because live text shimmers under the camera.
   - Words enter on their VO time.
 - **Numbers sit centred in their cards.** Small status dots pop in after the card.
 
@@ -64,7 +64,7 @@ The method we use to turn a storyboard into a SaaS promo film. It is built from 
 | `dissolve` | after a click that "sends" something | old scene breaks into particles that blow away from the click; new scene sits underneath (lower z) |
 | `zoom` | into a device, logo or tile | old scene scales ×2.6 with blur toward its focal point; new scene settles from 0.78 |
 | `push` | dark→dark story beats | old scene leaves with blur, new one enters from the opposite side. Vary the direction |
-| `morph` | same object, new context (card → dashboard) | the real element flies and reshapes from bbox A to bbox B (power3.inOut, about 0.85s), and the target settles from A's box. Never use a stand-in card |
+| `morph` | only where the user asks (same object, new context) | an empty shape keyed from A's outline rect to B's (x, y, w, h, rx; about 0.9s, power3.inOut), read live from the screen. Old content leaves first, new content fills after it lands. No stretch, no duplicate |
 | `fade` / `cut` | same set (wall → wall) / the footage slate | on a cut, hide the previous scene in the same frame |
 
 Scenes have a transparent background (the shader sits behind everything). So any transition that reveals must also remove the old scene in the same area.

@@ -127,10 +127,10 @@ def icon_tile(x, y, size, name, dark=True):
 def glass(x, y, w, h, r=28, dark=True):
     if dark:
         return grp("GLASS", rrect(x, y, w, h, r, fill="url(#gGlassFill)", stroke="url(#gGlassStroke)", sw=1.5)
-                   + rrect(x + 1.5, y + 1.5, w - 3, h * 0.45, r - 1.5, fill="url(#gGlassSheen)"))
+                   + rrect(x + 1.5, y + 1.5, w - 3, h - 3, r - 1.5, fill="url(#gGlassSheen)"))
     shadow = f'<ellipse cx="{x+w/2}" cy="{y+h+10}" rx="{w*0.48}" ry="{max(24,h*0.12)}" fill="url(#gShadow)"/>'
     return grp("GLASS", shadow + rrect(x, y, w, h, r, fill="#ffffff", stroke="url(#gGlassStrokeLight)", sw=1.5, opacity=0.92)
-               + rrect(x + 1.5, y + 1.5, w - 3, h * 0.4, r - 1.5, fill="url(#gSheenLight)"))
+               + rrect(x + 1.5, y + 1.5, w - 3, h - 3, r - 1.5, fill="url(#gSheenLight)"))
 
 
 def pill(cx, cy, label, w=None, dark=True, icon_name=None, size=30, font=AR, rtl=True, color=None):
@@ -212,7 +212,7 @@ DEFS = f"""<defs>
     <stop offset="0" stop-color="{OFF}" stop-opacity="0.10"/><stop offset="1" stop-color="{OFF}" stop-opacity="0.03"/>
   </linearGradient>
   <linearGradient id="gGlassSheen" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="{OFF}" stop-opacity="0.07"/><stop offset="1" stop-color="{OFF}" stop-opacity="0"/>
+    <stop offset="0" stop-color="{OFF}" stop-opacity="0.07"/><stop offset="0.45" stop-color="{OFF}" stop-opacity="0"/>
   </linearGradient>
   <linearGradient id="gGlassStroke" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="{LBLUE}" stop-opacity="0.95"/><stop offset="0.5" stop-color="{OFF}" stop-opacity="0.18"/><stop offset="1" stop-color="{LBLUE}" stop-opacity="0.55"/>
@@ -221,7 +221,7 @@ DEFS = f"""<defs>
     <stop offset="0" stop-color="{LBLUE}" stop-opacity="0.7"/><stop offset="0.5" stop-color="{BLUE}" stop-opacity="0.08"/><stop offset="1" stop-color="{LBLUE}" stop-opacity="0.45"/>
   </linearGradient>
   <linearGradient id="gSheenLight" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.4" stop-color="#ffffff" stop-opacity="0"/>
   </linearGradient>
   <linearGradient id="gTextFade" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="{OFF}"/><stop offset="1" stop-color="{LBLUE}"/>

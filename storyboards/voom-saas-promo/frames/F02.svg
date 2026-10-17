@@ -33,7 +33,7 @@
     <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.10"/><stop offset="1" stop-color="#f1f1f1" stop-opacity="0.03"/>
   </linearGradient>
   <linearGradient id="gGlassSheen" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.07"/><stop offset="1" stop-color="#f1f1f1" stop-opacity="0"/>
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.07"/><stop offset="0.45" stop-color="#f1f1f1" stop-opacity="0"/>
   </linearGradient>
   <linearGradient id="gGlassStroke" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#00b3ff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#f1f1f1" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.55"/>
@@ -42,7 +42,7 @@
     <stop offset="0" stop-color="#00b3ff" stop-opacity="0.7"/><stop offset="0.5" stop-color="#0012d6" stop-opacity="0.08"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.45"/>
   </linearGradient>
   <linearGradient id="gSheenLight" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.4" stop-color="#ffffff" stop-opacity="0"/>
   </linearGradient>
   <linearGradient id="gTextFade" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#f1f1f1"/><stop offset="1" stop-color="#00b3ff"/>
@@ -64,10 +64,10 @@
 <g id="BG_FILL"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="#000024"/></g><ellipse id="GLOW_MAIN" cx="560" cy="620" rx="980" ry="620" fill="url(#gGlowBlue)"/><ellipse id="GLOW_ACCENT" cx="1500" cy="300" rx="520" ry="380" fill="url(#gGlowSoftLight)"/><g id="VIGNETTE"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="url(#gVignette)"/></g>
 </g>
 <g id="L05_CHART_CARD">
-<g id="GLASS"><rect x="160" y="250" width="720" height="560" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="161.5" y="251.5" width="717" height="252.0" rx="26.5" fill="url(#gGlassSheen)"/></g><text id="TXT_المبيعات" x="840" y="320" font-family="IBM Plex Sans Arabic" font-size="30" font-weight="500" fill="#f1f1f1" text-anchor="start" direction="rtl">المبيعات</text><text id="TXT_Q1_Q4" x="200" y="322" font-family="Gabarito" font-size="22" font-weight="400" fill="#f1f1f1" text-anchor="start" opacity="0.6">Q1 - Q4</text><g id="CHART_GRIDLINES"><line x1="200" y1="430" x2="840" y2="430" stroke="#f1f1f1" stroke-opacity="0.08"/><line x1="200" y1="520" x2="840" y2="520" stroke="#f1f1f1" stroke-opacity="0.08"/><line x1="200" y1="610" x2="840" y2="610" stroke="#f1f1f1" stroke-opacity="0.08"/><line x1="200" y1="700" x2="840" y2="700" stroke="#f1f1f1" stroke-opacity="0.08"/></g><path id="CHART_AREA" d="M200 720 L320 690 L430 700 L540 630 L640 580 L740 470 L840 390 L840 770 L200 770Z" fill="url(#gArea)"/><path id="CHART_LINE" d="M200 720 L320 690 L430 700 L540 630 L640 580 L740 470 L840 390" fill="none" stroke="#00b3ff" stroke-width="4" stroke-linejoin="round"/><circle id="CHART_DOT" cx="840" cy="390" r="10" fill="#f1f1f1" stroke="#00b3ff" stroke-width="4"/>
+<g id="GLASS"><rect x="160" y="250" width="720" height="560" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="161.5" y="251.5" width="717" height="557" rx="26.5" fill="url(#gGlassSheen)"/></g><text id="TXT_المبيعات" x="840" y="320" font-family="IBM Plex Sans Arabic" font-size="30" font-weight="500" fill="#f1f1f1" text-anchor="start" direction="rtl">المبيعات</text><text id="TXT_Q1_Q4" x="200" y="322" font-family="Gabarito" font-size="22" font-weight="400" fill="#f1f1f1" text-anchor="start" opacity="0.6">Q1 - Q4</text><g id="CHART_GRIDLINES"><line x1="200" y1="430" x2="840" y2="430" stroke="#f1f1f1" stroke-opacity="0.08"/><line x1="200" y1="520" x2="840" y2="520" stroke="#f1f1f1" stroke-opacity="0.08"/><line x1="200" y1="610" x2="840" y2="610" stroke="#f1f1f1" stroke-opacity="0.08"/><line x1="200" y1="700" x2="840" y2="700" stroke="#f1f1f1" stroke-opacity="0.08"/></g><path id="CHART_AREA" d="M200 720 L320 690 L430 700 L540 630 L640 580 L740 470 L840 390 L840 770 L200 770Z" fill="url(#gArea)"/><path id="CHART_LINE" d="M200 720 L320 690 L430 700 L540 630 L640 580 L740 470 L840 390" fill="none" stroke="#00b3ff" stroke-width="4" stroke-linejoin="round"/><circle id="CHART_DOT" cx="840" cy="390" r="10" fill="#f1f1f1" stroke="#00b3ff" stroke-width="4"/>
 </g>
 <g id="L06_CHIP_x2">
-<g id="GLASS_2"><rect x="120" y="190" width="190" height="74" rx="37" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="121.5" y="191.5" width="187" height="33.300000000000004" rx="35.5" fill="url(#gGlassSheen)"/></g><path id="ICON_arrow_up" d="M7 17L17 7M9 7h8v8" transform="translate(142 207) scale(1.6666666666666667)" fill="none" stroke="#00b3ff" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/><text id="TXT__2" x="240" y="242" font-family="Gabarito" font-size="44" font-weight="600" fill="#f1f1f1" text-anchor="middle">×2</text>
+<g id="GLASS_2"><rect x="120" y="190" width="190" height="74" rx="37" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="121.5" y="191.5" width="187" height="71" rx="35.5" fill="url(#gGlassSheen)"/></g><path id="ICON_arrow_up" d="M7 17L17 7M9 7h8v8" transform="translate(142 207) scale(1.6666666666666667)" fill="none" stroke="#00b3ff" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"/><text id="TXT__2" x="240" y="242" font-family="Gabarito" font-size="44" font-weight="600" fill="#f1f1f1" text-anchor="middle">×2</text>
 </g>
 <g id="L07_CURSOR">
 <path id="CURSOR" d="M0 0L0 34L9 26L15 40L21 37L15 24L27 24Z" transform="translate(860 410) scale(1.0)" fill="#f1f1f1" stroke="#000024" stroke-width="2" stroke-linejoin="round"/>

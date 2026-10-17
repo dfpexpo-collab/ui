@@ -2,6 +2,18 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-17: preview review 2
+- **Wrong:** the morph stretched the content and duplicated the card in the middle.
+  **Rule:** a morph is a shape morph. The card's outline rect (position, size, corner radius) is keyed from A's on-screen rect to B's, read live every frame so camera moves are respected. The shape is empty while it travels: the old content leaves first, and the new content fills in after the shape lands.
+- **Wrong:** I reused the morph on other cuts.
+  **Rule:** use a transition the user requested only where they asked for it. Don't spread it to other cuts.
+- **Wrong:** numbers shimmered after counting (live `<text>` under camera scale).
+  **Rule:** when the count lands, swap back to the outlined glyphs.
+- **Wrong:** the glass sheen corners poked out past the pill and circle shapes (short rect with full radius).
+  **Rule:** the sheen uses the same rounded rect as the card, and the gradient fades out by 40%.
+- **User:** scenes need room to breathe; adding pauses to the VO is fine.
+  **Tool:** `retime.py` inserts silent gaps at points where the VO is already silent (find them with `silencedetect`). It shifts all scene times and splits the audio segments. Click times live in `cues.json`, so they shift too.
+
 ## 2026-10-17: preview review
 - **Wrong:** the morph looked broken (a blank glass card flew over the scene).
   **Rule:** a morph moves the real element. The old layer flies and reshapes (scaleX/scaleY + x/y from bbox A to bbox B, power3.inOut, about 0.85s) while the rest of the old scene fades. The new layer starts from A's box and settles into its own, and the two cross-fade around the middle. The target skips its normal entrance.

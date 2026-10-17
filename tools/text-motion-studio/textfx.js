@@ -207,7 +207,7 @@
     tx.setAttribute('font-size', g.dataset.size); tx.setAttribute('font-weight', g.dataset.weight);
     tx.setAttribute('text-anchor', anchor); tx.setAttribute('fill', g.dataset.fill);
     if (+g.dataset.ls) tx.setAttribute('letter-spacing', g.dataset.ls);
-    tx.style.fontVariantNumeric = 'tabular-nums';
+    tx.style.fontVariantNumeric = 'tabular-nums'; tx.setAttribute('text-rendering', 'geometricPrecision');
     if (g.getAttribute('opacity')) tx.setAttribute('opacity', g.getAttribute('opacity'));
     tx.textContent = fmt(0);
     g.parentNode.insertBefore(tx, g.nextSibling);
@@ -221,6 +221,10 @@
         { opacity: 1, y: 0, filter: 'blur(0px)', duration: s.duration, ease }, t);
     }
     tl.fromTo(box, { v: 0 }, { v: target, duration: s.duration, ease, onUpdate: () => { tx.textContent = fmt(box.v); } }, t);
+    // once landed, hand back to the outlined glyphs: live text shimmers under camera moves (hinting snaps per frame)
+    const landed = t + (s.bounce ? s.duration * 1.3 : s.duration) + 0.03;
+    tl.set(tx, { visibility: 'hidden' }, landed);
+    tl.set(g, { visibility: 'visible' }, landed);
   }
 
   function cleanType(rootEl) {
