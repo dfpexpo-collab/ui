@@ -1582,6 +1582,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
 </svg>
 </div></div>
     <div class="transport">
+      <button class="btn" id="toStart" type="button" title="Play from the start">⏮ From start</button>
       <button class="btn primary" id="play" type="button">Play</button>
       <button class="btn" id="replay" type="button" title="Replay the current scene">Replay scene</button>
       <label class="loop"><input id="loop" type="checkbox" checked> Loop scene</label>
@@ -2037,7 +2038,8 @@ function show(time) {
 }
 function tick() {
   if (!playing) return;
-  const now = audio.readyState >= 2 && !audio.paused ? audio.currentTime : t0Clock();
+  const now = t0Clock();   // the clock drives the picture; the audio follows it
+  try { if (!audio.paused && Math.abs(audio.currentTime - now) > 0.25) audio.currentTime = now; } catch (e) {}
   if (range && now >= range[1]) {
     if ($('loop').checked) { play(range[0], range); return; }
     show(range[1]); stop(); return;
@@ -2056,7 +2058,8 @@ function play(from, r) {
   requestAnimationFrame(tick);
 }
 function stop() { playing = false; $('play').textContent = 'Play'; try { audio.pause(); } catch (e) {} }
-$('play').addEventListener('click', () => playing ? stop() : play(t >= TOTAL ? 0 : t));
+$('play').addEventListener('click', () => playing ? stop() : play(t >= TOTAL - 0.05 ? 0 : t));
+$('toStart').addEventListener('click', () => { stop(); play(0); });
 $('loop').addEventListener('change', () => { if (!$('loop').checked) range = null; });
 $('scrub').addEventListener('input', e => { const v = e.target.value / 100 * TOTAL; if (playing) stop(); show(v); });
 function currentScene() {
