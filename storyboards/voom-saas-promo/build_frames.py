@@ -417,9 +417,9 @@ def f05():
 @frame("F06", "متصلة بالـ CRM بتاعك")
 def f06():
     # Spreadsheet CRM (Egyptian sample leads) syncing into the Voom dashboard.
-    X, Y, Wd = 90, 340, 820
+    X, Y, Wd = 90, 300, 820
     XL = "#1d6f42"   # spreadsheet-app green: product depiction only
-    sheet = glass(X, Y, Wd, 600, 18, dark=False)
+    sheet = glass(X, Y, Wd, 720, 18, dark=False)
     bar = rrect(X + 1, Y + 1, Wd - 2, 56, 17, fill="#f6f8fa")
     bar += rrect(X + Wd - 64, Y + 12, 34, 34, 7, fill=XL)
     bar += f'<path d="M{X+Wd-56} {Y+20}l18 18M{X+Wd-38} {Y+20}l-18 18" stroke="#fff" stroke-width="4"/>'
@@ -437,9 +437,15 @@ def f06():
         ("هبة مصطفى", "0114 563 0718", "B-305", "متاح", "إحالة", "مريم"),
         ("عمرو عادل", "0127 481 6625", "C-110", "محجوز", "الموقع", "سارة"),
         ("نورهان سامي", "0150 239 4471", "A-019", "مباع", "معرض", "يوسف"),
+        ("مصطفى إبراهيم", "0106 812 3390", "D-114", "متاح", "فيسبوك", "مريم"),
+        ("سلمى خالد", "0111 405 7726", "B-221", "محجوز", "الموقع", "سارة"),
+        ("طارق فتحي", "0128 337 9014", "C-308", "مباع", "إحالة", "يوسف"),
+        ("دينا أشرف", "0155 760 2148", "A-115", "متاح", "معرض", "مريم"),
+        ("شريف ناصر", "0109 223 5867", "D-402", "محجوز", "فيسبوك", "سارة"),
+        ("رنا جمال", "0114 978 0631", "B-017", "مباع", "الموقع", "يوسف"),
     ]
     stc = {"متاح": ST_AVAIL, "محجوز": ST_RES, "مباع": ST_SOLD}
-    top, hh, rh = Y + 70, 46, 54
+    top, hh, rh = Y + 70, 44, 42
     edges, x = [], X + Wd - 14
     for _, w in cols:
         edges.append((x - w, x)); x -= w
@@ -448,21 +454,21 @@ def f06():
     lines = [f'<line x1="{X+14}" y1="{top + hh + r*rh}" x2="{X+Wd-14}" y2="{top + hh + r*rh}"/>' for r in range(len(rows) + 1)]
     lines += [f'<line x1="{a}" y1="{top}" x2="{a}" y2="{top + hh + len(rows)*rh}"/>' for a, _ in edges[:-1]]
     grid += f'<g id="SHEET_GRID" stroke="{DEEP}" stroke-opacity="0.1" stroke-width="1">{"".join(lines)}</g>'
-    head = "".join(text((a + b) / 2, top + 31, lab, 19, 600, DEEP, "middle") for (lab, _), (a, b) in zip(cols, edges))
+    head = "".join(text((a + b) / 2, top + 29, lab, 17, 600, DEEP, "middle") for (lab, _), (a, b) in zip(cols, edges))
     body = ""
     for r, row in enumerate(rows):
-        cy = top + hh + r * rh + 35
+        cy = top + hh + r * rh + 28
         cells = [str(r + 1)] + list(row)
         for c, ((a, b), val) in enumerate(zip(edges, cells)):
             mid = (a + b) / 2
             if c == 4:
-                body += grp("STATUS_PILL", rrect(mid - 46, cy - 24, 92, 32, 16, fill=stc[val], opacity=0.16)
-                            + f'<circle cx="{mid+33}" cy="{cy-8}" r="6" fill="{stc[val]}"/>'
-                            + text(mid - 8, cy, val, 18, 600, DEEP, "middle"))
+                body += grp("STATUS_PILL", rrect(mid - 44, cy - 21, 88, 28, 14, fill=stc[val], opacity=0.16)
+                            + f'<circle cx="{mid+31}" cy="{cy-7}" r="5" fill="{stc[val]}"/>'
+                            + text(mid - 8, cy, val, 16, 600, DEEP, "middle"))
             elif c in (0, 2, 3):
-                body += text(mid, cy, val, 18, 500 if c else 400, DEEP if c else "#7a8494", "middle", LAT, False)
+                body += text(mid, cy, val, 16, 500 if c else 400, DEEP if c else "#7a8494", "middle", LAT, False)
             else:
-                body += text(mid, cy, val, 18, 500, DEEP, "middle")
+                body += text(mid, cy, val, 16, 500, DEEP, "middle")
     sheet += grp("SHEET_TABLE", grid + head + body)
 
     dash = dashboard(1090, 400, 700, 440)
@@ -504,7 +510,7 @@ def f08():
 def f09():
     bx, by, bw, bh = 360, 600, 1200, 120
     bar = glass(bx, by, bw, bh, bh / 2) + icon("spark", bx + bw - 90, by + 34, 52, LBLUE, 2)
-    bar += text(bx + bw - 120, by + 74, "اعرض الوحدات المتاحة بـ 3 غرف تحت 5 مليون|", 32, 400, OFF, "start", AR, True, 0.8)
+    bar += text(bx + bw - 120, by + 74, "اعرض الوحدات المتاحة بـ 3 غرف تحت 5 مليون", 32, 400, OFF, "start", AR, True, 0.8)
     bar += rrect(bx + 20, by + 20, 200, 80, 40, fill="url(#gTile)") + text(bx + 120, by + 72, "AI", 34, 600, OFF, "middle", LAT, False)
     chips = "".join(pill(cx, 830, lab, None, True, None, 24, LAT, False)
                     for cx, lab in [(700, "Smart filtration"), (960, "Live inventory"), (1220, "Availability")])

@@ -109,5 +109,57 @@
     });
   }
 
-  root.TextFX = { DEFAULTS, apply, clean };
+  // ---- typewriter for text inside bars, sheets and fields: letter by letter with a cursor
+  const TYPE_DEFAULTS = {
+    preset: 'type',            // type | none
+    typeSpeed: 45,             // letters per second
+    cursor: true,
+    cursorColor: '#00b3ff',
+    cursorColorLight: '#0012d6',
+    stagger: 0.01,             // s between fields in the same scene
+    delay: 0,
+  };
+  let clipN = 0;
+
+  /** Type the text group `g` (outlined <g id="TXT_…">) starting at time t. */
+  function typewrite(tl, g, t, opts, light) {
+    const s = Object.assign({}, TYPE_DEFAULTS, opts || {});
+    if (s.preset === 'none') { tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.01 }, t); return; }
+    const svg = g.ownerSVGElement, bb = g.getBBox();
+    if (!svg || !bb.width) return;
+    const label = (g.id || '').replace(/^TXT_/, '').replace(/_\d+$/, '');
+    const rtl = /[؀-ۿ]/.test(label);
+    const n = Math.max(1, label.replace(/_/g, '').length);
+    const pad = 4, x0 = bb.x - pad, w = bb.width + pad * 2, dur = n / s.typeSpeed;
+
+    const cp = document.createElementNS(SVGNS, 'clipPath');
+    cp.id = 'tfxclip' + (++clipN); cp.setAttribute('data-tfx', 'clip');
+    const r = document.createElementNS(SVGNS, 'rect');
+    r.setAttribute('y', bb.y - pad); r.setAttribute('height', bb.height + pad * 2);
+    cp.appendChild(r); svg.appendChild(cp);
+    g.setAttribute('clip-path', `url(#${cp.id})`); g.setAttribute('data-tfx-clip', '');
+    // RTL reveals from the right edge, LTR from the left, one letter step at a time
+    tl.fromTo(r, { attr: { x: rtl ? x0 + w : x0, width: 0 } },
+      { attr: { x: x0, width: w }, duration: dur, ease: `steps(${n})` }, t);
+
+    if (s.cursor) {
+      const c = document.createElementNS(SVGNS, 'rect');
+      c.setAttribute('data-tfx', 'cursor');
+      c.setAttribute('y', bb.y - 2); c.setAttribute('width', 2.5); c.setAttribute('height', bb.height + 4);
+      c.setAttribute('fill', light ? s.cursorColorLight : s.cursorColor);
+      g.parentNode.insertBefore(c, g.nextSibling);
+      const startX = rtl ? x0 + w : x0 - 2.5, endX = rtl ? x0 - 2.5 : x0 + w;
+      tl.fromTo(c, { attr: { x: startX }, opacity: 0 }, { opacity: 1, duration: 0.01 }, t - 0.05);
+      tl.to(c, { attr: { x: endX }, duration: dur, ease: `steps(${n})` }, t);
+      [0, 1, 0, 1, 0].forEach((o, i) => tl.set(c, { opacity: o }, t + dur + 0.12 + i * 0.12));
+    }
+  }
+
+  function cleanType(rootEl) {
+    rootEl.querySelectorAll('[data-tfx-clip]').forEach(g => { g.removeAttribute('clip-path'); g.removeAttribute('data-tfx-clip'); gsap.set(g, { clearProps: 'opacity' }); });
+  }
+  const _clean = clean;
+  function cleanAll(rootEl) { cleanType(rootEl); _clean(rootEl); }
+
+  root.TextFX = { DEFAULTS, TYPE_DEFAULTS, apply, typewrite, clean: cleanAll };
 })(typeof window !== 'undefined' ? window : globalThis);

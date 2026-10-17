@@ -88,6 +88,7 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
       <div class="status" id="scope"></div>
     </div>
 
+    <div id="headCtl">
     <div class="group">
       <h2>Motion</h2>
       <div class="row full"><label for="preset">Effect</label>
@@ -115,10 +116,26 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
       <div class="row full"><label for="tint">Colour fade</label>
         <select id="tint"><option value="1">Word starts in echo colour</option><option value="0">Word keeps its colour</option></select></div>
     </div>
+    </div>
+
+    <div id="fieldCtl" hidden>
+    <div class="group">
+      <h2>Typewriter</h2>
+      <div class="row full"><label for="f_preset">Effect</label>
+        <select id="f_preset"><option value="type">Typewriter (letter by letter)</option><option value="none">No animation</option></select></div>
+      <div class="row"><label for="f_typeSpeed">Letters / s</label><input id="f_typeSpeed" type="range" min="8" max="90" step="1"><output data-for="f_typeSpeed"></output></div>
+      <div class="row"><label for="f_stagger">Between fields</label><input id="f_stagger" type="range" min="0" max="0.3" step="0.005"><output data-for="f_stagger"></output></div>
+      <div class="row"><label for="f_delay">Delay (s)</label><input id="f_delay" type="range" min="-1" max="1.5" step="0.05"><output data-for="f_delay"></output></div>
+      <div class="row full"><label for="f_cursor">Cursor</label>
+        <select id="f_cursor"><option value="1">Show cursor</option><option value="0">No cursor</option></select></div>
+      <div class="row full"><label for="f_cursorColor">Cursor (dark)</label><input id="f_cursorColor" type="color"></div>
+      <div class="row full"><label for="f_cursorColorLight">Cursor (light)</label><input id="f_cursorColorLight" type="color"></div>
+    </div>
+    </div>
 
     <div class="group">
       <div class="actions">
-        <button class="btn" id="toAll" type="button">Apply to all texts</button>
+        <button class="btn" id="toAll" type="button">Apply to the whole group</button>
         <button class="btn" id="useGlobal" type="button">Use global</button>
         <button class="btn" id="reset" type="button">Reset</button>
       </div>
@@ -138,14 +155,18 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
 <script>
 const SCENES = __SCENES_JSON__;
 const TOTAL = SCENES[SCENES.length - 1].end;
-const KEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','ghostOpacity','lead','glow','glowStay','tint'];
-const DEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
-let settings = { global: Object.assign({}, DEF), overrides: {} };
+// headline controls use their key as the element id; field controls are prefixed "f_"
+const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostGap','ghostOpacity','lead','glow','glowStay','tint'];
+const FKEYS = ['preset','typeSpeed','stagger','delay','cursor','cursorColor','cursorColorLight'];
+const HDEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
+const FDEF = Object.assign({}, TextFX.TYPE_DEFAULTS);
+const fresh = () => ({ global: Object.assign({}, HDEF), fields: Object.assign({}, FDEF), overrides: {} });
+let settings = fresh();
 let tl = null, playing = false, t = 0, clockStart = 0, selected = '*', range = null;
 const $ = id => document.getElementById(id);
 const stage = $('stage'), audio = $('vo');
 
-// ---- collect every text (outlined SVG text groups with one <g> per word)
+// ---- collect every text. Headlines (L1x layers, big numbers) get echo + blur; text in bars, sheets and fields types.
 const ITEMS = [];
 SCENES.forEach((sc, i) => {
   const el = document.getElementById('S' + i); sc.el = el;
@@ -153,15 +174,15 @@ SCENES.forEach((sc, i) => {
   const bg = svg.querySelector('#BG_FILL rect');
   sc.light = !!bg && /^#f1f1f1$/i.test(bg.getAttribute('fill') || '');
   const layers = Array.from(svg.children).filter(n => n.tagName === 'g' && /^L\d/.test(n.id) && !/^L9\d/.test(n.id));
-  let headIdx = 0, otherIdx = 0;
+  let fieldIdx = 0;
   const headWords = [];
   layers.forEach(layer => {
-    const head = /^L1\d/.test(layer.id);
+    const head = /^L1\d/.test(layer.id) || /BIG_10X|COUNTER/.test(layer.id);
     layer.querySelectorAll('g[id^="TXT_"]').forEach(g => {
       if (g.id.includes('__w')) return;
       const words = Array.from(g.querySelectorAll(':scope > g[id*="__w"]'));
       if (!words.length) return;
-      const item = { key: sc.id + '/' + g.id, scene: sc, label: g.id.replace(/^TXT_/, '').replace(/_\d+$/, '').replace(/_/g, ' '), words, head, idx: head ? headIdx++ : otherIdx++ };
+      const item = { key: sc.id + '/' + g.id, scene: sc, g, label: g.id.replace(/^TXT_/, '').replace(/_\d+$/, '').replace(/_/g, ' '), words, kind: head ? 'head' : 'field', idx: head ? 0 : fieldIdx++ };
       if (head) headWords.push(...words);
       ITEMS.push(item);
     });
@@ -175,7 +196,9 @@ function voTimes(sc, n) {
   const span = Math.max(0.1, (b - a) * 0.85);
   return Array.from({ length: n }, (_, i) => a + (n > 1 ? span * i / (n - 1) : 0));
 }
-function eff(key) { return Object.assign({}, settings.global, settings.overrides[key] || {}); }
+const kindOf = sel => sel === '*' ? 'head' : sel === '#' ? 'field' : (ITEMS.find(i => i.key === sel) || {}).kind;
+const base = kind => kind === 'field' ? settings.fields : settings.global;
+function eff(key) { const k = kindOf(key); if (key === '*' || key === '#') return base(k); return Object.assign({}, base(k), settings.overrides[key] || {}); }
 
 // ---- build the timeline from the current settings
 function build() {
@@ -189,10 +212,12 @@ function build() {
     const vt = voTimes(sc, sc.headWords.length);
     ITEMS.filter(it => it.scene === sc).forEach(it => {
       const s = eff(it.key);
-      const times = it.head
-        ? it.words.map(w => vt[sc.headWords.indexOf(w)] + s.delay)
-        : it.words.map((_, k) => sc.start + 0.3 + it.idx * 0.08 + k * s.stagger + s.delay);
-      TextFX.apply(tl, it.words, times.map(x => Math.max(sc.start, x)), s, sc.light);
+      if (it.kind === 'field') {
+        TextFX.typewrite(tl, it.g, Math.max(sc.start, sc.start + 0.25 + it.idx * s.stagger + s.delay), s, sc.light);
+      } else {
+        const times = it.words.map(w => Math.max(sc.start, vt[sc.headWords.indexOf(w)] + s.delay));
+        TextFX.apply(tl, it.words, times, s, sc.light);
+      }
     });
   });
   tl.set({}, {}, TOTAL);
@@ -247,66 +272,77 @@ SCENES.forEach(sc => {
 
 // ---- inspector
 const target = $('target');
+const keysFor = kind => kind === 'field' ? FKEYS : HKEYS;
+const idFor = (kind, k) => kind === 'field' ? 'f_' + k : k;
 function fillTargets() {
   target.innerHTML = '';
-  const all = new Option('All texts (global)', '*'); target.add(all);
+  target.add(new Option('All headlines (echo + blur)', '*'));
+  target.add(new Option('All fields (typewriter)', '#'));
   SCENES.forEach(sc => {
     const its = ITEMS.filter(i => i.scene === sc); if (!its.length) return;
     const og = document.createElement('optgroup'); og.label = sc.id;
-    its.forEach(it => og.appendChild(new Option((settings.overrides[it.key] ? '● ' : '') + it.label, it.key)));
+    its.forEach(it => og.appendChild(new Option((settings.overrides[it.key] ? '● ' : '') + (it.kind === 'field' ? '⌨ ' : '') + it.label, it.key)));
     target.appendChild(og);
   });
   target.value = selected;
 }
-function readUI() {
+function readUI(kind) {
   const o = {};
-  KEYS.forEach(k => {
-    const el = $(k); let v = el.value;
+  keysFor(kind).forEach(k => {
+    const el = $(idFor(kind, k)); let v = el.value;
     if (el.type === 'range') v = parseFloat(v);
-    if (k === 'tint') v = v === '1';
+    if (k === 'tint' || k === 'cursor') v = v === '1';
     o[k] = v;
   });
   return o;
 }
-function writeUI(s) {
-  KEYS.forEach(k => {
-    const el = $(k); el.value = k === 'tint' ? (s.tint ? '1' : '0') : s[k];
-    const out = document.querySelector(`output[data-for="${k}"]`); if (out) out.value = s[k];
+function writeUI() {
+  const kind = kindOf(selected), s = eff(selected);
+  $('headCtl').hidden = kind === 'field'; $('fieldCtl').hidden = kind !== 'field';
+  keysFor(kind).forEach(k => {
+    const id = idFor(kind, k), el = $(id);
+    el.value = (k === 'tint' || k === 'cursor') ? (s[k] ? '1' : '0') : s[k];
+    const out = document.querySelector(`output[data-for="${id}"]`); if (out) out.value = s[k];
   });
   const it = ITEMS.find(i => i.key === selected);
-  $('scope').textContent = selected === '*' ? 'Editing every text without its own settings.' :
-    (settings.overrides[selected] ? 'This text has its own settings.' : 'Using the global settings. Change anything to give it its own.') + ' · ' + it.scene.id;
+  $('scope').textContent = selected === '*' ? 'Editing every headline without its own settings.' :
+    selected === '#' ? 'Editing every text inside bars, sheets and fields.' :
+    (settings.overrides[selected] ? 'This text has its own settings.' : 'Using its group settings. Change anything to give it its own.') + ' · ' + it.scene.id;
 }
 let pending = null;
 function onEdit() {
-  const vals = readUI();
-  KEYS.forEach(k => { const out = document.querySelector(`output[data-for="${k}"]`); if (out) out.value = vals[k]; });
+  const kind = kindOf(selected), vals = readUI(kind);
+  keysFor(kind).forEach(k => { const out = document.querySelector(`output[data-for="${idFor(kind, k)}"]`); if (out) out.value = vals[k]; });
   if (selected === '*') settings.global = Object.assign({}, settings.global, vals);
+  else if (selected === '#') settings.fields = Object.assign({}, settings.fields, vals);
   else {
-    const diff = {};
-    KEYS.forEach(k => { if (vals[k] !== settings.global[k]) diff[k] = vals[k]; });
+    const b = base(kind), diff = {};
+    keysFor(kind).forEach(k => { if (vals[k] !== b[k]) diff[k] = vals[k]; });
     if (Object.keys(diff).length) settings.overrides[selected] = diff; else delete settings.overrides[selected];
   }
-  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(eff(selected)); }, 250);
+  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(); }, 250);
   markDirty();
 }
-KEYS.forEach(k => $(k).addEventListener('input', onEdit));
+HKEYS.forEach(k => $(k).addEventListener('input', onEdit));
+FKEYS.forEach(k => $('f_' + k).addEventListener('input', onEdit));
 target.addEventListener('change', () => {
-  selected = target.value; writeUI(selected === '*' ? settings.global : eff(selected));
+  selected = target.value; writeUI();
   const it = ITEMS.find(i => i.key === selected);
-  if (it) { stop(); show(Math.max(0, (it.head ? voTimes(it.scene, 1)[0] : it.scene.start) - 0.1)); }
+  if (it) { stop(); show(Math.max(0, (it.kind === 'head' ? voTimes(it.scene, 1)[0] : it.scene.start) - 0.1)); }
 });
 $('toAll').addEventListener('click', () => {
-  settings.global = Object.assign({}, selected === '*' ? settings.global : eff(selected)); settings.overrides = {};
-  build(); fillTargets(); writeUI(eff(selected)); markDirty(); status('Applied to every text.');
+  const kind = kindOf(selected), s = Object.assign({}, eff(selected));
+  if (kind === 'field') settings.fields = s; else settings.global = s;
+  ITEMS.filter(i => i.kind === kind).forEach(i => delete settings.overrides[i.key]);
+  build(); fillTargets(); writeUI(); markDirty(); status(kind === 'field' ? 'Applied to every field.' : 'Applied to every headline.');
 });
 $('useGlobal').addEventListener('click', () => {
-  if (selected === '*') return; delete settings.overrides[selected];
-  build(); fillTargets(); writeUI(eff(selected)); markDirty();
+  if (selected === '*' || selected === '#') return; delete settings.overrides[selected];
+  build(); fillTargets(); writeUI(); markDirty();
 });
 $('reset').addEventListener('click', () => {
-  settings = { global: Object.assign({}, DEF), overrides: {} };
-  build(); fillTargets(); writeUI(eff(selected)); markDirty(); status('Back to the default look.');
+  settings = fresh();
+  build(); fillTargets(); writeUI(); markDirty(); status('Back to the default look.');
 });
 
 // ---- save: shared store (Claude reads it for the render) with a copy fallback
@@ -327,7 +363,7 @@ $('copy').addEventListener('click', async () => {
 });
 
 // ---- boot
-fillTargets(); writeUI(settings.global); build(); show(0);
+fillTargets(); writeUI(); build(); show(0);
 (async () => {
   db = window.claude ? await window.claude.use('db') : null;
   if (!db) return;
@@ -336,8 +372,8 @@ fillTargets(); writeUI(settings.global); build(); show(0);
     const snap = await db.doc('textfx/current').get();
     if (snap.exists) {
       const d = snap.data(); const saved = JSON.parse(d.settings);
-      settings = { global: Object.assign({}, DEF, saved.global), overrides: saved.overrides || {} };
-      fillTargets(); writeUI(eff(selected)); build(); show(t);
+      settings = { global: Object.assign({}, HDEF, saved.global), fields: Object.assign({}, FDEF, saved.fields), overrides: saved.overrides || {} };
+      fillTargets(); writeUI(); build(); show(t);
       status('Loaded the settings saved ' + new Date(d.savedAt).toLocaleString() + '.', true);
     }
   } catch (e) {}
