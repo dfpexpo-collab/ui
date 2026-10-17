@@ -1,0 +1,94 @@
+{
+ "global": {
+  "preset": "echo",
+  "direction": "right",
+  "distance": 60,
+  "duration": 0.6,
+  "blur": 14,
+  "echoColor": "#00b3ff",
+  "echoColorLight": "#0012d6",
+  "ghosts": 2,
+  "ghostGap": 1,
+  "ghostOpacity": 0.25,
+  "echoBlur": 18,
+  "lead": 4,
+  "glow": 0.35,
+  "glowStay": 0.12,
+  "tint": true,
+  "ease": [
+   0.16,
+   1,
+   0.3,
+   1
+  ],
+  "echoEase": [
+   0.587,
+   0.005,
+   0.447,
+   0.997
+  ],
+  "bounce": false,
+  "bounces": 2,
+  "stagger": 0.09,
+  "delay": 0
+ },
+ "fields": {
+  "preset": "type",
+  "typeSpeed": 45,
+  "cursor": false,
+  "cursorColor": "#00b3ff",
+  "cursorColorLight": "#0012d6",
+  "stagger": 0.01,
+  "delay": 0
+ },
+ "counts": {
+  "preset": "count",
+  "duration": 0.75,
+  "blur": 14,
+  "rise": 14,
+  "delay": 0,
+  "ease": [
+   0.33,
+   0,
+   0.67,
+   1
+  ],
+  "bounce": false,
+  "bounces": 2
+ },
+ "overrides": {
+  "F01/TXT_لكل_شركة": {
+   "direction": "up"
+  },
+  "F03/TXT_مشروعك_بالكامل": {
+   "direction": "up"
+  },
+  "F05/TXT_في_منصة_واحدة_تفاعلية": {
+   "direction": "down",
+   "ease": [
+    0.33,
+    0,
+    0.67,
+    1
+   ],
+   "ghosts": 0
+  },
+  "F04/TXT_بكل_وحداته_وتفاصيله_وبياناته": {
+   "direction": "left"
+  },
+  "F10/TXT_مشروعك_بالكامل_تجربة_تفاعلية": {
+   "direction": "down",
+   "bounces": 1
+  },
+  "F11/TXT_العرض_مربوط_بالبيانات_الحقيقية": {
+   "direction": "left",
+   "blur": 13,
+   "echoEase": [
+    0.413,
+    0.751,
+    0.542,
+    0.879
+   ]
+  }
+ }
+}
