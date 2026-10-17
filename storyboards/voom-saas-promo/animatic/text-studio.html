@@ -2143,6 +2143,9 @@ function writeUI() {
     const out = document.querySelector(`output[data-for="${id}"]`); if (out) out.value = s[k];
   });
   const it = ITEMS.find(i => i.key === selected);
+  const groupName = { head: 'headlines', field: 'fields', count: 'numbers' }[kind];
+  $('toAll').textContent = GROUPS[selected] ? 'Clear single-text settings (' + groupName + ')' : 'Use this for all ' + groupName;
+  $('useGlobal').hidden = !!GROUPS[selected];
   $('scope').textContent = selected === '*' ? 'Editing every headline without its own settings.' :
     selected === '#' ? 'Editing every text inside bars, sheets and fields.' :
     selected === '%' ? 'Editing every number and price.' :
