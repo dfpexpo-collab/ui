@@ -69,6 +69,7 @@ async function renderRange(browser, htmlPath, frames) {
   fs.mkdirSync(path.join(OUT, 'frames'), { recursive: true });
   const htmlPath = path.join(OUT, 'film.html');
   fs.writeFileSync(htmlPath, html);
+  if (process.env.HTML_ONLY) { console.log('wrote', htmlPath); return; }   // page only, no frames (used by the live preview)
   const total = CUES.scenes[CUES.scenes.length - 1].end;
   const n = Math.round(total * FPS);
   const only = process.env.ONLY ? process.env.ONLY.split(',').map(Number) : null;   // ONLY=frame,frame for spot checks

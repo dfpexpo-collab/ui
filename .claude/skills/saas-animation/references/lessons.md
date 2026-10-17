@@ -7,6 +7,7 @@ Add one entry per feedback round: what was wrong, then the rule. Fold any lastin
   **Rule:** every shot has a deadline (next cut minus the transition's OUT time minus 0.35s hold). Text is fitted before the deadline by typing faster, counting faster or compressing the headline words. `TEXT_REPORT` checks it.
 - **Change:** transitions were lengthened and given softer eases. F02/F03 cuts moved +0.15s.
 - **User:** don't render anything without asking first (saves time and tokens).
+- **Tool:** added the live preview (`build_preview.js`, published as an artifact) so the motion is reviewed in the browser before rendering.
 
 ## 2026-10-17: v03 review
 - **Wrong:** old-scene frames flashed after the pixel and dissolve transitions (the mask came off while the old scene was still visible).

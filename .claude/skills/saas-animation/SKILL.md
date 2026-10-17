@@ -18,8 +18,9 @@ The method we use to turn a storyboard into a SaaS promo film. It is built from 
 2. **Text motion:** tune it in Text Motion Studio (`tools/text-motion-studio/`), save, and export the settings to `textfx_settings.json`. The shared engine is `textfx.js`.
 3. **Timing:** `cues.json` holds the scenes (`start`, `end`, `vo` window, `words`, `big`) aligned to the VO, plus the audio segments.
 4. **Film runtime:** `film_runtime.js` builds one paused GSAP timeline, and `window.seek(t)` is a pure function of time. `build_film.js` inlines the SVGs, renders 4 Playwright workers at 30fps and muxes the VO.
-5. **QA loop** (see below). Show the user the video only after QA passes.
-6. **Optional AE hand-off:** write one `.jsx` at the end, after the motion is approved. Never iterate in AE, because it costs far more tokens.
+5. **Live preview before any render:** run `HTML_ONLY=1 node build_film.js <dir>`, then `node build_preview.js <dir>/film.html <vo.mp3> <out.html>`, and publish the result as an artifact. It plays the film in real time with the VO, a scrubber, scene jumps, frame steps, a scene loop and a copy-timecode button. The user reviews motion there, and we render the MP4 only once the motion is approved.
+6. **QA loop** (see below). Show the user the video only after QA passes.
+7. **Optional AE hand-off:** write one `.jsx` at the end, after the motion is approved. Never iterate in AE, because it costs far more tokens.
 
 ## Motion rules
 
