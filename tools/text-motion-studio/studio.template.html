@@ -37,6 +37,7 @@ header .spacer { flex: 1; }
 .marks button:hover, .marks button:focus-visible { color: var(--fg); }
 button.btn { font: 500 12px var(--ui); color: var(--fg); background: var(--raised); border: 1px solid var(--line); border-radius: 6px; padding: 6px 11px; cursor: pointer; }
 button.btn:hover { border-color: var(--muted); }
+button.btn:disabled { opacity: .4; cursor: default; }
 button.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .inspector { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 12px; min-width: 0; }
@@ -166,6 +167,10 @@ textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--
     </div>
 
     <div class="group">
+      <div class="actions">
+        <button class="btn" id="undo" type="button" title="Undo (Ctrl/Cmd+Z)" disabled>↶ Undo</button>
+        <button class="btn" id="redo" type="button" title="Redo (Shift+Ctrl/Cmd+Z)" disabled>↷ Redo</button>
+      </div>
       <div class="actions">
         <button class="btn" id="toAll" type="button">Apply to the whole group</button>
         <button class="btn" id="useGlobal" type="button">Use global</button>
@@ -418,8 +423,25 @@ function writeUI() {
     selected === '%' ? 'Editing every number and price.' :
     (settings.overrides[selected] ? 'This text has its own settings.' : 'Using its group settings. Change anything to give it its own.') + ' · ' + it.scene.id;
 }
+// ---- undo / redo: one snapshot per edit burst (a whole slider drag is one step)
+const past = [], future = [];
+let burstTimer = null;
+function snapshot() { past.push(JSON.stringify(settings)); if (past.length > 100) past.shift(); future.length = 0; syncUndo(); }
+function burst() { if (!burstTimer) snapshot(); clearTimeout(burstTimer); burstTimer = setTimeout(() => { burstTimer = null; }, 700); }
+function syncUndo() { $('undo').disabled = !past.length; $('redo').disabled = !future.length; }
+function restore(json) { settings = JSON.parse(json); build(); fillTargets(); writeUI(); markDirty(); syncUndo(); }
+function undo() { if (!past.length) return; clearTimeout(burstTimer); burstTimer = null; future.push(JSON.stringify(settings)); restore(past.pop()); status('Undone.'); }
+function redo() { if (!future.length) return; past.push(JSON.stringify(settings)); restore(future.pop()); status('Redone.'); }
+$('undo').addEventListener('click', undo);
+$('redo').addEventListener('click', redo);
+document.addEventListener('keydown', e => {
+  if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'z' || /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName) && document.activeElement.type !== 'range' && document.activeElement.type !== 'checkbox') return;
+  e.preventDefault(); e.shiftKey ? redo() : undo();
+});
+
 let pending = null;
 function onEdit() {
+  burst();
   const kind = kindOf(selected), vals = readUI(kind);
   keysFor(kind).forEach(k => { const out = document.querySelector(`output[data-for="${idFor(kind, k)}"]`); if (out) out.value = vals[k]; });
   if (selected === '*') settings.global = Object.assign({}, settings.global, vals);
@@ -442,16 +464,18 @@ target.addEventListener('change', () => {
   if (it) { stop(); show(Math.min(it.scene.end - 0.02, it.shownAt ?? it.scene.start + 0.5)); }
 });
 $('toAll').addEventListener('click', () => {
+  snapshot();
   const kind = kindOf(selected), s = Object.assign({}, eff(selected));
   if (kind === 'field') settings.fields = s; else if (kind === 'count') settings.counts = s; else settings.global = s;
   ITEMS.filter(i => i.kind === kind).forEach(i => delete settings.overrides[i.key]);
   build(); fillTargets(); writeUI(); markDirty(); status('Applied to the whole group.');
 });
 $('useGlobal').addEventListener('click', () => {
-  if (GROUPS[selected]) return; delete settings.overrides[selected];
+  if (GROUPS[selected]) return; snapshot(); delete settings.overrides[selected];
   build(); fillTargets(); writeUI(); markDirty();
 });
 $('reset').addEventListener('click', () => {
+  snapshot();
   settings = fresh();
   build(); fillTargets(); writeUI(); markDirty(); status('Back to the default look.');
 });

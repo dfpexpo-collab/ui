@@ -149,6 +149,21 @@ def pill(cx, cy, label, w=None, dark=True, icon_name=None, size=30, font=AR, rtl
     return grp("PILL_" + label, out)
 
 
+def pill_width(label, size, icon_name=None):
+    return len(label) * size * 0.62 + (90 if icon_name else 60)
+
+
+def pill_row(labels, cy, size=24, font=LAT, rtl=False, gap=24, cx=960, dark=True):
+    """Pills side by side, sized to their labels, evenly spaced and centred on cx (never overlapping)."""
+    ws = [pill_width(l, size) for l in labels]
+    x = cx - (sum(ws) + gap * (len(ws) - 1)) / 2
+    out = ""
+    for l, w in zip(labels, ws):
+        out += pill(x + w / 2, cy, l, w, dark, None, size, font, rtl)
+        x += w + gap
+    return out
+
+
 def cursor(x, y, s=1.0, color=OFF):
     return (f'<path id="{uid("CURSOR")}" d="M0 0L0 34L9 26L15 40L21 37L15 24L27 24Z" transform="translate({x} {y}) scale({s})" '
             f'fill="{color}" stroke="{DEEP}" stroke-width="2" stroke-linejoin="round"/>')
@@ -512,8 +527,7 @@ def f09():
     bar = glass(bx, by, bw, bh, bh / 2) + icon("spark", bx + bw - 90, by + 34, 52, LBLUE, 2)
     bar += text(bx + bw - 120, by + 74, "اعرض الوحدات المتاحة بـ 3 غرف تحت 5 مليون", 32, 400, OFF, "start", AR, True, 0.8)
     bar += rrect(bx + 20, by + 20, 200, 80, 40, fill="url(#gTile)") + text(bx + 120, by + 72, "AI", 34, 600, OFF, "middle", LAT, False)
-    chips = "".join(pill(cx, 830, lab, None, True, None, 24, LAT, False)
-                    for cx, lab in [(700, "Smart filtration"), (960, "Live inventory"), (1220, "Availability")])
+    chips = pill_row(["Smart filtration", "Live inventory", "Availability"], 830, 24, LAT, False)
     return [bg_dark(glow=(960, 700), glow2=(1500, 200), grid=True), g("L05_AI_BAR", bar), g("L06_CHIPS", chips),
             g("L07_CURSOR", cursor(bx + 150, by + 70)),
             g("L10_HEADLINE", text(960, 330, "منصة " + hl("PropTech"), 110, 600)
