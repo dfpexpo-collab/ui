@@ -497,16 +497,19 @@ def f06():
 
 @frame("F07", "شغالة أونلاين أو حتى أوفلاين")
 def f07():
+    # Start state: Online is selected. On «أوفلاين» the cursor clicks Offline and the knob slides left
+    # (animate TOGGLE_KNOB to x - (tw/2 - 14) and swap the two option colours).
     tx, ty, tw, th = 560, 470, 800, 160
-    tog = glass(tx, ty, tw, th, th / 2, dark=False)
-    tog += rrect(tx + 14, ty + 14, tw / 2 - 14, th - 28, (th - 28) / 2, fill="url(#gTile)")
-    tog += icon("wifi", tx + 70, ty + 50, 60, OFF, 2.4) + icon("slash", tx + 70, ty + 50, 60, OFF, 2.4)
-    tog += text(tx + 250, ty + 98, "Offline", 44, 600, OFF, "middle", LAT, False)
-    tog += icon("wifi", tx + tw - 330, ty + 50, 60, DEEP, 2.4)
-    tog += text(tx + tw - 160, ty + 98, "Online", 44, 500, DEEP, "middle", LAT, False, 0.55)
+    track = glass(tx, ty, tw, th, th / 2, dark=False)
+    knob = grp("TOGGLE_KNOB", rrect(tx + tw / 2, ty + 14, tw / 2 - 14, th - 28, (th - 28) / 2, fill="url(#gTile)"))
+    off = grp("OPT_OFFLINE", icon("wifi", tx + 70, ty + 50, 60, DEEP, 2.4) + icon("slash", tx + 70, ty + 50, 60, DEEP, 2.4)
+              + text(tx + 250, ty + 98, "Offline", 44, 500, DEEP, "middle", LAT, False, 0.55))
+    on = grp("OPT_ONLINE", icon("wifi", tx + tw - 330, ty + 50, 60, OFF, 2.4)
+             + text(tx + tw - 160, ty + 98, "Online", 44, 600, OFF, "middle", LAT, False))
+    tog = track + knob + off + on
     ok = pill(960, 760, "المنصة شغالة بدون إنترنت", 560, dark=False, icon_name="check", size=30)
     return [bg_light(), g("L05_TOGGLE", tog), g("L06_STATUS_PILL", ok),
-            g("L07_CURSOR", cursor(tx + 260, ty + 110, 1.0, DEEP)),
+            g("L07_CURSOR", cursor(tx + 230, ty + 150, 1.0, DEEP)),
             g("L10_HEADLINE", text(960, 290, "أونلاين أو حتى " + hl("أوفلاين", BLUE), 110, 600, DEEP)),
             chrome(dark=False)]
 
