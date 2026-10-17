@@ -683,7 +683,11 @@ def tile_wall(highlight_empty=False):
 @frame("F16", "أكتر من 200 مشروع اتباع عن طريق VOOM")
 def f16():
     wall = f'<g transform="matrix(0.92 -0.16 0.22 0.8 -40 150)" opacity="0.9">{tile_wall()}</g>'
-    scrim = f'<ellipse cx="960" cy="540" rx="720" ry="330" fill="{DEEP}" opacity="0.75"/>'
+    # soft, gaussian-like falloff (no hard edge) so the counter reads on top of the wall
+    scrim = (f'<defs><radialGradient id="gScrim" cx="50%" cy="50%" r="50%">'
+             f'<stop offset="0" stop-color="{DEEP}" stop-opacity="0.92"/><stop offset="0.45" stop-color="{DEEP}" stop-opacity="0.8"/>'
+             f'<stop offset="0.75" stop-color="{DEEP}" stop-opacity="0.35"/><stop offset="1" stop-color="{DEEP}" stop-opacity="0"/></radialGradient></defs>'
+             f'<ellipse cx="960" cy="545" rx="980" ry="470" fill="url(#gScrim)"/>')
     return [bg_dark(glow=(960, 540)), g("L03_PROJECT_WALL", wall), g("L04_SCRIM", scrim),
             g("L05_COUNTER", text(960, 590, "+200", 260, 700, "url(#gTextFade)", "middle", LAT, False, 1, -8)),
             g("L10_HEADLINE", text(960, 740, "مشروع اتباع عن طريق " + hl("VOOM"), 72, 600)),

@@ -109,13 +109,25 @@
       const [dx, dy] = PUSH_DIR[sc.id] || [0, 1];
       tl.to(pw, { x: -dx * 180, y: -dy * 130, opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.inOut' }, T - 0.45);
       tl.fromTo(whip, { x: dx * 220, y: dy * 170, opacity: 0, filter: 'blur(14px)' }, { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, T - 0.15);
+      tl.set(whip, { filter: 'none' }, T + 0.82);
     } else if (tin === 'zoom') {
       tl.to(pw, { scale: 2.2, opacity: 0, filter: 'blur(16px)', transformOrigin: prev.focus || '50% 50%', duration: 0.6, ease: 'power2.in' }, T - 0.45);
       tl.fromTo(whip, { scale: 0.82, opacity: 0, filter: 'blur(12px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.95, ease: 'power3.out' }, T - 0.1);
+      tl.set(whip, { filter: 'none' }, T + 0.87);
     } else if (tin === 'morph') {
-      tl.to(pw, { opacity: 0, duration: 0.4, ease: 'power1.inOut' }, T - 0.3);
-      tl.fromTo(whip, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }, T + 0.15);
-      MORPHS.push({ sc, prev, T });
+      // real morph: the old element itself flies and reshapes into the new one's box, then hands over
+      const [A, B] = MORPH[sc.id], ea = prev.svg.querySelector('#' + A), eb = svg.querySelector('#' + B);
+      const a = ea.getBBox(), b = eb.getBBox(), M = 0.85, t0 = T - 0.45;
+      const others = Array.from(prev.wrap.children).filter(n => /^L\d/.test(n.id) && n !== ea && n.id !== 'L01_BG');
+      tl.to(others, { opacity: 0, duration: 0.35, ease: 'power1.in' }, t0);
+      tl.to(ea, { x: b.x - a.x, y: b.y - a.y, scaleX: b.width / a.width, scaleY: b.height / a.height, svgOrigin: `${a.x} ${a.y}`, duration: M, ease: 'power3.inOut' }, t0);
+      tl.to(ea, { opacity: 0, duration: 0.3, ease: 'power1.in' }, t0 + M * 0.55);
+      tl.set(pw, { opacity: 0 }, t0 + M);
+      tl.set(whip, { opacity: 1 }, t0);
+      tl.fromTo(eb, { x: a.x - b.x, y: a.y - b.y, scaleX: a.width / b.width, scaleY: a.height / b.height, svgOrigin: `${b.x} ${b.y}` },
+        { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: M, ease: 'power3.inOut' }, t0);
+      tl.fromTo(eb, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power1.out' }, t0 + M * 0.4);
+      sc.morphTarget = B;
     } else if (tin === 'pixel') {
       tl.set(whip, { opacity: 1 }, T - 0.45);
       FX.push(pixelReveal(sc, T, PIXEL_FROM[sc.id] || [960, 540]));
@@ -190,7 +202,7 @@
         return;
       }
       if (id === 'L05_TOGGLE' && sc.id === 'F07') {
-        tl.from(layer, { opacity: 0, y: 50, filter: 'blur(10px)', duration: 0.8, ease: LAUNCH }, enter + 0.05);
+        if (sc.morphTarget !== id) { tl.from(layer, { opacity: 0, y: 50, filter: 'blur(10px)', duration: 0.8, ease: LAUNCH }, enter + 0.05); tl.set(layer, { filter: 'none' }, enter + 0.85); }
         const knob = layer.querySelector('#TOGGLE_KNOB'), off = layer.querySelector('#OPT_OFFLINE'), on = layer.querySelector('#OPT_ONLINE');
         const T = CLICK.F07 + 0.05, move = -(800 / 2 - 14);
         tl.to(knob, { x: move, duration: 0.45, ease: 'back.out(1.2)' }, T);
@@ -202,6 +214,7 @@
         return;
       }
       // generic element entrance, varied by role
+      if (sc.morphTarget === id) { layerAt[id] = start - 0.1; return; }
       const at = enter + 0.06 + ei * 0.1; ei++;
       layerAt[id] = at;
       let from;
@@ -213,6 +226,7 @@
       else if (/LINK|LEADER|ARROWS/.test(id)) from = { opacity: 0, duration: 0.4, ease: 'none' };
       else from = [{ opacity: 0, y: 60, filter: 'blur(10px)' }, { opacity: 0, scale: 0.92, filter: 'blur(10px)', transformOrigin: '50% 50%' }, { opacity: 0, y: -40, filter: 'blur(10px)' }][ei % 3];
       tl.from(layer, Object.assign({ ease: LAUNCH, duration: 0.85 }, from), at);
+      if (from.filter) tl.set(layer, { filter: 'none' }, at + (from.duration || 0.85) + 0.02);
       // inner parts
       q(layer, '[id^="ICON_TILE"]').forEach((t, k) => tl.from(t, { scale: 0, transformOrigin: '50% 50%', duration: 0.45, ease: 'back.out(2)' }, at + 0.25 + k * 0.06));
       q(layer, 'circle').filter(cn => +cn.getAttribute('r') <= 10 && !cn.id).forEach((cn, k) => tl.from(cn, { scale: 0, transformOrigin: '50% 50%', duration: 0.35, ease: 'back.out(2.5)' }, at + 0.3 + (k % 14) * 0.03));
@@ -229,6 +243,7 @@
         const span = Math.max(...cl.map(c => c.cx - x0 + c.cy - y0)) || 1;
         cl.forEach(c => tl.fromTo(c.inner, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%', filter: 'brightness(2.6) drop-shadow(0 0 8px #00b3ff)' },
           { opacity: 1, scale: 1, filter: 'brightness(1) drop-shadow(0 0 0px #00b3ff)', duration: 0.5, ease: 'back.out(2.2)' }, at + 0.2 + 0.75 * (c.cx - x0 + c.cy - y0) / span));
+        tl.set(cl.map(c => c.inner), { filter: 'none' }, at + 1.5);
       });
     });
 
@@ -405,25 +420,6 @@
       },
       reset() { this.g.style.display = 'none'; } };
   }
-
-  // element morph: a glass card flies from an element of the old scene to the matching one of the new
-  const fxtop = document.getElementById('fxtop');
-  MORPHS.forEach(({ sc, prev, T }) => {
-    const [A, B] = MORPH[sc.id];
-    FX.push({ a: T - 0.35, b: T + 0.5,
-      init() {
-        const ea = prev.svg.querySelector('#' + A), eb = sc.svg.querySelector('#' + B);
-        this.ba = ea.getBBox(); this.bb = eb.getBBox();
-        const lt = sc.light;
-        this.r = mk('rect', { fill: lt ? 'rgba(255,255,255,0.92)' : 'rgba(10,30,200,0.55)', stroke: LBLUE, 'stroke-width': 2, style: `filter:drop-shadow(0 20px 40px ${lt ? 'rgba(0,18,214,.18)' : 'rgba(0,179,255,.35)'})` }, fxtop);
-      },
-      render(t) {
-        const p = c01((t - this.a) / 0.85), e = gsap.parseEase('power3.inOut')(p), A_ = this.ba, B_ = this.bb, L = (u, v) => u + (v - u) * e;
-        Object.entries({ x: L(A_.x, B_.x), y: L(A_.y, B_.y), width: L(A_.width, B_.width), height: L(A_.height, B_.height), rx: 26 }).forEach(([k, v]) => this.r.setAttribute(k, v.toFixed(1)));
-        this.r.setAttribute('opacity', Math.min(c01(p / 0.15), c01((1 - p) / 0.35)).toFixed(3)); this.r.style.display = '';
-      },
-      reset() { this.r.style.display = 'none'; } });
-  });
 
   function runFx(t) {
     FX.forEach(f => {

@@ -2,6 +2,14 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-17: preview review
+- **Wrong:** the morph looked broken (a blank glass card flew over the scene).
+  **Rule:** a morph moves the real element. The old layer flies and reshapes (scaleX/scaleY + x/y from bbox A to bbox B, power3.inOut, about 0.85s) while the rest of the old scene fades. The new layer starts from A's box and settles into its own, and the two cross-fade around the middle. The target skips its normal entrance.
+- **Wrong:** a faint box showed behind elements after they entered (behind the sync icon and the toggle edge).
+  **Rule:** a CSS `blur(0px)` left on an SVG group still rasterises it. Always set `filter: 'none'` when a blur entrance or a transition ends.
+- **Wrong:** the F16 scrim ellipse had a hard edge and weak contrast.
+  **Rule:** scrims use a radial gradient with a long falloff (opaque centre → 0 at the edge), never a flat shape.
+
 ## 2026-10-17: pacing
 - **User:** don't leave a scene until all its text has appeared, and make the transitions relaxed.
   **Rule:** every shot has a deadline (next cut minus the transition's OUT time minus 0.35s hold). Text is fitted before the deadline by typing faster, counting faster or compressing the headline words. `TEXT_REPORT` checks it.

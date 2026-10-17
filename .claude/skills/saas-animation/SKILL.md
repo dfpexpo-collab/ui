@@ -64,7 +64,7 @@ The method we use to turn a storyboard into a SaaS promo film. It is built from 
 | `dissolve` | after a click that "sends" something | old scene breaks into particles that blow away from the click; new scene sits underneath (lower z) |
 | `zoom` | into a device, logo or tile | old scene scales ×2.6 with blur toward its focal point; new scene settles from 0.78 |
 | `push` | dark→dark story beats | old scene leaves with blur, new one enters from the opposite side. Vary the direction |
-| `morph` | same object, new context (card → dashboard) | glass card flies from bbox A to bbox B (power3.inOut) |
+| `morph` | same object, new context (card → dashboard) | the real element flies and reshapes from bbox A to bbox B (power3.inOut, about 0.85s), and the target settles from A's box. Never use a stand-in card |
 | `fade` / `cut` | same set (wall → wall) / the footage slate | on a cut, hide the previous scene in the same frame |
 
 Scenes have a transparent background (the shader sits behind everything). So any transition that reveals must also remove the old scene in the same area.
@@ -77,6 +77,7 @@ Scenes have a transparent background (the shader sits behind everything). So any
 - Don't name a global `top`.
 - Use `let`/`const` effect factories carefully. Anything called during the scene build must not touch a later-declared `const` (TDZ).
 - WebGL in headless Chromium needs `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist`, plus `preserveDrawingBuffer: true`.
+- Set `filter: 'none'` after every blur entrance or transition. A leftover `blur(0px)` paints a faint box around the group.
 - Wrap each scene's content in a group so masks can apply. Keep an unmasked fx group on top.
 
 ## QA loop (mandatory, every render)
