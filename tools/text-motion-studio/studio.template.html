@@ -1,0 +1,335 @@
+<title>__TITLE__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: an editing bay — the stage and its timeline on the left, an inspector column on the right; stacks on phones. Deliberately single dark look, like a motion app. */
+:root {
+  --bg: #0f1218; --panel: #161a22; --raised: #1e2330; --line: #2a3140;
+  --fg: #e7e9ef; --muted: #8d95a8; --accent: #7fb2ff; --accent-ink: #0b1220; --ok: #5fd39a;
+  --ui: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font: 13px/1.45 var(--ui); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px; box-sizing: border-box; }
+header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+header h1 { font-size: 15px; font-weight: 600; margin: 0; letter-spacing: .01em; }
+header .sub { color: var(--muted); font-size: 12px; }
+header .spacer { flex: 1; }
+.bay { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 14px; align-items: start; }
+@media (max-width: 900px) { .bay { grid-template-columns: minmax(0, 1fr); } }
+.stagewrap { min-width: 0; display: grid; gap: 10px; }
+.stage { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.scene { position: absolute; inset: 0; visibility: hidden; }
+.scene svg { width: 100%; height: 100%; display: block; }
+.slate { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2%; background: radial-gradient(ellipse at 50% 60%, #0012d6 0%, #000024 70%); color: #f1f1f1; font-family: "IBM Plex Sans Arabic", sans-serif; }
+.slate b { font-size: clamp(14px, 4vw, 44px); font-weight: 600; direction: rtl; }
+.slate span { font: 500 clamp(9px, 1.2vw, 14px) var(--mono); color: #00b3ff; letter-spacing: .25em; }
+.transport { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.transport output { font: 500 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; min-width: 92px; }
+.scrub { position: relative; flex: 1; min-width: 200px; }
+.scrub input { width: 100%; }
+.marks { position: relative; height: 18px; margin-top: 2px; }
+.marks button { position: absolute; top: 0; transform: translateX(-50%); font: 500 10px var(--mono); color: var(--muted); background: none; border: 0; padding: 0 2px; cursor: pointer; }
+.marks button:hover, .marks button:focus-visible { color: var(--fg); }
+button.btn { font: 500 12px var(--ui); color: var(--fg); background: var(--raised); border: 1px solid var(--line); border-radius: 6px; padding: 6px 11px; cursor: pointer; }
+button.btn:hover { border-color: var(--muted); }
+button.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.inspector { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 12px; min-width: 0; }
+.inspector h2 { margin: 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.group { display: grid; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 46px; align-items: center; gap: 8px; }
+.row label { color: var(--muted); font-size: 12px; }
+.row output { font: 12px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.row.full { grid-template-columns: 96px minmax(0, 1fr); }
+select, input[type="color"] { width: 100%; background: var(--raised); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; font: 12px var(--ui); box-sizing: border-box; }
+input[type="color"] { padding: 2px; height: 28px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.target select { font-family: "IBM Plex Sans Arabic", var(--ui); }
+.badge { display: inline-block; font: 500 10px var(--mono); padding: 2px 6px; border-radius: 4px; background: var(--raised); color: var(--muted); }
+.badge.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.status { font-size: 12px; color: var(--muted); min-height: 1.4em; }
+.status.ok { color: var(--ok); }
+textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--raised); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; font: 11px var(--mono); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<header>
+  <h1>__TITLE__</h1>
+  <span class="sub">Echo + blur per word · preview with the VO, then Save for the final render</span>
+  <span class="spacer"></span>
+  <span class="badge" id="dbBadge">local only</span>
+</header>
+
+<div class="bay">
+  <section class="stagewrap" aria-label="Preview">
+    <div class="stage" id="stage">__SCENES__</div>
+    <div class="transport">
+      <button class="btn primary" id="play" type="button">Play</button>
+      <button class="btn" id="replay" type="button" title="Replay the selected text">Replay text</button>
+      <output id="clock">0.00 / 0.00</output>
+      <div class="scrub">
+        <input id="scrub" type="range" min="0" max="100" step="0.01" value="0" aria-label="Timeline">
+        <div class="marks" id="marks"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="inspector" aria-label="Text settings">
+    <div class="target">
+      <h2>Text</h2>
+      <select id="target" aria-label="Which text to edit"></select>
+      <div class="status" id="scope"></div>
+    </div>
+
+    <div class="group">
+      <h2>Motion</h2>
+      <div class="row full"><label for="preset">Effect</label>
+        <select id="preset"><option value="echo">Echo + blur</option><option value="blur">Blur only</option><option value="fade">Slide only</option><option value="none">No animation</option></select></div>
+      <div class="row full"><label for="direction">Comes from</label>
+        <select id="direction"><option value="right">Right</option><option value="left">Left</option><option value="up">Above</option><option value="down">Below</option><option value="none">In place</option></select></div>
+      <div class="row"><label for="distance">Distance</label><input id="distance" type="range" min="0" max="200" step="2"><output data-for="distance"></output></div>
+      <div class="row"><label for="duration">Speed (s)</label><input id="duration" type="range" min="0.2" max="1.6" step="0.05"><output data-for="duration"></output></div>
+      <div class="row"><label for="blur">Blur</label><input id="blur" type="range" min="0" max="40" step="1"><output data-for="blur"></output></div>
+      <div class="row"><label for="delay">Delay (s)</label><input id="delay" type="range" min="-1" max="1" step="0.05"><output data-for="delay"></output></div>
+      <div class="row full"><label for="ease">Ease</label>
+        <select id="ease"><option value="expo.out">Launch (fast, long settle)</option><option value="power3.out">Settle</option><option value="power2.inOut">Smooth</option><option value="back.out(1.4)">Small overshoot</option></select></div>
+    </div>
+
+    <div class="group">
+      <h2>Echo</h2>
+      <div class="row full"><label for="echoColor">Colour (dark)</label><input id="echoColor" type="color"></div>
+      <div class="row full"><label for="echoColorLight">Colour (light)</label><input id="echoColorLight" type="color"></div>
+      <div class="row"><label for="ghosts">Copies</label><input id="ghosts" type="range" min="0" max="6" step="1"><output data-for="ghosts"></output></div>
+      <div class="row"><label for="ghostSpacing">Spacing</label><input id="ghostSpacing" type="range" min="0.1" max="1.5" step="0.05"><output data-for="ghostSpacing"></output></div>
+      <div class="row"><label for="ghostOpacity">Opacity</label><input id="ghostOpacity" type="range" min="0" max="1" step="0.05"><output data-for="ghostOpacity"></output></div>
+      <div class="row"><label for="lead">Lead (frames)</label><input id="lead" type="range" min="0" max="8" step="1"><output data-for="lead"></output></div>
+      <div class="row"><label for="glow">Glow</label><input id="glow" type="range" min="0" max="1" step="0.05"><output data-for="glow"></output></div>
+      <div class="row"><label for="glowStay">Glow stays</label><input id="glowStay" type="range" min="0" max="0.6" step="0.02"><output data-for="glowStay"></output></div>
+      <div class="row full"><label for="tint">Colour fade</label>
+        <select id="tint"><option value="1">Word starts in echo colour</option><option value="0">Word keeps its colour</option></select></div>
+    </div>
+
+    <div class="group">
+      <div class="actions">
+        <button class="btn" id="toAll" type="button">Apply to all texts</button>
+        <button class="btn" id="useGlobal" type="button">Use global</button>
+        <button class="btn" id="reset" type="button">Reset</button>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="save" type="button">Save for render</button>
+        <button class="btn" id="copy" type="button">Copy settings</button>
+      </div>
+      <div class="status" id="status"></div>
+      <textarea id="json" aria-label="Settings JSON" hidden readonly></textarea>
+    </div>
+  </aside>
+</div>
+
+<audio id="vo" preload="auto" src="__AUDIO__"></audio>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>__TEXTFX__</script>
+<script>
+const SCENES = __SCENES_JSON__;
+const TOTAL = SCENES[SCENES.length - 1].end;
+const KEYS = ['preset','direction','distance','duration','blur','delay','ease','echoColor','echoColorLight','ghosts','ghostSpacing','ghostOpacity','lead','glow','glowStay','tint'];
+const DEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
+let settings = { global: Object.assign({}, DEF), overrides: {} };
+let tl = null, playing = false, t = 0, clockStart = 0, selected = '*';
+const $ = id => document.getElementById(id);
+const stage = $('stage'), audio = $('vo');
+
+// ---- collect every text (outlined SVG text groups with one <g> per word)
+const ITEMS = [];
+SCENES.forEach((sc, i) => {
+  const el = document.getElementById('S' + i); sc.el = el;
+  const svg = el.querySelector('svg'); if (!svg) return;
+  const bg = svg.querySelector('#BG_FILL rect');
+  sc.light = !!bg && /^#f1f1f1$/i.test(bg.getAttribute('fill') || '');
+  const layers = Array.from(svg.children).filter(n => n.tagName === 'g' && /^L\d/.test(n.id) && !/^L9\d/.test(n.id));
+  let headIdx = 0, otherIdx = 0;
+  const headWords = [];
+  layers.forEach(layer => {
+    const head = /^L1\d/.test(layer.id);
+    layer.querySelectorAll('g[id^="TXT_"]').forEach(g => {
+      if (g.id.includes('__w')) return;
+      const words = Array.from(g.querySelectorAll(':scope > g[id*="__w"]'));
+      if (!words.length) return;
+      const item = { key: sc.id + '/' + g.id, scene: sc, label: g.id.replace(/^TXT_/, '').replace(/_\d+$/, '').replace(/_/g, ' '), words, head, idx: head ? headIdx++ : otherIdx++ };
+      if (head) headWords.push(...words);
+      ITEMS.push(item);
+    });
+  });
+  sc.headWords = headWords;
+});
+
+function voTimes(sc, n) {
+  if (sc.words) return Array.from({ length: n }, (_, i) => sc.words[Math.min(i, sc.words.length - 1)]);
+  const [a, b] = sc.vo || [sc.start + 0.2, sc.start + (sc.end - sc.start) * 0.6];
+  const span = Math.max(0.1, (b - a) * 0.85);
+  return Array.from({ length: n }, (_, i) => a + (n > 1 ? span * i / (n - 1) : 0));
+}
+function eff(key) { return Object.assign({}, settings.global, settings.overrides[key] || {}); }
+
+// ---- build the timeline from the current settings
+function build() {
+  if (tl) tl.kill();
+  TextFX.clean(stage);
+  tl = gsap.timeline({ paused: true });
+  SCENES.forEach(sc => {
+    tl.set(sc.el, { visibility: 'visible' }, sc.start);
+    tl.set(sc.el, { visibility: 'hidden' }, sc.end);
+    if (!sc.headWords) return;
+    const vt = voTimes(sc, sc.headWords.length);
+    ITEMS.filter(it => it.scene === sc).forEach(it => {
+      const s = eff(it.key);
+      const times = it.head
+        ? it.words.map(w => vt[sc.headWords.indexOf(w)] + s.delay)
+        : it.words.map((_, k) => sc.start + 0.3 + it.idx * 0.08 + k * s.stagger + s.delay);
+      TextFX.apply(tl, it.words, times.map(x => Math.max(sc.start, x)), s, sc.light);
+    });
+  });
+  tl.set({}, {}, TOTAL);
+  tl.seek(t, false);
+}
+
+// ---- transport
+function show(time) {
+  t = Math.max(0, Math.min(TOTAL, time));
+  if (tl) tl.seek(t, false);
+  $('scrub').value = (t / TOTAL * 100).toFixed(2);
+  $('clock').value = t.toFixed(2) + ' / ' + TOTAL.toFixed(2);
+}
+function tick() {
+  if (!playing) return;
+  const now = audio.readyState >= 2 && !audio.paused ? audio.currentTime : t0Clock();
+  show(now);
+  if (now >= TOTAL) { stop(); return; }
+  requestAnimationFrame(tick);
+}
+function t0Clock() { return (performance.now() - clockStart) / 1000; }
+function play(from) {
+  playing = true; $('play').textContent = 'Pause';
+  show(from ?? t);
+  clockStart = performance.now() - t * 1000;
+  try { audio.currentTime = t; audio.play().catch(() => {}); } catch (e) {}
+  requestAnimationFrame(tick);
+}
+function stop() { playing = false; $('play').textContent = 'Play'; try { audio.pause(); } catch (e) {} }
+$('play').addEventListener('click', () => playing ? stop() : play(t >= TOTAL ? 0 : t));
+$('scrub').addEventListener('input', e => { const v = e.target.value / 100 * TOTAL; if (playing) stop(); show(v); });
+$('replay').addEventListener('click', () => {
+  const it = ITEMS.find(i => i.key === selected);
+  const sc = it ? it.scene : SCENES.find(s => t >= s.start && t < s.end) || SCENES[0];
+  play(Math.max(0, sc.start - 0.05));
+});
+const marks = $('marks');
+SCENES.forEach(sc => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.textContent = sc.id === 'SLATE' ? '▮' : sc.id.replace('F', '');
+  b.title = sc.id; b.style.left = (sc.start / TOTAL * 100) + '%';
+  b.addEventListener('click', () => { stop(); show(sc.start + 0.01); });
+  marks.appendChild(b);
+});
+
+// ---- inspector
+const target = $('target');
+function fillTargets() {
+  target.innerHTML = '';
+  const all = new Option('All texts (global)', '*'); target.add(all);
+  SCENES.forEach(sc => {
+    const its = ITEMS.filter(i => i.scene === sc); if (!its.length) return;
+    const og = document.createElement('optgroup'); og.label = sc.id;
+    its.forEach(it => og.appendChild(new Option((settings.overrides[it.key] ? '● ' : '') + it.label, it.key)));
+    target.appendChild(og);
+  });
+  target.value = selected;
+}
+function readUI() {
+  const o = {};
+  KEYS.forEach(k => {
+    const el = $(k); let v = el.value;
+    if (el.type === 'range') v = parseFloat(v);
+    if (k === 'tint') v = v === '1';
+    o[k] = v;
+  });
+  return o;
+}
+function writeUI(s) {
+  KEYS.forEach(k => {
+    const el = $(k); el.value = k === 'tint' ? (s.tint ? '1' : '0') : s[k];
+    const out = document.querySelector(`output[data-for="${k}"]`); if (out) out.value = s[k];
+  });
+  const it = ITEMS.find(i => i.key === selected);
+  $('scope').textContent = selected === '*' ? 'Editing every text without its own settings.' :
+    (settings.overrides[selected] ? 'This text has its own settings.' : 'Using the global settings. Change anything to give it its own.') + ' · ' + it.scene.id;
+}
+let pending = null;
+function onEdit() {
+  const vals = readUI();
+  KEYS.forEach(k => { const out = document.querySelector(`output[data-for="${k}"]`); if (out) out.value = vals[k]; });
+  if (selected === '*') settings.global = Object.assign({}, settings.global, vals);
+  else {
+    const diff = {};
+    KEYS.forEach(k => { if (vals[k] !== settings.global[k]) diff[k] = vals[k]; });
+    if (Object.keys(diff).length) settings.overrides[selected] = diff; else delete settings.overrides[selected];
+  }
+  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(eff(selected)); }, 120);
+  markDirty();
+}
+KEYS.forEach(k => $(k).addEventListener('input', onEdit));
+target.addEventListener('change', () => {
+  selected = target.value; writeUI(selected === '*' ? settings.global : eff(selected));
+  const it = ITEMS.find(i => i.key === selected);
+  if (it) { stop(); show(Math.max(0, (it.head ? voTimes(it.scene, 1)[0] : it.scene.start) - 0.1)); }
+});
+$('toAll').addEventListener('click', () => {
+  settings.global = Object.assign({}, selected === '*' ? settings.global : eff(selected)); settings.overrides = {};
+  build(); fillTargets(); writeUI(eff(selected)); markDirty(); status('Applied to every text.');
+});
+$('useGlobal').addEventListener('click', () => {
+  if (selected === '*') return; delete settings.overrides[selected];
+  build(); fillTargets(); writeUI(eff(selected)); markDirty();
+});
+$('reset').addEventListener('click', () => {
+  settings = { global: Object.assign({}, DEF), overrides: {} };
+  build(); fillTargets(); writeUI(eff(selected)); markDirty(); status('Back to the default look.');
+});
+
+// ---- save: shared store (Claude reads it for the render) with a copy fallback
+let db = null;
+function status(msg, ok) { const s = $('status'); s.textContent = msg; s.classList.toggle('ok', !!ok); }
+function markDirty() { status('Unsaved changes.'); }
+$('save').addEventListener('click', async () => {
+  if (!db) { status('Saving needs the shared store. Use Copy settings and paste them to Claude.'); return; }
+  try {
+    await db.doc('textfx/current').set({ settings: JSON.stringify(settings), savedAt: new Date().toISOString() });
+    status('Saved. Claude will use these settings for the render.', true);
+  } catch (e) { status('Could not save (' + (e && e.code || 'error') + '). Use Copy settings instead.'); }
+});
+$('copy').addEventListener('click', async () => {
+  const txt = JSON.stringify(settings, null, 1); const ta = $('json'); ta.value = txt;
+  try { await navigator.clipboard.writeText(txt); status('Copied. Paste it to Claude.', true); }
+  catch (e) { ta.hidden = false; ta.select(); status('Select the text below and copy it.'); }
+});
+
+// ---- boot
+fillTargets(); writeUI(settings.global); build(); show(0);
+(async () => {
+  db = window.claude ? await window.claude.use('db') : null;
+  if (!db) return;
+  $('dbBadge').textContent = 'shared store'; $('dbBadge').classList.add('on');
+  try {
+    const snap = await db.doc('textfx/current').get();
+    if (snap.exists) {
+      const d = snap.data(); const saved = JSON.parse(d.settings);
+      settings = { global: Object.assign({}, DEF, saved.global), overrides: saved.overrides || {} };
+      fillTargets(); writeUI(eff(selected)); build(); show(t);
+      status('Loaded the settings saved ' + new Date(d.savedAt).toLocaleString() + '.', true);
+    }
+  } catch (e) {}
+})();
+</script>
