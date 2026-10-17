@@ -287,7 +287,7 @@ function onEdit() {
     KEYS.forEach(k => { if (vals[k] !== settings.global[k]) diff[k] = vals[k]; });
     if (Object.keys(diff).length) settings.overrides[selected] = diff; else delete settings.overrides[selected];
   }
-  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(eff(selected)); if (!playing || !range) replayScene(); }, 150);
+  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(eff(selected)); }, 250);
   markDirty();
 }
 KEYS.forEach(k => $(k).addEventListener('input', onEdit));
