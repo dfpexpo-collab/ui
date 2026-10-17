@@ -114,7 +114,7 @@
   const TYPE_DEFAULTS = {
     preset: 'type',            // type | none
     typeSpeed: 45,             // letters per second
-    cursor: true,
+    cursor: false,
     cursorColor: '#00b3ff',
     cursorColorLight: '#0012d6',
     stagger: 0.01,             // s between fields in the same scene
