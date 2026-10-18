@@ -41,4 +41,5 @@ def plate(src, crop, pt, out, feather_top=(110, 70), feather_bot=(170, 230)):
 P = sys.argv[1] if len(sys.argv) > 1 else 'brochure/pages/'   # folder with the brochure page JPGs (b01.jpg ...)
 plate(P + 'b01.jpg', (0, 0, 1240, 1754), 166, 'assets/plate_b01.jpg', feather_top=(60, 60), feather_bot=(150, 150))
 plate(P + 'b04.jpg', (0, 140, 1240, 1754), 227, 'assets/plate_b04.jpg')
+plate(P + 'b06.jpg', (0, 140, 1240, 1754), 227, 'assets/plate_b06.jpg')
 plate(P + 'b08.jpg', (0, 140, 1240, 1754), 227, 'assets/plate_b08.jpg')
