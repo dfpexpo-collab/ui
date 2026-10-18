@@ -20,17 +20,26 @@ def rect_mask(shape, rects, pad=0):
     return m
 
 def clean_bg(img, mask):
-    """Fill the masked areas with a smooth continuation of the background (inpaint at 1/4 size, then blur)."""
+    """Fill masked areas with a smooth surface fitted to the visible background (2D polynomial, degree 4):
+    a clean light gradient with no smears, edges, or leftover shapes."""
     h, w = mask.shape
-    small = cv2.resize(img.astype(np.uint8), (w // 4, h // 4), interpolation=cv2.INTER_AREA)
-    ms = cv2.resize(mask, (w // 4, h // 4), interpolation=cv2.INTER_NEAREST)
-    ms = cv2.dilate(ms, np.ones((5, 5), np.uint8))
-    fill = cv2.inpaint(small, ms, 9, cv2.INPAINT_TELEA)
-    fill = cv2.GaussianBlur(fill, (0, 0), 7)
-    fill = cv2.resize(fill, (w, h), interpolation=cv2.INTER_CUBIC).astype(np.float32)
-    soft = cv2.GaussianBlur(cv2.dilate(mask, np.ones((9, 9), np.uint8)).astype(np.float32) / 255, (0, 0), 6)[..., None]
+    step = 6
+    ys, xs = np.mgrid[0:h:step, 0:w:step]
+    ok = cv2.dilate(mask, np.ones((31, 31), np.uint8))[::step, ::step] == 0
+    def feats(y, x):
+        u, v = x / w * 2 - 1, y / h * 2 - 1
+        return np.stack([u ** i * v ** j for i in range(4) for j in range(4 - i)], -1)
+    F = feats(ys[ok].astype(np.float32), xs[ok].astype(np.float32))
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    FA = feats(yy, xx)
+    fill = np.zeros_like(img)
+    for ch in range(3):
+        coef, *_ = np.linalg.lstsq(F, img[::step, ::step, ch][ok], rcond=None)
+        vis = img[::step, ::step, ch][ok]
+        fill[..., ch] = np.clip(FA @ coef, np.percentile(vis, 8), np.percentile(vis, 99))
+    soft = cv2.GaussianBlur(cv2.dilate(mask, np.ones((41, 41), np.uint8)).astype(np.float32) / 255, (0, 0), 22)[..., None]
     base = cv2.GaussianBlur(img, (0, 0), 1.2)
-    return base * (1 - soft) + fill * soft
+    return base * (1 - soft) + np.clip(fill, 0, 255) * soft
 
 class Scene:
     def __init__(self, sid, page, crop_top, pt):
@@ -144,7 +153,7 @@ class Scene:
 def cover():
     sc = Scene('s2', 'b01', 0, 166)
     img = sc.img
-    CX, CY, R_OUT, R_CORE = 627, 1112, 462, 232
+    CX, CY, R_OUT, R_CORE = 627, 1112, 462, 258   # core keeps the whole dark gap ring
     yy, xx = np.mgrid[0:1754, 0:1240].astype(np.float32)
     rr = np.hypot(xx - CX, yy - CY); ang = (np.degrees(np.arctan2(yy - CY, xx - CX)) + 360) % 360
     texts = [('logo', (330, 150, 910, 340)), ('t_h1', (160, 370, 1090, 480)), ('t_h2', (245, 500, 995, 595)), ('t_url', (540, 1622, 712, 1675))]

@@ -11,7 +11,7 @@
   --ar:"thmanyah sans",sans-serif;--lat:"Gabarito",sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:#000;width:1080px;height:1920px;overflow:hidden}
-#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--deep)}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--deep);isolation:isolate}
 .scene{position:absolute;inset:0;overflow:hidden;visibility:hidden}
 .cam{position:absolute;inset:0;transform-origin:50% 50%}
 .abs{position:absolute}
@@ -57,26 +57,20 @@ function ghostFor(w, color) {
   else { g.textContent = w.querySelector('.wi').textContent; g.style.color = color; g.className = 'g ' + (w.dataset.cls || ''); g.style.background = 'none'; g.style.webkitTextFillColor = color; }
   return g;
 }
+// Motion language (motion-art-direction: Premium personality): one entrance curve (expo out), one exit curve,
+// base unit 0.6 s, overshoot 0, line stagger 80 ms, word stagger 60 ms. Text = mask reveal (kinetic-typography):
+// each word sits in its own mask with padding for Arabic dots, the glyphs rise from a hidden baseline. No blur, no ghosts.
+function maskWord(w) {
+  w.style.overflow = 'hidden'; w.style.verticalAlign = 'top';
+  if (w.classList.contains('tw')) { w.style.padding = '.32em .08em .38em'; w.style.margin = '-.32em -.08em -.38em'; }
+}
 function echoIn(words, t0, opt = {}) {
-  const o = Object.assign({}, TFX, opt), dir = o.dir || 'right';
-  const [dx, dy] = { right: [o.distance, 0], left: [-o.distance, 0], up: [0, -o.distance * .7], down: [0, o.distance * .7] }[dir];
-  words.forEach((w, i) => {
-    const t = t0 + i * (o.stagger ?? .09), wi = w.querySelector('.wi'); SFX.push(['word', +t.toFixed(3), i]);
-    const glow = ghostFor(w, o.echo); glow.style.zIndex = -1;
-    tl.fromTo(glow, { opacity: 0, x: dx, y: dy, filter: 'blur(18px)' }, { opacity: o.glow, x: 0, y: 0, duration: o.duration, ease: eEcho }, t - o.lead / FPS);
-    tl.to(glow, { opacity: o.glowStay, duration: o.duration * 1.2, ease: 'sine.out' }, t + o.duration);
-    tl.to(glow, { opacity: 0, duration: .6 }, t + o.duration * 2.4);
-    for (let k = 1; k <= o.ghosts; k++) {
-      const gh = ghostFor(w, o.echo), op = o.ghostOpacity * (1 - (k - 1) / (o.ghosts + 1)), ts = t - o.lead / FPS - (o.ghosts - k) * o.ghostGap / FPS;
-      tl.fromTo(gh, { opacity: 0, x: dx, y: dy, filter: `blur(${o.echoBlur}px)` }, { opacity: op, x: 0, y: 0, filter: `blur(${o.echoBlur * .4}px)`, duration: o.duration * .8, ease: eEcho }, ts);
-      tl.to(gh, { opacity: 0, duration: o.duration * .5, ease: 'power1.out' }, t + o.duration * .55);
-    }
-    tl.fromTo(wi, { opacity: 0, x: dx, y: dy, filter: `blur(${o.blur}px)` }, { opacity: 1, x: 0, y: 0, filter: 'blur(0px)', duration: o.duration, ease: eLaunch }, t);
-    const tint = ghostFor(w, o.echo);
-    tl.fromTo(tint, { opacity: 0, x: dx, y: dy }, { opacity: 1, x: 0, y: 0, duration: o.duration, ease: eLaunch }, t);
-    tl.to(tint, { opacity: 0, duration: o.duration * 1.1, ease: 'power1.inOut' }, t + o.duration * .3);
-  });
-  return t0 + (words.length - 1) * (o.stagger ?? .09) + o.duration;
+  const long = words.length > 3, st = long ? 0 : (opt.stagger ?? .06), dur = long ? .7 : .62;
+  words.forEach((w, i) => { maskWord(w); const t = t0 + i * st, wi = w.querySelector('.wi');
+    if (!long || i === 0) SFX.push(['word', +t.toFixed(3), i]);
+    tl.fromTo(wi, { yPercent: 118, opacity: 0 }, { yPercent: 0, opacity: 1, duration: dur, ease: eLaunch }, t);
+    tl.set(wi, { opacity: 1 }, t + .12); });
+  return t0 + (words.length - 1) * st + dur;
 }
 // sprite words from the manifest
 function spriteWords(parent, L) {
@@ -105,16 +99,16 @@ function scene(dur, build) {
   g.setAttribute('stdDeviation', '0 0'); g.setAttribute('in', 'SourceGraphic'); f.appendChild(g); document.getElementById('mbdefs').appendChild(f);
   const bok = el('div', 'cam', s, { pointerEvents: 'none', mixBlendMode: 'screen' }); s.insertBefore(bok, cam);
   let seed = (i + 1) * 9301; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-  for (let k = 0; k < 4; k++) { const r = 220 + rnd() * 340, x = rnd() * 1080, y = 200 + rnd() * 1600, ring = k === 3;
+  for (let k = 0; k < 4; k++) { const r = 220 + rnd() * 340, x = rnd() * 1080, y = 200 + rnd() * 1600, ring = false;
     const c = el('div', 'abs', bok, { left: (x - r) + 'px', top: (y - r) + 'px', width: 2 * r + 'px', height: 2 * r + 'px', borderRadius: '50%',
       background: ring ? 'none' : `radial-gradient(closest-side,rgba(${k % 2 ? '0,179,255' : '0,60,255'},.55),transparent)`,
       border: ring ? '2px solid rgba(127,208,255,.35)' : 'none', filter: ring ? 'blur(2px)' : 'blur(30px)', opacity: ring ? .5 : .32 });
     tl.fromTo(c, { x: -40 + rnd() * 80, y: -40 + rnd() * 80, scale: .9 }, { x: -60 + rnd() * 120, y: -80 + rnd() * 160, scale: 1.12, duration: dur + 1, ease: 'sine.inOut' }, t0 - .5); }
   SC.push({ s, cam, bgl, bok, t0, dur, blur: g, blurId: f.id }); build(cam, t0, s, bgl); T += dur; return s; }
-function plate(layer, src) { const p = el('img', 'plate', layer); p.src = src; return p; }
+function plate(layer, src) { return null; }   // backgrounds come from the live gradient
 function camPush(cam, t0, dur, from = 1, to = 1.045, extra = {}) { tl.fromTo(cam, Object.assign({ scale: from }, extra.from || {}), Object.assign({ scale: to, duration: dur + .6, ease: 'sine.inOut' }, extra.to || {}), t0 - .3); }
 function riseIn(e, t, dist = 140, dur = 1.2) { tl.fromTo(e, { y: dist, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: dur, ease: eLaunch }, t); }
-function popIn(e, t, from = .5, dur = .55, origin) { if (origin) e.style.transformOrigin = origin; tl.fromTo(e, { scale: from, opacity: 0, filter: 'blur(8px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: dur, ease: backOut }, t); }
+function popIn(e, t, from = .5, dur = .55, origin) { if (origin) e.style.transformOrigin = origin; tl.fromTo(e, { scale: from, opacity: 0, filter: 'blur(8px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: dur, ease: eLaunch }, t); }
 function fadeIn(e, t, dur = .6) { tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: dur, ease: eSettle }, t); }
 function bottomFade(e, pageBottom, topY, len = 240) { const h = parseFloat(e.style.height); const cut = (pageBottom - topY) / h * 100, st = (pageBottom - len - topY) / h * 100;
   e.style.webkitMaskImage = e.style.maskImage = `linear-gradient(180deg,#000 ${st}%,transparent ${cut}%)`; }
@@ -127,15 +121,42 @@ function countUp(node, t, target, { dur = .75, fmt = v => Math.round(v).toLocale
 const SFX = [];   // [type, time, extra] for the sound design pass
 const sfx = (type, t, x) => SFX.push([type, +t.toFixed(3), x || 0]);
 
+
+// ================= live gradient background (saas-animation house rule): frame still, inside moves
+const glc = el('canvas', 'abs', stage, { left: 0, top: 0, zIndex: -1 }); glc.width = 540; glc.height = 960; glc.style.width = '1080px'; glc.style.height = '1920px';
+stage.insertBefore(glc, stage.firstChild);
+const gl = glc.getContext('webgl', { preserveDrawingBuffer: true });
+const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const FS = `precision highp float;uniform vec2 r;uniform float t;uniform vec3 c0,c1,c2;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*n(p);p*=2.02;a*=.5;}return v;}
+void main(){vec2 uv=gl_FragCoord.xy/r;vec2 p=uv*vec2(.56,1.)*.5*2.;float T=t*.11;
+vec2 q=vec2(fbm(p+vec2(0.,T)),fbm(p+vec2(5.2,1.3)-T));vec2 w=vec2(fbm(p+2.*q+vec2(1.7,9.2)+T*.7),fbm(p+2.*q+vec2(8.3,2.8)-T*.6));
+float f=fbm(p+2.2*w);float g=smoothstep(.25,.85,f);vec3 col=mix(c0,c1,g);col=mix(col,c2,smoothstep(.62,.95,f)*.55);
+float v=1.-.55*pow(length((uv-.5)*vec2(1.,.8)),1.6);gl_FragColor=vec4(col*v,1.);}`;
+function sh(type, src) { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; }
+const prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); gl.useProgram(prog);
+const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+const pl = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(pl); gl.vertexAttribPointer(pl, 2, gl.FLOAT, false, 0, 0);
+const U = n => gl.getUniformLocation(prog, n); gl.uniform2f(U('r'), 540, 960);
+gl.uniform3f(U('c0'), 0 / 255, 3 / 255, 40 / 255); gl.uniform3f(U('c1'), 0 / 255, 22 / 255, 200 / 255); gl.uniform3f(U('c2'), 0 / 255, 160 / 255, 255 / 255);
+function drawBG(t) { gl.uniform1f(U('t'), t); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
 // ================= v02: beat grid, camera + parallax per scene, motivated transitions, living holds
 const BPM = 112, B = 60 / BPM;                       // one beat = 0.536 s; every cut and hero hit lands on the grid
 const beat = n => +(n * B).toFixed(4);
-const soft = bez(.3, 1.16, .5, 1);                   // pops: ~3 % overshoot, once
+const soft = bez(.16, 1, .3, 1);   // premium: no overshoot                   // pops: ~3 % overshoot, once
 const TRANS = [];                                    // [type, index, opts]
-function maskRise(words, t0, { stagger = .06, dur = .62, from = 105 } = {}) {
-  words.forEach((w, i) => { w.style.overflow = 'hidden'; if (w.classList.contains('tw')) { w.style.paddingBlock = '.22em'; w.style.marginBlock = '-.22em'; w.style.verticalAlign = 'top'; }
-    const wi = w.querySelector('.wi'); tl.fromTo(wi, { yPercent: from, opacity: 0 }, { yPercent: 0, opacity: 1, duration: dur, ease: eSettle }, t0 + i * stagger); if (i % 2 === 0) SFX.push(['word_soft', +(t0 + i * stagger).toFixed(3), i]); });
+function maskRise(words, t0, { stagger = 0, dur = .6 } = {}) {
+  words.forEach((w, i) => { maskWord(w); const wi = w.querySelector('.wi'); const t = t0 + i * stagger;
+    tl.fromTo(wi, { yPercent: 118, opacity: 0 }, { yPercent: 0, opacity: 1, duration: dur, ease: eLaunch }, t);
+    if (i === 0) SFX.push(['word_soft', +t.toFixed(3), i]); });
   return t0 + (words.length - 1) * stagger + dur;
+}
+// kashida grows inside a featured word (Thmanyah swaps in its curved stretched forms)
+function kashida(w, base, at, t, { from = 0, to = 4, dur = .7 } = {}) {
+  const wi = w.querySelector('.wi'), bx = { n: from }, set = () => { wi.textContent = base.slice(0, at) + 'ـ'.repeat(Math.round(bx.n)) + base.slice(at); };
+  set(); tl.fromTo(bx, { n: from }, { n: to, duration: dur, ease: eSettle, onUpdate: set, immediateRender: false }, t); SFX.push(['spark', +(t + .1).toFixed(3), 0]);
 }
 function cameraMove(cam, bgl, t0, dur, { from = {}, to = {}, origin = '50% 50%', par = .35 } = {}) {
   cam.style.transformOrigin = origin; bgl.style.transformOrigin = origin;
@@ -171,7 +192,7 @@ scene(beat(6), (cam, t0, s, bgl) => {
   const by = el('div', 'abs lat', cam, { right: '116px', top: '1478px', font: '500 28px Gabarito', color: '#f1f1f1', opacity: .85 }); by.textContent = 'Powered by VOOM.';
   tl.fromTo(win, { opacity: 0, clipPath: 'inset(0 0 100% 0 round 30px)' }, { opacity: 1, clipPath: 'inset(0 0 0% 0 round 30px)', duration: .9, ease: eLaunch }, t0 + .1);
   dots.forEach((d, i) => popIn(d, t0 + .45 + i * .06, .2, .4)); popIn(ast, t0 + .55, .2, .5); tl.to(ast, { rotation: 120, duration: beat(6), ease: 'sine.inOut' }, t0 + .55);
-  echoIn(lines[0].words, t0 + beat(1)); echoIn(lines[1].words, t0 + beat(1.75)); echoIn(lines[2].words, t0 + beat(2.5));
+  echoIn(lines[0].words, t0 + beat(1)); echoIn(lines[1].words, t0 + beat(1.75)); echoIn(lines[2].words, t0 + beat(2.5)); kashida(lines[2].words[2], 'واحد؟', 3, t0 + beat(3.25), { to: 3 });
   maskRise([by], t0 + beat(3.5));
   sfx('whoosh_soft', t0 + .1); sfx('shimmer', t0 + beat(2.5));
 });
@@ -215,7 +236,7 @@ scene(beat(7), (cam, t0, s, bgl) => {
   // living hold: the spark runs round the segments; the core breathes on the beat
   [4, 5, 6].forEach(n => { tl.to(core, { scale: 1.035, duration: .12, ease: 'power2.out' }, t0 + beat(n)); tl.to(core, { scale: 1, duration: .35, ease: eSettle }, t0 + beat(n) + .12); });
 });
-TRANS.push(['whip', 2, { dx: 0, dy: -1 }]);
+TRANS.push(['dissolve', 2, {}]);
 
 // ===== S3 your project (7 beats): tower + man rise, bands slide out of the tower, labels, Floor 23 card + ping
 scene(beat(7), (cam, t0, s, bgl) => {
@@ -224,7 +245,7 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const bands = [1, 2, 3].map(i => { const d = sprite(cam, findL(M, 'band' + i)); d.style.transformOrigin = '36% 50%'; return d; });
   const fg = sprite(cam, findL(M, 'fg')); bottomFade(fg, M.pageBottom, parseFloat(fg.style.top), 200);
   tl.fromTo(fg, { y: 230, opacity: 0, filter: 'blur(16px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.25, ease: eLaunch }, t0 - .05); drift(fg, t0 + 1.2, beat(7) - 1, { y: -14 }); sfx('rise', t0);
-  maskRise(spriteWords(cam, findL(M, 't_eyebrow')), t0 + beat(.75), { stagger: .05 });
+  maskRise(spriteWords(cam, findL(M, 't_eyebrow')), t0 + beat(.75));
   echoIn(spriteWords(cam, findL(M, 't_h1')), t0 + beat(1.25)); echoIn(spriteWords(cam, findL(M, 't_h2')), t0 + beat(2));
   bands.forEach((b, i) => { const t = t0 + beat(2.5) + i * beat(.25); tl.fromTo(b, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .7, ease: eLaunch }, t); sfx('swish', t, i); });
   ['t_l1', 't_l2', 't_l3'].forEach((id, i) => { const ws = spriteWords(cam, findL(M, id)); ws.forEach(w => tl.fromTo(w, { x: -50, opacity: 0, filter: 'blur(8px)' }, { x: 0, opacity: 1, filter: 'blur(0px)', duration: .6, ease: eLaunch }, t0 + beat(2.85) + i * beat(.25))); });
@@ -234,11 +255,10 @@ scene(beat(7), (cam, t0, s, bgl) => {
   ping(cam, M.finger[0], M.finger[1], t0 + beat(4.5) - .05, { r: 70 });
   sheen(cam, t0 + beat(5.5), { left: 0, top: bands[0].offsetTop || 0, width: 1080, height: 1920, dur: 1.0, alpha: .18 });
 });
-TRANS.push(['whip', 3, { dx: -1, dy: 0 }]);
+TRANS.push(['push', 3, { dx: -1, dy: 0 }]);
 
 // ===== S4 it looks like Voom (7 beats): headline, then the dashboard rises and its KPIs count
 scene(beat(7), (cam, t0, s, bgl) => {
-  el('div', 'plate', bgl, { background: 'radial-gradient(90% 55% at 70% 18%,rgba(0,18,214,.75),transparent 70%),radial-gradient(120% 70% at 30% 100%,rgba(0,18,214,.9),transparent 70%),#000024' });
   cameraMove(cam, bgl, t0, beat(7), { from: { x: 30, scale: 1.0 }, to: { x: -24, scale: 1.04 }, origin: '50% 40%' });
   const q1 = liveLine(cam, 'What does smarter', 'lat', { left: '72px', top: '340px', font: '500 54px/1.1 Gabarito', color: '#f1f1f1' });
   const q2 = liveLine(cam, 'selling look like?', 'lat', { left: '72px', top: '400px', font: '500 54px/1.1 Gabarito', color: '#f1f1f1' });
@@ -250,10 +270,10 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const a2 = liveLine(cam, 'لجزء من تجربة البيع مع Voom', 'ar', { right: '72px', top: '880px', fontSize: '44px', fontWeight: 500, color: '#f1f1f1' });
   const c1 = liveLine(cam, 'Full Control. Clear Insights. One Dashboard.', 'lat', { left: '72px', top: '975px', font: '600 40px Gabarito', color: '#f1f1f1' });
   const c2 = liveLine(cam, 'حلّل بيانات مشاريعك، تابع الأداء، واتخذ قرارات أفضل', 'ar', { left: '72px', top: '1032px', fontSize: '34px', fontWeight: 500, color: '#7fd0ff' });
-  maskRise([...q1.words, ...q2.words], t0 - .3, { stagger: .05 });
-  echoIn(h1.words, t0 + beat(.5), { dir: 'left' }); echoIn([w1, w2], t0 + beat(1), { dir: 'left' }); sfx('shimmer', t0 + beat(1.9));
-  maskRise([...a1.words, ...a2.words], t0 + beat(2.5), { stagger: .04 });
-  maskRise(c1.words, t0 + beat(3), { stagger: .04 }); maskRise(c2.words, t0 + beat(3.25), { stagger: .03 });
+  maskRise(q1.words, t0 - .3); maskRise(q2.words, t0 - .22);
+  echoIn(h1.words, t0 - .15); echoIn([w1, w2], t0 + .15); sfx('shimmer', t0 + beat(1.9));
+  maskRise(a1.words, t0 + beat(2.5)); maskRise(a2.words, t0 + beat(2.5) + .08);
+  maskRise(c1.words, t0 + beat(3)); maskRise(c2.words, t0 + beat(3) + .08);
   const dash = el('div', 'abs card', cam, { left: '72px', top: '1110px', width: '936px', padding: '18px' });
   const img = el('img', '', dash, { display: 'block', width: '100%', borderRadius: '18px' }); img.src = 'assets/own/dash.jpg';
   tl.fromTo(dash, { y: 320, opacity: 0, rotationX: 18, filter: 'blur(14px)' }, { y: 0, opacity: 1, rotationX: 0, filter: 'blur(0px)', duration: 1.1, ease: eLaunch }, t0 + beat(2.75));
@@ -270,7 +290,6 @@ TRANS.push(['zoom', 4, { fx: 540, fy: 1360 }]);      // push through the dashboa
 
 // ===== S5 masterplan (8 beats): board lands from 3D, unit cards lift, "ضاعف مبيعاتك", 10X on the bar
 scene(beat(8), (cam, t0, s, bgl) => {
-  el('div', 'plate', bgl, { background: 'radial-gradient(70% 40% at 50% 36%,rgba(0,18,214,.85),transparent 72%),radial-gradient(120% 70% at 30% 100%,rgba(0,18,214,.6),transparent 70%),#000024' });
   s.style.perspective = '1800px';
   cameraMove(cam, bgl, t0, beat(8), { from: { scale: 1.0 }, to: { scale: 1.05 }, origin: '50% 40%' });
   const bh = 1008 * 1618 / 2334;
@@ -286,9 +305,9 @@ scene(beat(8), (cam, t0, s, bgl) => {
     const t = t0 + beat(1.5) + i * beat(.5);
     tl.fromTo(c, { scale: 1, z: 0 }, { scale: 1.14, z: 70, duration: .5, ease: soft }, t); tl.to(c, { scale: 1.04, z: 25, duration: beat(3), ease: 'sine.inOut' }, t + .5); sfx('pop', t, i + 2); });
   const head = el('div', 'abs ar', cam, { right: '72px', top: '1110px', textAlign: 'right', fontSize: '128px', fontWeight: 700, lineHeight: 1.08, color: '#f1f1f1' });
-  const l1 = liveLine(el('div', '', head, { position: 'relative', height: '138px' }), 'ضاعـــف', 'ar', { position: 'relative' });
+  const l1 = liveLine(el('div', '', head, { position: 'relative', height: '138px' }), 'ضاعف', 'ar', { position: 'relative' });
   const l2 = liveLine(el('div', '', head, { position: 'relative', height: '138px' }), 'مبيعاتك', 'ar', { position: 'relative' });
-  echoIn(l1.words, t0 + beat(2.5)); echoIn(l2.words, t0 + beat(3));
+  echoIn(l1.words, t0 + beat(2.5)); echoIn(l2.words, t0 + beat(3)); kashida(l1.words[0], 'ضاعف', 3, t0 + beat(3.5), { to: 5, dur: .9 });
   const ten = el('div', 'abs lat grad', cam, { left: '72px', top: '1120px', font: '900 300px/1 Gabarito', letterSpacing: '-.05em', transformOrigin: '0% 70%' });
   const box = { v: 0 }; ten.textContent = '0X'; const tc = t0 + beat(3.5);
   tl.fromTo(ten, { opacity: 0, y: 30, filter: 'blur(14px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .45, ease: eLaunch }, tc);
@@ -299,7 +318,7 @@ scene(beat(8), (cam, t0, s, bgl) => {
   tl.fromTo(glow, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1.1, duration: .2 }, t0 + beat(5)); tl.to(glow, { opacity: 0, duration: 1.0, ease: eSettle }, t0 + beat(5) + .2);
   sheen(board, t0 + beat(5.5), { width: 1008, height: bh, dur: 1.0, alpha: .3, radius: 30 });
 });
-TRANS.push(['whip', 5, { dx: 1, dy: 0 }]);
+TRANS.push(['pixel', 5, { fx: 300, fy: 1270 }]);
 
 // ===== S6 AI voice agent (7 beats): person + podium rise, title, stats band counts, screen glow
 scene(beat(7), (cam, t0, s, bgl) => {
@@ -311,8 +330,8 @@ scene(beat(7), (cam, t0, s, bgl) => {
   tl.fromTo(pod, { y: 280, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.3, ease: eLaunch }, t0 + beat(.5));
   drift(man, t0 + 1.2, beat(6), { y: -10 }); drift(pod, t0 + 1.4, beat(6), { y: -6 }); sfx('rise', t0);
   echoIn(spriteWords(cam, findL(M, 't_title')), t0 + beat(1), { dir: 'left' });
-  maskRise(spriteWords(cam, findL(M, 't_sub')), t0 + beat(1.75), { stagger: .04 });
-  maskRise(spriteWords(cam, findL(M, 't_ar1')), t0 + beat(2.25), { stagger: .05 });
+  maskRise(spriteWords(cam, findL(M, 't_sub')), t0 + beat(1.75));
+  maskRise(spriteWords(cam, findL(M, 't_ar1')), t0 + beat(2.25));
   echoIn(spriteWords(cam, findL(M, 't_ar2')), t0 + beat(2.75));
   const band = sprite(cam, findL(M, 'band')); tl.fromTo(band, { scaleX: .2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .7, ease: eLaunch }, t0 + beat(3.5)); sfx('swish', t0 + beat(3.5));
   M.nums.forEach((n, i) => { const L = findL(M, n.id);
@@ -324,7 +343,7 @@ scene(beat(7), (cam, t0, s, bgl) => {
   tl.fromTo(scr, { opacity: 0 }, { opacity: 1, duration: .3 }, t0 + beat(5)); tl.to(scr, { opacity: 0, duration: 1.2, ease: eSettle }, t0 + beat(5) + .3);
   ping(cam, 690, 1360, t0 + beat(5), { r: 160 }); sfx('glass', t0 + beat(5), 1);
 });
-TRANS.push(['whip', 6, { dx: 0, dy: 1 }]);
+TRANS.push(['push', 6, { dx: 0, dy: -1 }]);
 
 // ===== S7 digital twin (7 beats): tower + city rise, title, callouts slide in by side, dots pulse
 scene(beat(7), (cam, t0, s, bgl) => {
@@ -345,7 +364,6 @@ TRANS.push(['match', 7, { from: [690, 1063], to: [560, 1080], scale: .42 }]);   
 
 // ===== S8 twin dashboard (7 beats): board unfolds in 3D around the tower, 25 % counts
 scene(beat(7), (cam, t0, s, bgl) => {
-  el('div', 'plate', bgl, { background: 'radial-gradient(70% 40% at 50% 55%,rgba(0,18,214,.9),transparent 72%),#000024' });
   s.style.perspective = '1800px';
   cameraMove(cam, bgl, t0, beat(7), { from: { scale: 1.0 }, to: { scale: 1.04 }, origin: '50% 55%' });
   const board = el('img', 'abs', cam, { left: '36px', top: '820px', width: '1008px', borderRadius: '30px', boxShadow: '0 40px 100px rgba(0,0,36,.7)', transformOrigin: '52% 45%' }); board.src = 'assets/own/twin_box.jpg';
@@ -354,22 +372,22 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const t1 = liveLine(cam, 'توأم رقمي ذكي: يراقب، يتحكم، يحلل، يتنبأ', 'ar', { left: 0, right: 0, top: '520px', textAlign: 'center', fontSize: '54px', fontWeight: 700, color: '#f1f1f1' });
   const t2 = el('div', 'line ar', cam, { left: 0, right: 0, top: '600px', textAlign: 'center', fontSize: '90px', fontWeight: 700, color: '#f1f1f1' });
   const mk = txt => { const w = el('span', 'tw', t2); el('span', 'wi', w).textContent = txt; t2.appendChild(document.createTextNode(' ')); return w; };
-  const wa = mk('ويــوفر'), wb = mk('حتى'); const wp = el('span', 'tw', t2); const pct = el('span', 'wi lat grad', wp, { fontWeight: 900, fontSize: '1.12em', direction: 'ltr', unicodeBidi: 'isolate' }); pct.textContent = '%25';
+  const wa = mk('ويوفر'), wb = mk('حتى'); const wp = el('span', 'tw', t2); const pct = el('span', 'wi lat grad', wp, { fontWeight: 900, fontSize: '1.12em', direction: 'ltr', unicodeBidi: 'isolate' }); pct.textContent = '%25';
   t2.appendChild(document.createTextNode(' ')); const wc = mk('من'), wd = mk('الطاقة');
-  maskRise(t1.words, t0 + beat(1), { stagger: .04 }); echoIn([wa, wb], t0 + beat(2)); echoIn([wc, wd], t0 + beat(2.75));
+  maskRise(t1.words, t0 + beat(1)); echoIn([wa, wb], t0 + beat(2)); echoIn([wc, wd], t0 + beat(2.75)); kashida(wa, 'ويوفر', 2, t0 + beat(3.5), { to: 3 });
   const box = { v: 0 }; const tc = t0 + beat(2.5);
   tl.fromTo(wp, { opacity: 0, filter: 'blur(14px)', y: 14 }, { opacity: 1, filter: 'blur(0px)', y: 0, duration: .6, ease: eLaunch }, tc);
   tl.fromTo(box, { v: 0 }, { v: 25, duration: beat(1.5), ease: bez(.33, 0, .67, 1), onUpdate: () => { pct.textContent = '%' + Math.round(box.v); } }, tc); SFX.push(['tick', tc, beat(1.5)]);
   sheen(cam, t0 + beat(4.5), { left: 36, top: 820, width: 1008, height: 580, dur: 1.0, alpha: .3, radius: 30 });
   [[200, 1015], [200, 1110], [200, 1200], [880, 1150]].forEach(([x, y], i) => ping(cam, x, y, t0 + beat(4) + i * .12, { r: 40 }));
 });
-TRANS.push(['whip', 8, { dx: -1, dy: 0 }]);
+TRANS.push(['push', 8, { dx: 1, dy: 0 }]);
 
 // ===== S9 global presence (7 beats): flags pop on the 8ths, counts, offices, contact + QR
 scene(beat(7), (cam, t0, s, bgl) => {
   const M = MAN.s9; plate(bgl, M.plate);
   cameraMove(cam, bgl, t0, beat(7), { from: { x: -22, scale: 1.02 }, to: { x: 22, scale: 1.05 }, origin: '50% 45%' });
-  maskRise(spriteWords(cam, findL(M, 't_en')), t0 + .05, { stagger: .05 });
+  maskRise(spriteWords(cam, findL(M, 't_en')), t0 + .05);
   echoIn(spriteWords(cam, findL(M, 't_ar')), t0 + beat(.5));
   for (let i = 0; i < 7; i++) { const f = sprite(cam, findL(M, 'flag' + i)), l = sprite(cam, findL(M, 'flagl' + i)); const t = t0 + beat(1.25) + i * beat(.25);
     tl.fromTo(f, { scale: .5, opacity: 0, y: 14, filter: 'blur(8px)' }, { scale: 1, opacity: 1, y: 0, filter: 'blur(0px)', duration: .5, ease: soft }, t);
@@ -382,8 +400,8 @@ scene(beat(7), (cam, t0, s, bgl) => {
   echoIn(spriteWords(cam, findL(M, 't_ar2')), t0 + beat(3.5));
   ['card_sa', 'card_eg', 'card_iq', 'card_us'].forEach((id, i) => { const c = sprite(cam, findL(M, id)); const t = t0 + beat(4.25) + i * beat(.25);
     tl.fromTo(c, { y: 50, opacity: 0, scale: .95, filter: 'blur(8px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: .6, ease: eLaunch }, t); sfx('glass', t, i); });
-  maskRise(spriteWords(cam, findL(M, 't_find')), t0 + beat(5.25), { stagger: .03 });
-  ['t_contact', 't_contact_ar', 't_phone', 't_mail'].forEach((id, i) => maskRise(spriteWords(cam, findL(M, id)), t0 + beat(5.5) + i * .06, { stagger: .03 }));
+  maskRise(spriteWords(cam, findL(M, 't_find')), t0 + beat(5.25));
+  ['t_contact', 't_contact_ar', 't_phone', 't_mail'].forEach((id, i) => maskRise(spriteWords(cam, findL(M, id)), t0 + beat(5.5) + i * .06));
   const qr = sprite(cam, findL(M, 'qr')); tl.fromTo(qr, { scale: .6, opacity: 0, filter: 'blur(8px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: .5, ease: soft }, t0 + beat(5.5)); sfx('pop_low', t0 + beat(5.5));
   const L = findL(M, 'qr'); const scan = el('div', 'abs', cam, { left: L.x + 'px', top: L.y + 'px', width: L.w + 'px', height: '6px', background: 'linear-gradient(90deg,transparent,#00b3ff,transparent)', boxShadow: '0 0 20px 6px rgba(0,179,255,.6)', opacity: 0 });
   tl.fromTo(scan, { y: 0, opacity: 0 }, { opacity: 1, duration: .05 }, t0 + beat(6)); tl.to(scan, { y: L.h - 6, duration: .7, ease: 'sine.inOut' }, t0 + beat(6) + .05); tl.to(scan, { opacity: 0, duration: .2 }, t0 + beat(6) + .7);
@@ -393,17 +411,16 @@ TRANS.push(['zoomout', 9, {}]);
 // ===== S10 end card (rest of the 40 s): logo, PropTech Summit, the box opens and types, booth E3 / E4
 scene(+(40 - T).toFixed(4), (cam, t0, s, bgl) => {
   const D = 40 - t0;
-  el('div', 'plate', bgl, { background: 'radial-gradient(70% 38% at 50% 92%,rgba(0,179,255,.55),transparent 70%),radial-gradient(110% 60% at 50% 70%,rgba(0,18,214,.95),transparent 72%),#000024' });
   cameraMove(cam, bgl, t0, D, { from: { scale: 1.0, y: 10 }, to: { scale: 1.035, y: -10 }, origin: '50% 55%' });
   const logo = el('div', 'abs', cam, { left: '50%', top: '230px', width: '260px', marginLeft: '-130px' });
   const li = el('img', '', logo, { width: '100%', display: 'block' }); li.src = 'assets/own/voom-wordmark-white.png';
   const tag = el('div', 'lat', logo, { textAlign: 'center', font: '500 25.5px/1 Gabarito', letterSpacing: '.03em', color: '#f1f1f1', marginTop: '6px', whiteSpace: 'nowrap' }); tag.textContent = 'End -to- End solutions';
   tl.fromTo(li, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: .8, ease: eLaunch }, t0 - .3); maskRise([tag], t0 + beat(.5)); sfx('streak', t0 - .3);
-  const w1 = liveLine(cam, 'انتظرونا في', 'ar', { left: 0, right: 0, top: '420px', textAlign: 'center', fontSize: '104px', fontWeight: 700, color: '#f1f1f1' }); w1.words[0].querySelector('.wi').textContent = 'انتظـرونا';
+  const w1 = liveLine(cam, 'انتظرونا في', 'ar', { left: 0, right: 0, top: '420px', textAlign: 'center', fontSize: '104px', fontWeight: 700, color: '#f1f1f1' }); w1.words[0].querySelector('.wi').textContent = 'انتظرونا';
   const p1 = liveLine(cam, 'PropTech', 'lat', { left: 0, right: 0, top: '560px', textAlign: 'center', font: '800 206px/.9 Gabarito', color: '#f1f1f1' });
   const p2 = el('div', 'line lat', cam, { left: 0, right: 0, top: '745px', textAlign: 'center', font: '800 206px/.9 Gabarito' });
   const sw = el('span', 'tw', p2); sw.dataset.cls = 'grad'; el('span', 'wi grad', sw).textContent = 'Summit';
-  echoIn(w1.words, t0 - .1); echoIn(p1.words, t0 + beat(.5), { dir: 'up' }); echoIn([sw], t0 + beat(1), { dir: 'up' }); sfx('shimmer', t0 + beat(1));
+  echoIn(w1.words, t0 - .1); kashida(w1.words[0], 'انتظرونا', 4, t0 + beat(1.75), { to: 4 }); echoIn(p1.words, t0 + beat(.5), { dir: 'up' }); echoIn([sw], t0 + beat(1), { dir: 'up' }); sfx('shimmer', t0 + beat(1));
   const info = el('div', 'abs card', cam, { left: '72px', right: '72px', top: '972px', height: '292px', overflow: 'hidden' });
   tl.fromTo(info, { clipPath: 'inset(48% 0 48% 0 round 32px)', opacity: 0 }, { clipPath: 'inset(0% 0 0% 0 round 32px)', opacity: 1, duration: .6, ease: eLaunch }, t0 + beat(3)); sfx('open', t0 + beat(3));
   const row = (top, svg, small) => { const r = el('div', 'abs', info, { left: '40px', top: top + 'px', display: 'flex', alignItems: 'center', gap: '26px' });
@@ -538,6 +555,29 @@ TRANS.forEach(([type, i, o]) => {
     tl.to(prev.s, { scale: o.scale, x: o.to[0] - o.from[0], y: o.to[1] - o.from[1], duration: .6, ease: bez(.6, 0, .2, 1) }, c - .55);
     tl.to(prev.s, { opacity: 0, duration: .25, ease: 'power1.in' }, c - .15);
     tl.fromTo(cur.s, { opacity: 0 }, { opacity: 1, duration: .4, ease: eSettle }, c - .45); sfx('whoosh_up', c - .55);
+  } else if (type === 'push') {
+    // relaxed push + blur: old leaves over 0.6 s, new settles over 0.95 s, incoming already moving (LEAD 0.3)
+    const dx = o.dx * 260, dy = o.dy * 360;
+    tl.to(prev.s, { x: -dx, y: -dy, opacity: 0, filter: 'blur(14px)', duration: .6, ease: 'power2.in' }, c - .5);
+    tl.set(cur.s, { visibility: 'visible' }, c - .3);
+    tl.fromTo(cur.s, { x: dx, y: dy, opacity: 0, filter: 'blur(14px)' }, { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: .95, ease: 'power3.out' }, c - .3);
+    tl.set(cur.s, { filter: 'none' }, c + .66); sfx('whoosh', c - .5);
+  } else if (type === 'pixel') {
+    // glass-square disc grows from the hit point: new scene masked in by a growing circle, squares glint along its edge
+    tl.set(cur.s, { visibility: 'visible', zIndex: 2 }, c - .45);
+    const R = { r: 0 }, pc = el('canvas', 'abs', stage, { left: 0, top: 0, zIndex: 58, pointerEvents: 'none', opacity: 0 }); pc.width = W; pc.height = H; const px = pc.getContext('2d');
+    const draw = () => { cur.s.style.clipPath = `circle(${R.r}px at ${o.fx}px ${o.fy}px)`; px.clearRect(0, 0, W, H); const g = 44;
+      for (let y = 0; y < H; y += g) for (let x = 0; x < W; x += g) { const d = Math.hypot(x + g / 2 - o.fx, y + g / 2 - o.fy) - R.r; if (Math.abs(d) < 70) {
+        const a = 1 - Math.abs(d) / 70; px.fillStyle = `rgba(160,225,255,${.35 * a})`; px.strokeStyle = `rgba(234,247,255,${.6 * a})`; px.fillRect(x + 3, y + 3, g - 6, g - 6); px.strokeRect(x + 3, y + 3, g - 6, g - 6); } } };
+    tl.fromTo(R, { r: 0 }, { r: 2300, duration: 1.05, ease: 'power2.inOut', onUpdate: draw }, c - .45);
+    tl.fromTo(pc, { opacity: 0 }, { opacity: 1, duration: .1 }, c - .45); tl.to(pc, { opacity: 0, duration: .2 }, c + .45);
+    tl.set(cur.s, { clipPath: 'none' }, c + .62); tl.set(prev.s, { visibility: 'hidden' }, c + .62);
+    tl.to(prev.s, { scale: .96, filter: 'blur(6px)', duration: 1.0, ease: 'power2.in' }, c - .45); sfx('zoom', c - .45);
+  } else if (type === 'dissolve') {
+    tl.set(cur.s, { visibility: 'visible' }, c - .55);
+    tl.to(prev.s, { opacity: 0, filter: 'blur(12px)', scale: 1.04, duration: .6, ease: eExit }, c - .5);
+    tl.fromTo(cur.s, { opacity: 0, filter: 'blur(12px)', scale: .98 }, { opacity: 1, filter: 'blur(0px)', scale: 1, duration: .7, ease: eSettle }, c - .5);
+    sfx('whoosh_soft', c - .5);
   } else if (type === 'zoomout') {
     prev.s.style.transformOrigin = '50% 40%';
     tl.to(prev.s, { scale: .82, opacity: 0, filter: 'blur(10px)', duration: .45, ease: bez(.6, 0, .9, .4) }, c - .4);
@@ -547,7 +587,7 @@ TRANS.forEach(([type, i, o]) => {
 });
 tl.set({}, {}, TOTAL);
 window.TOTAL = TOTAL; window.SFX = SFX; window.SCENES = SC.map(c => [c.t0, c.dur]); window.BPM = BPM;
-window.seek = t => { tl.time(Math.min(t, TOTAL - 1e-3)); drawHook(t); drawSpark(t); };
+window.seek = t => { tl.time(Math.min(t, TOTAL - 1e-3)); drawBG(t); drawHook(t); drawSpark(t); };
 const imgs = [...document.images];
 window.ready = Promise.all([document.fonts.ready, ...imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })), ...Object.values(hookImgs).map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))]);
 window.ready.then(() => { document.body.dataset.ready = '1'; const p = new URLSearchParams(location.search); window.seek(+(p.get('t') || 0)); });

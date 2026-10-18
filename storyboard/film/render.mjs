@@ -2,7 +2,7 @@
 import {chromium} from '/opt/node22/lib/node_modules/playwright/index.mjs';
 import fs from 'fs';
 const [mode, a, b, c0, c1] = process.argv.slice(2);
-const br = await chromium.launch({args:['--disable-web-security','--allow-file-access-from-files']});
+const br = await chromium.launch({args:['--disable-web-security','--allow-file-access-from-files','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
 const p = await br.newPage({viewport:{width:1080,height:1920}});
 p.on('console', m => { if (m.type()==='error') console.log('console:', m.text()); });
 p.on('pageerror', e => console.log('pageerror:', e.message));
