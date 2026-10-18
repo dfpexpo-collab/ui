@@ -161,6 +161,22 @@ def rise(d=1.0):
     sub = np.sin(2 * np.pi * np.cumsum(50 + 40 * tt) / SR) * tt * (1 - tt) * .6
     return (s * .5 + sub) * .6
 
+def blip(n, d=.09, g=.12):
+    tt = t_arr(d); f = note(n)
+    return (np.sin(2 * np.pi * f * tt) + .2 * np.sin(2 * np.pi * 2 * f * tt)) * np.exp(-tt * 45) * g
+def glint(d=.5):
+    tt = t_arr(d); s = hp(rng.standard_normal(len(tt)), 6000) * np.exp(-tt * 9) * .18
+    for j, n in enumerate([96, 100, 103]): s += np.sin(2 * np.pi * note(n) * tt) * np.exp(-tt * (10 + 4 * j)) * .05
+    return s
+def whip_fx(d=.32):
+    n = int(d * SR); tt = np.linspace(0, 1, n)
+    return sweep_noise(n, 400, 9000, True) * np.sin(np.pi * tt) ** .8 * .7
+def zoom_fx():
+    d = .9; n = int(d * SR); tt = np.linspace(0, 1, n)
+    swell = sweep_noise(n, 200, 6000, True) * tt ** 2.5 * .55
+    sub = np.sin(2 * np.pi * np.cumsum(30 + 50 * tt) / SR) * tt ** 2 * .5
+    return swell + sub
+WORD_SCALE = [62, 65, 69, 72, 74, 77]
 for typ, t, x in data['sfx']:
     if typ == 'whoosh': add(whoosh(.6, 250, 6000, True, .9), t - .05, 1, -.3)
     elif typ == 'whoosh_soft': add(whoosh(.9, 150, 2500, True, .6), t, 1, .2)
@@ -178,6 +194,11 @@ for typ, t, x in data['sfx']:
     elif typ == 'ding': add(bell(76), t, 1, -.2)
     elif typ == 'ding2': add(bell(83), t, 1, .2)
     elif typ == 'shimmer': add(shimmer(2.6, 88), t, 1.2, 0)
+    elif typ == 'word': add(blip(WORD_SCALE[int(x) % 6] + 12, .08, .1), t, 1, (-.3, .3)[int(x) % 2])
+    elif typ == 'word_soft': add(blip(WORD_SCALE[int(x) % 6] + 24, .05, .05), t, 1, .15)
+    elif typ == 'spark': add(glint(), t, 1, 0)
+    elif typ == 'whip': add(whip_fx(), t, 1, -.4 * float(x))
+    elif typ == 'zoom': add(zoom_fx(), t, 1, 0)
 sfx = np.stack([L, R])
 
 # ---------------- mix
