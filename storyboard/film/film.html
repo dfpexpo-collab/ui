@@ -110,8 +110,9 @@ function camPush(cam, t0, dur, from = 1, to = 1.045, extra = {}) { tl.fromTo(cam
 function riseIn(e, t, dist = 140, dur = 1.2) { tl.fromTo(e, { y: dist, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: dur, ease: eLaunch }, t); }
 function popIn(e, t, from = .5, dur = .55, origin) { if (origin) e.style.transformOrigin = origin; tl.fromTo(e, { scale: from, opacity: 0, filter: 'blur(8px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: dur, ease: eLaunch }, t); }
 function fadeIn(e, t, dur = .6) { tl.fromTo(e, { opacity: 0 }, { opacity: 1, duration: dur, ease: eSettle }, t); }
-function bottomFade(e, pageBottom, topY, len = 240) { const h = parseFloat(e.style.height); const cut = (pageBottom - topY) / h * 100, st = (pageBottom - len - topY) / h * 100;
-  e.style.webkitMaskImage = e.style.maskImage = `linear-gradient(180deg,#000 ${st}%,transparent ${cut}%)`; }
+function bottomFade(e, pageBottom, topY, len = 240, topClear = 0) { const h = parseFloat(e.style.height); const cut = (pageBottom - topY) / h * 100, st = (pageBottom - len - topY) / h * 100;
+  const head = topClear ? `transparent 0%,transparent ${topClear / h * 100}%,#000 ${(topClear + 70) / h * 100}%,` : '';
+  e.style.webkitMaskImage = e.style.maskImage = `linear-gradient(180deg,${head}#000 ${st}%,transparent ${cut}%)`; }
 function countUp(node, t, target, { dur = .75, fmt = v => Math.round(v).toLocaleString('en-US'), rise = 14, blur = 14 } = {}) {
   const box = { v: 0 }; node.textContent = fmt(0);
   tl.fromTo(node, { opacity: 0, y: rise, filter: `blur(${blur}px)` }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: dur, ease: bez(.33, 0, .67, 1) }, t);
@@ -122,6 +123,65 @@ const SFX = [];   // [type, time, extra] for the sound design pass
 const sfx = (type, t, x) => SFX.push([type, +t.toFixed(3), x || 0]);
 
 
+
+// ================= live brochure text: the brochure's copy rebuilt as real text (thmanyah for Arabic, Poppins for Latin),
+// fitted to the original box. Keyed bitmaps eroded the glyphs; live text stays crisp and animates cleanly.
+const TXT = {
+  's2:t_h1': [['حلول عقاريــة متكاملـــة'], 'ar', 700, 'grad', 'center'],
+  's2:t_h2': [['مدعومــة بالذكــاء الاصطنــاعي'], 'ar', 500, '', 'center'],
+  's2:t_url': [['voom.ltd'], 'lat', 500, '', 'center'],
+  's3:t_eyebrow': [['Your project. one interactive Experience'], 'lat', 600, 'silver', 'center'],
+  's3:t_h1': [['مستقبــل بيع العقـارات'], 'ar', 700, 'grad', 'center'],
+  's3:t_h2': [['يبـدأ من هنا'], 'ar', 500, '', 'center'],
+  's3:t_l1': [['Real time', 'availability'], 'lat', 600, 'grad', 'left', [1, .72]],
+  's3:t_l2': [['From', 'master plan', 'to unit'], 'lat', 600, 'grad', 'left', [1, 1, .72]],
+  's3:t_l3': [['Built for', 'smarter sales'], 'lat', 600, 'grad', 'left', [1, .72]],
+  's3:t_r1': [['مشروعــك', 'بطريقة مختلفة'], 'ar', 700, 'grad', 'right', [1, .62]],
+  's3:t_r2': [['كل التفاصيل', 'في تجربة واحدة'], 'ar', 700, 'grad', 'right', [1, .78]],
+  's3:t_r3': [['تقنيــة', 'تخدم مبيعاتك'], 'ar', 700, 'grad', 'right', [1, .62]],
+  's6:t_title': [['AI Voice Sales Agent'], 'lat', 600, 'silver', 'center'],
+  's6:t_sub': [['Smart conversations | Better experiences'], 'lat', 500, 'silver', 'center'],
+  's6:t_ar1': [['يتفاعل، يتحدث، يتابع، يحلل محادثات'], 'ar', 600, 'grad', 'center'],
+  's6:t_ar2': [['العمــلاء في أي وقــت'], 'ar', 700, 'grad', 'center'],
+  's6:t_l1': [['Languages'], 'lat', 500, '', 'center'], 's6:t_l2': [['Availability'], 'lat', 500, '', 'center'],
+  's6:t_l3': [['Instant', 'Responses'], 'lat', 600, 'grad', 'left', [1, 1]],
+  's7:t_title': [['Digital Twin Solution'], 'lat', 600, 'silver', 'center'],
+  's7:t_ar': [['تــوأم رقمي ذكي'], 'ar', 700, 'grad', 'center'],
+  's9:t_en': [['Our Global Presence'], 'lat', 600, 'silver', 'center'],
+  's9:t_ar': [['بصمتنا في أكثر من 10 دول'], 'ar', 700, 'grad', 'center'],
+  's9:t_cn': [['Countries'], 'lat', 600, 'grad', 'left'], 's9:t_pj': [['Projects'], 'lat', 600, 'grad', 'left'],
+  's9:t_ar2': [['مكاتبنــا حــول العالم'], 'ar', 700, 'grad', 'center'],
+  's9:t_find': [['Find Us Across These Destinations'], 'lat', 500, 'silver', 'center'],
+  's9:t_contact': [['contact us'], 'lat', 500, 'silver', 'left'], 's9:t_contact_ar': [['تواصل معنا'], 'ar', 700, 'grad', 'left'],
+  's9:t_phone': [['+966 53 918 9443'], 'lat', 500, '', 'left'], 's9:t_mail': [['info@voom.ltd'], 'lat', 500, '', 'left'],
+};
+const FITS = [];
+function TX(cam, M, id) {
+  const key = Object.keys(MAN).find(k => MAN[k] === M) + ':' + id, d = TXT[key], L = findL(M, id);
+  if (!d) return spriteWords(cam, L);
+  const [lines, fam, wt, cls, align, rel] = d;
+  const box = el('div', 'abs', cam, { left: L.x + 'px', top: L.y + 'px', width: L.w + 'px', display: 'flex', flexDirection: 'column',
+    alignItems: align === 'center' ? 'center' : (align === 'right' ? 'flex-end' : 'flex-start') });
+  const words = [], rows = [];
+  lines.forEach((txt, i) => {
+    const r = el('div', fam === 'ar' ? 'ar' : 'lat', box, { whiteSpace: 'nowrap', width: 'max-content', fontWeight: wt, color: '#f1f1f1',
+      fontFamily: fam === 'ar' ? '"thmanyah sans"' : 'Poppins', letterSpacing: fam === 'ar' ? '0' : '-.01em', wordSpacing: fam === 'ar' ? '.14em' : '0', lineHeight: 1.25 });
+    txt.split(' ').forEach((p, j, a) => { const w = el('span', 'tw', r); const wi = el('span', 'wi' + (cls ? ' ' + cls : ''), w); wi.textContent = p;
+      if (cls === 'silver') { wi.style.background = 'linear-gradient(180deg,#ffffff 15%,#aeb9cf 95%)'; wi.style.webkitBackgroundClip = 'text'; wi.style.backgroundClip = 'text'; wi.style.color = 'transparent'; }
+      if (j < a.length - 1) r.appendChild(document.createTextNode(' ')); words.push(w); });
+    rows.push([r, (rel || [])[i] ?? 1]); });
+  FITS.push({ box, rows, L, lines: lines.length }); return words;
+}
+function fitAll() {
+  for (const f of FITS) {
+    const base = f.L.h / (f.lines * 1.3);
+    f.rows.forEach(([r, k]) => { r.style.fontSize = (base * k) + 'px'; });
+    const wmax = Math.max(...f.rows.map(([r]) => r.getBoundingClientRect().width / (r.closest('.scene').getBoundingClientRect().width / 1080 || 1)));
+    const sc = Math.min(1.05, f.L.w / Math.max(wmax, 1));
+    f.rows.forEach(([r, k]) => { r.style.fontSize = (base * k * sc) + 'px'; });
+    const hh = f.box.offsetHeight; f.box.style.top = (f.L.y + (f.L.h - hh) / 2) + 'px';
+  }
+}
 // ================= live gradient background (saas-animation house rule): frame still, inside moves
 const glc = el('canvas', 'abs', stage, { left: 0, top: 0, zIndex: -1 }); glc.width = 540; glc.height = 960; glc.style.width = '1080px'; glc.style.height = '1920px';
 stage.insertBefore(glc, stage.firstChild);
@@ -240,9 +300,9 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const streak = el('div', 'abs', cam, { left: logo.style.left, top: (parseFloat(logo.style.top) + parseFloat(logo.style.height) * .5) + 'px', width: '170px', height: '5px', borderRadius: '6px',
     background: 'linear-gradient(90deg,transparent,#00b3ff,#eaf7ff,#00b3ff,transparent)', boxShadow: '0 0 30px 8px rgba(0,179,255,.6)', opacity: 0 });
   tl.fromTo(streak, { x: -140, opacity: 0 }, { x: lw, opacity: 1, duration: .8, ease: eLaunch }, t0 + beat(2)); tl.to(streak, { opacity: 0, duration: .25 }, t0 + beat(2) + .7); sfx('streak', t0 + beat(2));
-  echoIn(spriteWords(cam, findL(M, 't_h1')), t0 + beat(2.75));
-  maskRise(spriteWords(cam, findL(M, 't_h2')), t0 + beat(3.5));
-  maskRise([sprite(cam, findL(M, 't_url'))], t0 + beat(4.25));
+  echoIn(TX(cam, M, 't_h1'), t0 + beat(2.75));
+  maskRise(TX(cam, M, 't_h2'), t0 + beat(3.5));
+  maskRise(TX(cam, M, 't_url'), t0 + beat(4.25));
   // living hold: the spark runs round the segments; the core breathes on the beat
   [4, 5, 6].forEach(n => { tl.to(core, { scale: 1.035, duration: .12, ease: 'power2.out' }, t0 + beat(n)); tl.to(core, { scale: 1, duration: .35, ease: eSettle }, t0 + beat(n) + .12); });
 });
@@ -255,11 +315,11 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const bands = [1, 2, 3].map(i => { const d = sprite(cam, findL(M, 'band' + i)); d.style.transformOrigin = '36% 50%'; return d; });
   const fg = sprite(cam, findL(M, 'fg')); bottomFade(fg, M.pageBottom, parseFloat(fg.style.top), 200);
   tl.fromTo(fg, { y: 230, opacity: 0, filter: 'blur(16px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.25, ease: eLaunch }, t0 - .05); drift(fg, t0 + 1.2, beat(7) - 1, { y: -14 }); sfx('rise', t0);
-  maskRise(spriteWords(cam, findL(M, 't_eyebrow')), t0 + beat(.75));
-  echoIn(spriteWords(cam, findL(M, 't_h1')), t0 + beat(1.25)); echoIn(spriteWords(cam, findL(M, 't_h2')), t0 + beat(2));
+  maskRise(TX(cam, M, 't_eyebrow'), t0 + beat(.75));
+  echoIn(TX(cam, M, 't_h1'), t0 + beat(1.25)); echoIn(TX(cam, M, 't_h2'), t0 + beat(2));
   bands.forEach((b, i) => { const t = t0 + beat(2.5) + i * beat(.25); tl.fromTo(b, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .7, ease: eLaunch }, t); sfx('swish', t, i); });
-  ['t_l1', 't_l2', 't_l3'].forEach((id, i) => { const ws = spriteWords(cam, findL(M, id)); ws.forEach(w => tl.fromTo(w, { x: -50, opacity: 0, filter: 'blur(8px)' }, { x: 0, opacity: 1, filter: 'blur(0px)', duration: .6, ease: eLaunch }, t0 + beat(2.85) + i * beat(.25))); });
-  ['t_r1', 't_r2', 't_r3'].forEach((id, i) => { const ws = spriteWords(cam, findL(M, id)); ws.forEach(w => tl.fromTo(w, { x: 50, opacity: 0, filter: 'blur(8px)' }, { x: 0, opacity: 1, filter: 'blur(0px)', duration: .6, ease: eLaunch }, t0 + beat(2.85) + i * beat(.25))); });
+  ['t_l1', 't_l2', 't_l3'].forEach((id, i) => { const ws = TX(cam, M, id); maskRise(ws, t0 + beat(2.85) + i * beat(.25)); });
+  ['t_r1', 't_r2', 't_r3'].forEach((id, i) => { const ws = TX(cam, M, id); maskRise(ws, t0 + beat(2.85) + i * beat(.25)); });
   const card = sprite(cam, findL(M, 'card')); card.style.transformOrigin = '100% 0%';
   tl.fromTo(card, { scale: .15, opacity: 0, filter: 'blur(8px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: .6, ease: soft }, t0 + beat(4.5)); sfx('pop', t0 + beat(4.5), 4);
   ping(cam, M.finger[0], M.finger[1], t0 + beat(4.5) - .05, { r: 70 });
@@ -341,15 +401,15 @@ scene(beat(7), (cam, t0, s, bgl) => {
   tl.fromTo(man, { y: 220, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.2, ease: eLaunch }, t0 - .05);
   tl.fromTo(pod, { y: 280, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.3, ease: eLaunch }, t0 + beat(.5));
   drift(man, t0 + 1.2, beat(6), { y: -10 }); drift(pod, t0 + 1.4, beat(6), { y: -6 }); sfx('rise', t0);
-  echoIn(spriteWords(cam, findL(M, 't_title')), t0 + beat(1), { dir: 'left' });
-  maskRise(spriteWords(cam, findL(M, 't_sub')), t0 + beat(1.75));
-  maskRise(spriteWords(cam, findL(M, 't_ar1')), t0 + beat(2.25));
-  echoIn(spriteWords(cam, findL(M, 't_ar2')), t0 + beat(2.75));
+  echoIn(TX(cam, M, 't_title'), t0 + beat(1), { dir: 'left' });
+  maskRise(TX(cam, M, 't_sub'), t0 + beat(1.75));
+  maskRise(TX(cam, M, 't_ar1'), t0 + beat(2.25));
+  echoIn(TX(cam, M, 't_ar2'), t0 + beat(2.75));
   const band = sprite(cam, findL(M, 'band')); tl.fromTo(band, { scaleX: .2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .7, ease: eLaunch }, t0 + beat(3.5)); sfx('swish', t0 + beat(3.5));
   M.nums.forEach((n, i) => { const L = findL(M, n.id);
     const d = el('div', 'count grad', cam, { left: L.x + 'px', top: (L.y - 6) + 'px', width: L.w + 'px', textAlign: 'center', font: `600 ${L.h * 1.05}px/1.1 Gabarito`, letterSpacing: '-.02em' });
     countUp(d, t0 + beat(3.75) + i * .1, n.target, { fmt: v => (n.prefix || '') + Math.round(v) + (n.suffix || ''), dur: .9 }); });
-  ['t_l1', 't_l2', 't_l3'].forEach((id, i) => maskRise(spriteWords(cam, findL(M, id)), t0 + beat(4) + i * .08));
+  ['t_l1', 't_l2', 't_l3'].forEach((id, i) => maskRise(TX(cam, M, id), t0 + beat(4) + i * .08));
   // the tablet screen wakes up
   const scr = el('div', 'abs', cam, { left: '396px', top: '927px', width: '590px', height: '410px', borderRadius: '24px', background: 'radial-gradient(closest-side,rgba(0,179,255,.45),transparent)', mixBlendMode: 'screen', opacity: 0 });
   tl.fromTo(scr, { opacity: 0 }, { opacity: 1, duration: .3 }, t0 + beat(5)); tl.to(scr, { opacity: 0, duration: 1.2, ease: eSettle }, t0 + beat(5) + .3);
@@ -363,8 +423,8 @@ TRANS.push(['push', 6, { dx: 0, dy: -1 }]);
 scene(beat(7), (cam, t0, s, bgl) => {
   const M = MAN.s7; plate(bgl, M.plate);
   cameraMove(cam, bgl, t0, beat(7), { from: { scale: 1.08, y: 30 }, to: { scale: 1.0, y: -10 }, origin: '55% 65%' });
-  const ph = sprite(cam, findL(M, 'photo')); bottomFade(ph, M.pageBottom, parseFloat(ph.style.top), 220);
-  const php = findL(M, 'photo'), ghost = sprite(cam, php); bottomFade(ghost, M.pageBottom, parseFloat(ghost.style.top), 220); cam.insertBefore(ghost, ph);
+  const ph = sprite(cam, findL(M, 'photo')); bottomFade(ph, M.pageBottom, parseFloat(ph.style.top), 220, 112);
+  const php = findL(M, 'photo'), ghost = sprite(cam, php); bottomFade(ghost, M.pageBottom, parseFloat(ghost.style.top), 220, 112); cam.insertBefore(ghost, ph);
   ghost.style.filter = 'grayscale(1) brightness(.55) sepia(1) hue-rotate(185deg) saturate(3)';
   tl.fromTo(ghost, { y: 160, opacity: 0 }, { y: 0, opacity: .9, duration: 1.1, ease: eLaunch }, t0 - .15);
   const sc = { p: 100 }, line = el('div', 'abs', cam, { left: 0, width: '1080px', height: '4px', background: 'linear-gradient(90deg,transparent,#00b3ff 20%,#eaf7ff 50%,#00b3ff 80%,transparent)', boxShadow: '0 0 40px 12px rgba(0,179,255,.55)', opacity: 0 });
@@ -373,8 +433,8 @@ scene(beat(7), (cam, t0, s, bgl) => {
   tl.set(ph, { opacity: 1 }, t0 - .2); tl.fromTo(line, { opacity: 0 }, { opacity: 1, duration: .15 }, t0 + .35);
   tl.fromTo(sc, { p: 100 }, { p: 0, duration: 1.7, ease: 'power2.inOut', onUpdate: upd }, t0 + .35); tl.to(line, { opacity: 0, duration: .3 }, t0 + 2.0);
   upd(); drift(ph, t0 + 1.3, beat(6), { y: -12 }); drift(ghost, t0 + 1.3, beat(6), { y: -12 }); sfx('rise', t0 + .35);
-  echoIn(spriteWords(cam, findL(M, 't_title')), t0 + beat(1), { dir: 'left' });
-  echoIn(spriteWords(cam, findL(M, 't_ar')), t0 + beat(1.75));
+  echoIn(TX(cam, M, 't_title'), t0 + beat(1), { dir: 'left' });
+  echoIn(TX(cam, M, 't_ar'), t0 + beat(1.75));
   M.layers.filter(l => l.id.startsWith('c_')).forEach((L, i) => { const d = sprite(cam, L); const dx = L.side === 'left' ? -90 : 90; const t = t0 + beat(2.75) + i * beat(.375);
     d.style.transformOrigin = L.side === 'left' ? '100% 50%' : '0% 50%';
     tl.fromTo(d, { x: dx, opacity: 0, scale: .92, filter: 'blur(10px)' }, { x: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: .6, ease: eLaunch }, t);
@@ -409,21 +469,21 @@ TRANS.push(['push', 8, { dx: 1, dy: 0 }]);
 scene(beat(7), (cam, t0, s, bgl) => {
   const M = MAN.s9; plate(bgl, M.plate); s.style.perspective = '1200px'; cam.style.transformStyle = 'preserve-3d';
   cameraMove(cam, bgl, t0, beat(7), { from: { x: -22, scale: 1.02 }, to: { x: 22, scale: 1.05 }, origin: '50% 45%' });
-  maskRise(spriteWords(cam, findL(M, 't_en')), t0 + .05);
-  echoIn(spriteWords(cam, findL(M, 't_ar')), t0 + beat(.5));
+  maskRise(TX(cam, M, 't_en'), t0 + .05);
+  echoIn(TX(cam, M, 't_ar'), t0 + beat(.5));
   for (let i = 0; i < 7; i++) { const f = sprite(cam, findL(M, 'flag' + i)), l = sprite(cam, findL(M, 'flagl' + i)); const t = t0 + beat(1.25) + i * beat(.25);
     f.style.transformOrigin = '50% 50%'; tl.fromTo(f, { rotationY: -100, opacity: 0, z: -80 }, { rotationY: 0, opacity: 1, z: 0, duration: .75, ease: eLaunch }, t);
     tl.fromTo(l, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .4, ease: eSettle }, t + .1); sfx('pop', t, i); }
   M.nums.forEach((n, i) => { const L = findL(M, n.id);
     const d = el('div', 'count grad', cam, { left: (L.x - 14) + 'px', top: (L.y - 4) + 'px', width: L.w + 'px', textAlign: 'right', font: `700 ${L.h * .78}px/1.1 Gabarito`, letterSpacing: '-.02em' });
     countUp(d, t0 + beat(3) + i * .1, n.target, { fmt: v => Math.round(v) + n.suffix, dur: .9 }); });
-  ['t_cn', 't_pj'].forEach((id, i) => maskRise(spriteWords(cam, findL(M, id)), t0 + beat(3) + i * .1));
+  ['t_cn', 't_pj'].forEach((id, i) => maskRise(TX(cam, M, id), t0 + beat(3) + i * .1));
   maskRise([sprite(cam, findL(M, 't_bar'))], t0 + beat(3));
-  echoIn(spriteWords(cam, findL(M, 't_ar2')), t0 + beat(3.5));
+  echoIn(TX(cam, M, 't_ar2'), t0 + beat(3.5));
   ['card_sa', 'card_eg', 'card_iq', 'card_us'].forEach((id, i) => { const c = sprite(cam, findL(M, id)); const t = t0 + beat(4.25) + i * beat(.25);
     tl.fromTo(c, { y: 50, opacity: 0, scale: .95, filter: 'blur(8px)' }, { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: .6, ease: eLaunch }, t); sfx('glass', t, i); });
-  maskRise(spriteWords(cam, findL(M, 't_find')), t0 + beat(5.25));
-  ['t_contact', 't_contact_ar', 't_phone', 't_mail'].forEach((id, i) => maskRise(spriteWords(cam, findL(M, id)), t0 + beat(5.5) + i * .06));
+  maskRise(TX(cam, M, 't_find'), t0 + beat(5.25));
+  ['t_contact', 't_contact_ar', 't_phone', 't_mail'].forEach((id, i) => maskRise(TX(cam, M, id), t0 + beat(5.5) + i * .08));
   const qr = sprite(cam, findL(M, 'qr')); tl.fromTo(qr, { scale: .6, opacity: 0, filter: 'blur(8px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: .5, ease: soft }, t0 + beat(5.5)); sfx('pop_low', t0 + beat(5.5));
   const L = findL(M, 'qr'); const scan = el('div', 'abs', cam, { left: L.x + 'px', top: L.y + 'px', width: L.w + 'px', height: '6px', background: 'linear-gradient(90deg,transparent,#00b3ff,transparent)', boxShadow: '0 0 20px 6px rgba(0,179,255,.6)', opacity: 0 });
   tl.fromTo(scan, { y: 0, opacity: 0 }, { opacity: 1, duration: .05 }, t0 + beat(6)); tl.to(scan, { y: L.h - 6, duration: .7, ease: 'sine.inOut' }, t0 + beat(6) + .05); tl.to(scan, { opacity: 0, duration: .2 }, t0 + beat(6) + .7);
@@ -580,9 +640,9 @@ TRANS.forEach(([type, i, o]) => {
   } else if (type === 'push') {
     // relaxed push + blur: old leaves over 0.6 s, new settles over 0.95 s, incoming already moving (LEAD 0.3)
     const dx = o.dx * 260, dy = o.dy * 360;
-    tl.to(prev.s, { x: -dx, y: -dy, opacity: 0, filter: 'blur(14px)', duration: .6, ease: 'power2.in' }, c - .5);
-    tl.set(cur.s, { visibility: 'visible' }, c - .3);
-    tl.fromTo(cur.s, { x: dx, y: dy, opacity: 0, filter: 'blur(14px)' }, { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: .95, ease: 'power3.out' }, c - .3);
+    tl.to(prev.s, { x: -dx, y: -dy, opacity: 0, filter: 'blur(14px)', duration: .45, ease: 'power2.in' }, c - .55);
+    tl.set(cur.s, { visibility: 'visible' }, c - .15);
+    tl.fromTo(cur.s, { x: dx, y: dy, opacity: 0, filter: 'blur(14px)' }, { x: 0, y: 0, opacity: 1, filter: 'blur(0px)', duration: .95, ease: 'power3.out' }, c - .15);
     tl.set(cur.s, { filter: 'none' }, c + .66); sfx('whoosh', c - .5);
   } else if (type === 'pixel') {
     // glass-square disc grows from the hit point: new scene masked in by a growing circle, squares glint along its edge
@@ -612,7 +672,7 @@ window.TOTAL = TOTAL; window.SFX = SFX; window.SCENES = SC.map(c => [c.t0, c.dur
 window.seek = t => { tl.time(Math.min(t, TOTAL - 1e-3)); drawBG(t); drawHook(t); drawSpark(t); drawWaves(t); };
 const imgs = [...document.images];
 window.ready = Promise.all([document.fonts.ready, ...imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })), ...Object.values(hookImgs).map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))]);
-window.ready.then(() => { document.body.dataset.ready = '1'; const p = new URLSearchParams(location.search); window.seek(+(p.get('t') || 0)); });
+window.ready.then(() => { fitAll(); document.body.dataset.ready = '1'; const p = new URLSearchParams(location.search); window.seek(+(p.get('t') || 0)); });
 </script>
 </body>
 </html>

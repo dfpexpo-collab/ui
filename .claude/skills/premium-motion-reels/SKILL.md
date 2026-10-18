@@ -56,6 +56,9 @@ Rules: transitions last 0.3-0.6 s; the next scene is already moving when it appe
 - **Mixed styles in one line** work: regular + bold + italic/serif accent («Spend *crypto*», «Everything *evolved*»).
 - Arabic: reveal whole words right-to-left, never letters (joining breaks); kashida can grow on the hero word.
 - The outgoing line leaves before the incoming one takes its place; text never overlaps text.
+- **Never animate text cut out of an image.** Keyed/bitmapped copy erodes the glyphs and reads as the wrong font. Rebuild every line as live text in the brand font, fitted to the source box, and erase the baked copy from any photo layer under it (otherwise a ghost of it shows as an "echo").
+- Clean reveals beat clever ones: mask-rise per line, no blur trails or duplicate "echo" layers unless the brief asks for them.
+- In push/whip transitions the outgoing scene must be gone before the incoming one is readable, or both scenes' text doubles up.
 
 ## 5. Depth and life
 
