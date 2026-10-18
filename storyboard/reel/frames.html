@@ -45,122 +45,149 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 .page .plate{position:absolute;inset:0;width:1080px;height:1920px}
 .page .bgblur{position:absolute;left:-90px;top:-90px;width:1260px;height:2100px;object-fit:cover;filter:blur(46px) saturate(1.15) brightness(.82)}
 .page .pg{position:absolute;left:0;top:var(--pt);width:1080px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 93%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 93%,transparent 100%)}
-#f4 .box{left:36px;top:330px;width:1008px;border-radius:30px;box-shadow:0 40px 100px rgba(0,0,36,.7)}
-/* ---------- F1 cover ---------- */
-#f1 .logo{left:50%;transform:translateX(-50%);width:300px;--lw:300px}
-#f1 .head{top:430px;left:0;right:0;text-align:center;font-size:136px}
-#f1 .sub{top:800px;left:0;right:0;text-align:center;font-size:56px;font-weight:500;color:var(--off);opacity:.9}
-#f1 .wheel{left:50%;top:930px;width:740px;height:740px;transform:translateX(-50%);
+#f5 .box{left:36px;top:330px;width:1008px;border-radius:30px;box-shadow:0 40px 100px rgba(0,0,36,.7)}
+/* ---------- F1 hook: scattered modules pulled into one point ---------- */
+#f1{background:radial-gradient(80% 45% at 50% 66%,rgba(0,18,214,.85),transparent 72%),radial-gradient(70% 40% at 50% 10%,rgba(0,18,214,.45),transparent 70%),var(--deep)}
+#f1 .hk-net{inset:0;width:1080px;height:1920px}
+#f1 .hk-q{top:380px;left:0;right:0;text-align:center;font-size:116px;line-height:1.22}
+#f1 .hk-orb{left:470px;top:1180px;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,#ffffff 0,#bfe9ff 18%,#00b3ff 45%,rgba(0,18,214,.0) 72%);
+  box-shadow:0 0 80px 20px rgba(0,179,255,.55),0 0 220px 60px rgba(0,18,214,.6)}
+#f1 .hchip{transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;white-space:nowrap;padding:14px 22px;border-radius:999px;
+  background:linear-gradient(180deg,rgba(241,241,241,.12),rgba(241,241,241,.04));border:1.5px solid var(--glass-line);backdrop-filter:blur(16px);
+  font:600 27px/1 var(--lat);letter-spacing:-.01em;color:var(--off);direction:ltr;box-shadow:0 14px 40px rgba(0,0,36,.5)}
+#f1 .hchip i{width:10px;height:10px;border-radius:50%;background:var(--light);box-shadow:0 0 12px var(--light)}
+/* ---------- F2 cover ---------- */
+#f2 .logo{left:50%;transform:translateX(-50%);width:300px;--lw:300px}
+#f2 .head{top:430px;left:0;right:0;text-align:center;font-size:136px}
+#f2 .sub{top:800px;left:0;right:0;text-align:center;font-size:56px;font-weight:500;color:var(--off);opacity:.9}
+#f2 .wheel{left:50%;top:930px;width:740px;height:740px;transform:translateX(-50%);
   -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 58%,transparent 71%);mask-image:radial-gradient(circle at 50% 50%,#000 58%,transparent 71%)}
-#f1 .url{bottom:240px;left:0;right:0;text-align:center;font:500 34px var(--lat);color:var(--mute)}
+#f2 .url{bottom:240px;left:0;right:0;text-align:center;font:500 34px var(--lat);color:var(--mute)}
 
-/* ---------- F2 interactive experience ---------- */
-#f2 .logo{right:var(--sx)}
-#f2 .eyebrow{top:390px;right:var(--sx);text-align:right}
-#f2 .head{top:450px;right:var(--sx);text-align:right;font-size:132px}
-#f2 .tower{left:-40px;top:900px;width:560px;height:1120px;object-position:50% 0;
+/* ---------- F3 interactive experience ---------- */
+#f3 .logo{right:var(--sx)}
+#f3 .eyebrow{top:390px;right:var(--sx);text-align:right}
+#f3 .head{top:450px;right:var(--sx);text-align:right;font-size:132px}
+#f3 .tower{left:-40px;top:900px;width:560px;height:1120px;object-position:50% 0;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 70%,transparent 96%),linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 70%,transparent 96%);}
-#f2 .rows{top:1000px;right:var(--sx);width:500px;display:flex;flex-direction:column;gap:22px}
-#f2 .row{padding:26px 30px;text-align:right}
-#f2 .row b{display:block;font:700 36px/1 var(--lat);letter-spacing:-.02em;direction:ltr;text-align:right}
-#f2 .row span{display:block;margin-top:12px;font-size:31px;font-weight:500;color:var(--sky2)}
+#f3 .rows{top:1000px;right:var(--sx);width:500px;display:flex;flex-direction:column;gap:22px}
+#f3 .row{padding:26px 30px;text-align:right}
+#f3 .row b{display:block;font:700 36px/1 var(--lat);letter-spacing:-.02em;direction:ltr;text-align:right}
+#f3 .row span{display:block;margin-top:12px;font-size:31px;font-weight:500;color:var(--sky2)}
 
-/* ---------- F4 masterplan 10X ---------- */
-#f4{background:var(--deep)}
-#f4 .plan{inset:0;width:100%;height:100%;object-position:62% 50%;transform:scale(1.02)}
-#f4 .shade{inset:0;background:linear-gradient(180deg,rgba(0,0,36,.85) 0,rgba(0,0,36,.15) 26%,rgba(0,0,36,0) 45%,rgba(0,0,36,.55) 62%,rgba(0,0,36,.96) 84%)}
-#f4 .chip{top:var(--top);right:var(--sx)}
-#f4 .qr{width:40px;height:40px}
-#f4 .head{top:1110px;right:var(--sx);text-align:right;font-size:128px;line-height:1.08}
-#f4 .ten{top:1120px;left:var(--sx);font:900 300px/1 var(--lat);letter-spacing:-.05em;direction:ltr}
-#f4 .legend{top:340px;right:var(--sx);padding:26px 30px;display:grid;gap:16px;font:500 30px var(--lat);direction:ltr}
-#f4 .legend i{display:inline-block;width:20px;height:20px;border-radius:50%;margin-right:14px;vertical-align:-2px}
+/* ---------- F5 masterplan 10X ---------- */
+#f5{background:var(--deep)}
+#f5 .plan{inset:0;width:100%;height:100%;object-position:62% 50%;transform:scale(1.02)}
+#f5 .shade{inset:0;background:linear-gradient(180deg,rgba(0,0,36,.85) 0,rgba(0,0,36,.15) 26%,rgba(0,0,36,0) 45%,rgba(0,0,36,.55) 62%,rgba(0,0,36,.96) 84%)}
+#f5 .chip{top:var(--top);right:var(--sx)}
+#f5 .qr{width:40px;height:40px}
+#f5 .head{top:1110px;right:var(--sx);text-align:right;font-size:128px;line-height:1.08}
+#f5 .ten{top:1120px;left:var(--sx);font:900 300px/1 var(--lat);letter-spacing:-.05em;direction:ltr}
+#f5 .legend{top:340px;right:var(--sx);padding:26px 30px;display:grid;gap:16px;font:500 30px var(--lat);direction:ltr}
+#f5 .legend i{display:inline-block;width:20px;height:20px;border-radius:50%;margin-right:14px;vertical-align:-2px}
 
-/* ---------- F3 it looks like voom ---------- */
-#f3 .logo{left:var(--sx)}
-#f3 .y{top:calc(var(--top) + 18px);right:var(--sx);font:600 34px var(--lat);color:var(--mute)}
-#f3 .q{top:340px;left:var(--sx);font:500 54px/1.1 var(--lat);letter-spacing:-.02em;color:var(--off);direction:ltr}
-#f3 .head{top:480px;left:var(--sx);font-size:172px}
-#f3 .ar1{top:820px;left:var(--sx);right:var(--sx);text-align:right;font-size:44px;font-weight:500;line-height:1.35;color:var(--off)}
-#f3 .dash{top:1110px;left:var(--sx);right:var(--sx);padding:18px}
-#f3 .dash img{display:block;width:100%;border-radius:18px}
-#f3 .laptop{top:1270px;right:-80px;width:520px;transform:rotate(-4deg);filter:drop-shadow(0 30px 50px rgba(0,0,36,.7));border-radius:18px}
-#f3 .ctl{top:975px;left:var(--sx);font:600 40px var(--lat);letter-spacing:-.02em;direction:ltr}
-#f3 .ar2{top:1032px;left:var(--sx);font-size:34px;font-weight:500;color:var(--sky2)}
+/* ---------- F4 it looks like voom ---------- */
+#f4 .logo{left:var(--sx)}
+#f4 .y{top:calc(var(--top) + 18px);right:var(--sx);font:600 34px var(--lat);color:var(--mute)}
+#f4 .q{top:340px;left:var(--sx);font:500 54px/1.1 var(--lat);letter-spacing:-.02em;color:var(--off);direction:ltr}
+#f4 .head{top:480px;left:var(--sx);font-size:172px}
+#f4 .ar1{top:820px;left:var(--sx);right:var(--sx);text-align:right;font-size:44px;font-weight:500;line-height:1.35;color:var(--off)}
+#f4 .dash{top:1110px;left:var(--sx);right:var(--sx);padding:18px}
+#f4 .dash img{display:block;width:100%;border-radius:18px}
+#f4 .laptop{top:1270px;right:-80px;width:520px;transform:rotate(-4deg);filter:drop-shadow(0 30px 50px rgba(0,0,36,.7));border-radius:18px}
+#f4 .ctl{top:975px;left:var(--sx);font:600 40px var(--lat);letter-spacing:-.02em;direction:ltr}
+#f4 .ar2{top:1032px;left:var(--sx);font-size:34px;font-weight:500;color:var(--sky2)}
 
-/* ---------- F5 ai voice agent ---------- */
-#f5 .logo{right:var(--sx)}
-#f5 .head{top:250px;left:var(--sx);font-size:150px}
-#f5 .sm{top:548px;left:var(--sx);font:500 40px var(--lat);color:var(--mute);direction:ltr;letter-spacing:-.01em}
-#f5 .ar1{top:622px;right:var(--sx);text-align:right;font-size:52px;font-weight:500}
-#f5 .ar2{top:690px;right:var(--sx);text-align:right;font-size:104px}
-#f5 .agent{left:0;top:960px;width:1080px;height:739px;object-fit:cover;
-  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 90%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 90%,transparent 100%)}
-#f5 .agentblur{left:-90px;top:1300px;width:1260px;height:720px;object-fit:cover;object-position:50% 100%;filter:blur(46px) saturate(1.1) brightness(.8)}
-#f5 .stats{top:870px;left:var(--sx);right:var(--sx);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-#f5 .stat{padding:26px 26px 24px;direction:ltr}
-#f5 .stat b{display:block;font:800 76px/1 var(--lat);letter-spacing:-.04em}
-#f5 .stat span{display:block;margin-top:10px;font:500 28px var(--lat);color:var(--mute)}
-
-/* ---------- F6 digital twin ---------- */
-#f6 .twin{inset:0;width:100%;height:100%;object-position:50% 60%;transform:scale(1.2);transform-origin:50% 70%}
-#f6 .shade{inset:0;background:linear-gradient(180deg,rgba(0,0,36,.96) 0,rgba(0,0,36,.75) 30%,rgba(0,0,36,.05) 52%,rgba(0,0,36,0) 80%,rgba(0,0,36,.7) 100%)}
+/* ---------- F6 ai voice agent ---------- */
 #f6 .logo{right:var(--sx)}
-#f6 .head{top:380px;left:var(--sx);font-size:150px}
-#f6 .ar{top:660px;right:var(--sx);text-align:right;font-size:112px}
-#f6 .cc{padding:22px 24px;width:400px;direction:ltr;font-family:var(--lat)}
-#f6 .cc h4{font:700 30px var(--lat);letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:center}
-#f6 .cc h4 em{font:600 22px var(--lat);font-style:normal;color:#5fe39a;display:flex;align-items:center;gap:8px}
-#f6 .cc h4 em::before{content:"";width:10px;height:10px;border-radius:50%;background:#5fe39a}
-#f6 .cc dl{display:grid;grid-template-columns:1fr auto;gap:8px 12px;margin-top:14px;font:500 25px var(--lat);color:var(--mute)}
-#f6 .cc dd{color:var(--off);font-weight:600;text-align:right}
-#f6 .lead{position:absolute;height:2px;background:linear-gradient(90deg,var(--light),rgba(0,179,255,.2));transform-origin:0 50%}
+#f6 .head{top:250px;left:var(--sx);font-size:150px}
+#f6 .sm{top:548px;left:var(--sx);font:500 40px var(--lat);color:var(--mute);direction:ltr;letter-spacing:-.01em}
+#f6 .ar1{top:622px;right:var(--sx);text-align:right;font-size:52px;font-weight:500}
+#f6 .ar2{top:690px;right:var(--sx);text-align:right;font-size:104px}
+#f6 .agent{left:0;top:960px;width:1080px;height:739px;object-fit:cover;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 90%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 90%,transparent 100%)}
+#f6 .agentblur{left:-90px;top:1300px;width:1260px;height:720px;object-fit:cover;object-position:50% 100%;filter:blur(46px) saturate(1.1) brightness(.8)}
+#f6 .stats{top:870px;left:var(--sx);right:var(--sx);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+#f6 .stat{padding:26px 26px 24px;direction:ltr}
+#f6 .stat b{display:block;font:800 76px/1 var(--lat);letter-spacing:-.04em}
+#f6 .stat span{display:block;margin-top:10px;font:500 28px var(--lat);color:var(--mute)}
 
-/* ---------- F7 digital twin dashboard ---------- */
-#f7 .t1{top:520px;left:0;right:0;text-align:center;font-size:54px;font-weight:700;color:var(--off)}
-#f7 .t2{top:600px;left:50%;transform:translateX(-50%);text-align:center;font-size:112px;font-weight:700;color:var(--off);white-space:nowrap}
-#f7 .pct{font-weight:900;font-size:1.12em;letter-spacing:-.04em;unicode-bidi:isolate}
-#f7 .box{left:36px;top:820px;width:1008px;border-radius:30px;box-shadow:0 40px 100px rgba(0,0,36,.7)}
-/* ---------- F9 PropTech Summit end card ---------- */
-#f9{background:radial-gradient(70% 38% at 50% 92%,rgba(0,179,255,.55),transparent 70%),radial-gradient(110% 60% at 50% 70%,rgba(0,18,214,.95),transparent 72%),var(--deep)}
-#f9 .tower{left:50%;top:160px;width:640px;transform:translateX(-50%);opacity:.28}
-#f9 .floor{left:0;bottom:0;width:1080px;height:620px;opacity:.35;
+/* ---------- F7 digital twin ---------- */
+#f7 .twin{inset:0;width:100%;height:100%;object-position:50% 60%;transform:scale(1.2);transform-origin:50% 70%}
+#f7 .shade{inset:0;background:linear-gradient(180deg,rgba(0,0,36,.96) 0,rgba(0,0,36,.75) 30%,rgba(0,0,36,.05) 52%,rgba(0,0,36,0) 80%,rgba(0,0,36,.7) 100%)}
+#f7 .logo{right:var(--sx)}
+#f7 .head{top:380px;left:var(--sx);font-size:150px}
+#f7 .ar{top:660px;right:var(--sx);text-align:right;font-size:112px}
+#f7 .cc{padding:22px 24px;width:400px;direction:ltr;font-family:var(--lat)}
+#f7 .cc h4{font:700 30px var(--lat);letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:center}
+#f7 .cc h4 em{font:600 22px var(--lat);font-style:normal;color:#5fe39a;display:flex;align-items:center;gap:8px}
+#f7 .cc h4 em::before{content:"";width:10px;height:10px;border-radius:50%;background:#5fe39a}
+#f7 .cc dl{display:grid;grid-template-columns:1fr auto;gap:8px 12px;margin-top:14px;font:500 25px var(--lat);color:var(--mute)}
+#f7 .cc dd{color:var(--off);font-weight:600;text-align:right}
+#f7 .lead{position:absolute;height:2px;background:linear-gradient(90deg,var(--light),rgba(0,179,255,.2));transform-origin:0 50%}
+
+/* ---------- F8 digital twin dashboard ---------- */
+#f8 .t1{top:520px;left:0;right:0;text-align:center;font-size:54px;font-weight:700;color:var(--off)}
+#f8 .t2{top:600px;left:50%;transform:translateX(-50%);text-align:center;font-size:112px;font-weight:700;color:var(--off);white-space:nowrap}
+#f8 .pct{font-weight:900;font-size:1.12em;letter-spacing:-.04em;unicode-bidi:isolate}
+#f8 .box{left:36px;top:820px;width:1008px;border-radius:30px;box-shadow:0 40px 100px rgba(0,0,36,.7)}
+/* ---------- F10 PropTech Summit end card ---------- */
+#f10{background:radial-gradient(70% 38% at 50% 92%,rgba(0,179,255,.55),transparent 70%),radial-gradient(110% 60% at 50% 70%,rgba(0,18,214,.95),transparent 72%),var(--deep)}
+#f10 .tower{left:50%;top:160px;width:640px;transform:translateX(-50%);opacity:.28}
+#f10 .floor{left:0;bottom:0;width:1080px;height:620px;opacity:.35;
   -webkit-mask-image:linear-gradient(180deg,transparent,#000 60%);mask-image:linear-gradient(180deg,transparent,#000 60%)}
-#f9 .logo{left:50%;transform:translateX(-50%);width:260px;--lw:260px}
-#f9 .wait{top:420px;left:0;right:0;text-align:center;font-size:104px;font-weight:700}
-#f9 .ps{top:560px;left:0;right:0;text-align:center;font-size:206px;line-height:.9;font-weight:800}
-#f9 .info{top:972px;left:var(--sx);right:var(--sx);padding:34px 40px;display:grid;gap:26px}
-#f9 .info .r{display:flex;align-items:center;gap:26px;direction:ltr}
-#f9 .info svg{flex:none;width:56px;height:56px}
-#f9 .info b{font:700 66px/1 var(--lat);letter-spacing:-.03em}
-#f9 .info .loc b{font-size:56px}
-#f9 .info small{display:block;margin-top:8px;font:500 36px var(--lat);color:var(--mute)}
-#f9 .sep{height:1.5px;background:var(--glass-line)}
-#f9 .booth{top:1300px;left:var(--sx);right:var(--sx);height:250px;border-radius:36px;background:linear-gradient(135deg,#00b3ff,#0a7dff 55%,#0012d6);display:flex;align-items:center;justify-content:space-between;padding:0 44px;box-shadow:0 30px 90px rgba(0,179,255,.45)}
-#f9 .booth .t{direction:rtl;text-align:right;color:#fff}
-#f9 .booth .t span{display:block;font-size:64px;font-weight:700;line-height:1}
-#f9 .booth .t b{display:block;font:800 132px/1 var(--lat);letter-spacing:-.04em;direction:ltr;margin-top:6px}
-#f9 .plan{width:300px;height:186px}
-#f9 .url{top:1548px;left:0;right:0;text-align:center;font:500 32px var(--lat);color:var(--mute)}
+#f10 .logo{left:50%;transform:translateX(-50%);width:260px;--lw:260px}
+#f10 .wait{top:420px;left:0;right:0;text-align:center;font-size:104px;font-weight:700}
+#f10 .ps{top:560px;left:0;right:0;text-align:center;font-size:206px;line-height:.9;font-weight:800}
+#f10 .info{top:972px;left:var(--sx);right:var(--sx);padding:34px 40px;display:grid;gap:26px}
+#f10 .info .r{display:flex;align-items:center;gap:26px;direction:ltr}
+#f10 .info svg{flex:none;width:56px;height:56px}
+#f10 .info b{font:700 66px/1 var(--lat);letter-spacing:-.03em}
+#f10 .info .loc b{font-size:56px}
+#f10 .info small{display:block;margin-top:8px;font:500 36px var(--lat);color:var(--mute)}
+#f10 .sep{height:1.5px;background:var(--glass-line)}
+#f10 .booth{top:1300px;left:var(--sx);right:var(--sx);height:250px;border-radius:36px;background:linear-gradient(135deg,#00b3ff,#0a7dff 55%,#0012d6);display:flex;align-items:center;justify-content:space-between;padding:0 44px;box-shadow:0 30px 90px rgba(0,179,255,.45)}
+#f10 .booth .t{direction:rtl;text-align:right;color:#fff}
+#f10 .booth .t span{display:block;font-size:64px;font-weight:700;line-height:1}
+#f10 .booth .t b{display:block;font:800 132px/1 var(--lat);letter-spacing:-.04em;direction:ltr;margin-top:6px}
+#f10 .plan{width:300px;height:186px}
+#f10 .url{top:1548px;left:0;right:0;text-align:center;font:500 32px var(--lat);color:var(--mute)}
 </style>
 </head>
 <body>
 
 <!-- F1 -->
-<section class="frame page" id="f1" style="--pt:166px">
-  <img class="plate" src="assets/plate_b01.jpg" alt="">
+<section class="frame" id="f1">
+  <div class="glow" style="left:240px;top:950px;width:600px;height:600px;background:#00b3ff;opacity:.28"></div>
+  <svg class="abs hk-net" viewBox="0 0 1080 1920" fill="none">
+    <defs><radialGradient id="hkfade" cx="540" cy="1250" r="460" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#00b3ff" stop-opacity=".9"/><stop offset="1" stop-color="#7fd0ff" stop-opacity=".12"/></radialGradient></defs>
+    <circle cx="540" cy="1250" r="150" stroke="#00b3ff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="6 10"/>
+    <circle cx="540" cy="1250" r="300" stroke="#00b3ff" stroke-opacity=".2" stroke-width="1.5" stroke-dasharray="3 12"/>
+    <ellipse cx="540" cy="1250" rx="420" ry="330" stroke="#7fd0ff" stroke-opacity=".12" stroke-width="1.5"/>
+    <g stroke="url(#hkfade)" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"><line x1="240" y1="1075" x2="540" y2="1250"/><line x1="520" y1="965" x2="540" y2="1250"/><line x1="825" y1="1050" x2="540" y2="1250"/><line x1="910" y1="1235" x2="540" y2="1250"/><line x1="840" y1="1425" x2="540" y2="1250"/><line x1="560" y1="1535" x2="540" y2="1250"/><line x1="250" y1="1445" x2="540" y2="1250"/><line x1="250" y1="1260" x2="540" y2="1250"/></g>
+  </svg>
+  <div class="abs hk-orb"></div>
+  <div class="abs hchip" style="left:240px;top:1075px"><i></i>PropTech Solutions</div><div class="abs hchip" style="left:825px;top:1050px"><i></i>AI Voice Sales Agent</div><div class="abs hchip" style="left:250px;top:1260px"><i></i>Community Management</div><div class="abs hchip" style="left:910px;top:1235px"><i></i>ERP</div><div class="abs hchip" style="left:250px;top:1445px"><i></i>E-CRM Sales Agent</div><div class="abs hchip" style="left:840px;top:1425px"><i></i>Digital Twin</div><div class="abs hchip" style="left:520px;top:965px"><i></i>Computer Vision</div><div class="abs hchip" style="left:560px;top:1535px"><i></i>Cinematic video</div>
+  <div class="abs hk-q ar h-ar kb" data-max="2"><span class="ln">هل يم~كن أن تُ~دار</span><span class="ln">شركتك العقارية كلها</span><span class="ln grad">من مك~ان واح~د؟</span></div>
   <div class="safe"></div>
 </section>
 
 <!-- F2 -->
-<section class="frame page" id="f2" hidden style="--pt:227px">
-  <img class="plate" src="assets/plate_b04.jpg" alt="">
+<section class="frame page" id="f2" hidden style="--pt:166px">
+  <img class="plate" src="assets/plate_b01.jpg" alt="">
   <div class="safe"></div>
 </section>
 
 <!-- F3 -->
-<section class="frame" id="f3" hidden>
+<section class="frame page" id="f3" hidden style="--pt:227px">
+  <img class="plate" src="assets/plate_b04.jpg" alt="">
+  <div class="safe"></div>
+</section>
+
+<!-- F4 -->
+<section class="frame" id="f4" hidden>
   <div class="abs q">What does smarter<br>selling look like?</div>
   <div class="abs head lat h-lat"><span class="ln">It looks</span><span class="ln">like <span class="grad">Voom</span></span></div>
   <div class="abs ar1 ar">كل تفصيلة في مشروعك تتحول<br>لجزء من تجربة البيع مع Voom</div>
@@ -170,8 +197,8 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
   <div class="safe"></div>
 </section>
 
-<!-- F4 -->
-<section class="frame" id="f4" hidden>
+<!-- F5 -->
+<section class="frame" id="f5" hidden>
   <div class="glow" style="left:140px;top:420px;width:800px;height:600px;background:#0012d6;opacity:.8"></div>
   <img class="abs box" src="assets/plan_box.jpg" alt="">
   <div class="abs head ar h-ar grad kb"><span class="ln">ضاعـ~ـف</span><span class="ln">مبيعا~تك</span></div>
@@ -179,34 +206,34 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
   <div class="safe"></div>
 </section>
 
-<!-- F5 -->
-<section class="frame page" id="f5" hidden>
+<!-- F6 -->
+<section class="frame page" id="f6" hidden>
   <img class="plate" src="assets/plate_b06.jpg" alt="">
   <div class="safe"></div>
 </section>
 
-<!-- F6 -->
-<section class="frame page" id="f6" hidden style="--pt:227px">
+<!-- F7 -->
+<section class="frame page" id="f7" hidden style="--pt:227px">
   <img class="plate" src="assets/plate_b08.jpg" alt="">
   <div class="safe"></div>
 </section>
 
-<!-- F7 -->
-<section class="frame" id="f7" hidden>
+<!-- F8 -->
+<section class="frame" id="f8" hidden>
   <div class="glow" style="left:140px;top:640px;width:800px;height:700px;background:#0012d6;opacity:.85"></div>
   <div class="abs t1 ar">توأم رقمي ذكي: يراقب، يتحكم، يحلل، يتنبأ</div>
   <div class="abs t2 head ar h-ar">ويــوفر حتى <span class="pct grad lat" dir="ltr">%25</span> من الطاقة</div>
   <img class="abs box" src="assets/twin_box.jpg" alt="">
   <div class="safe"></div>
 </section>
-<!-- F8 -->
-<section class="frame page" id="f8" hidden>
+<!-- F9 -->
+<section class="frame page" id="f9" hidden>
   <img class="plate" src="assets/plate_b16.jpg" alt="">
   <div class="safe"></div>
 </section>
 
-<!-- F9 -->
-<section class="frame" id="f9" hidden>
+<!-- F10 -->
+<section class="frame" id="f10" hidden>
   <svg class="abs tower" viewBox="0 0 400 1300" fill="none" stroke="#7fd0ff" stroke-width="3" stroke-linejoin="round">
     <!-- Faisaliah Tower: four ribs converging to a spire, glass globe near the top, lantern tip -->
     <path d="M110 1300 L196 110 M290 1300 L204 110 M150 1300 L198 240 M250 1300 L202 240"/>
@@ -262,7 +289,7 @@ function balance(block){
     const set=n=>{ let i=0; l.textContent=src.replace(/~/g,()=>'ـ'.repeat(Math.floor(n/marks)+((i++)<n%marks?1:0))); };
     if(solo){ set(+block.dataset.k||2*marks); return; }   // single line: fixed emphasis level
     let n=0; set(0);
-    while(n<5*marks && inkW(l)<target-4){ n++; set(n); }
+    while(n<(+block.dataset.max||5)*marks && inkW(l)<target-4){ n++; set(n); }
     if(inkW(l)>target+12 && n>0){ set(n-1); }
   });
 }
