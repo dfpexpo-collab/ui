@@ -10,17 +10,22 @@ LEVELS = [0, 3, 7, 13, 22, 34, 50]          # blur radii, px
 def smooth(x):                               # smootherstep 0..1
     x = np.clip(x, 0, 1); return x * x * x * (x * (x * 6 - 15) + 10)
 
-def plate(src, crop, pt, out, feather_top=(110, 70), feather_bot=(170, 230)):
+def plate(src, crop, pt, out, feather_top=(110, 70), feather_bot=(170, 230), edge='mirror'):
+    # edge='mirror' carries imagery on (towers, people); 'stretch' smears the outermost rows, for pages with text at the edges
     pg = Image.open(src).convert('RGB').crop(crop)
     h = round(pg.height * 1080 / pg.width); pg = pg.resize((1080, h), Image.LANCZOS)
     c = Image.new('RGB', (1080, 1920))
     c.paste(pg, (0, pt))
     # continuation: mirror the page edges outward so colours and light carry on naturally
-    if pt > 0:
-        c.paste(pg.crop((0, 0, 1080, min(pt, h))).transpose(Image.FLIP_TOP_BOTTOM).resize((1080, pt)), (0, 0))
     rest = 1920 - (pt + h)
-    if rest > 0:
-        c.paste(pg.crop((0, h - min(rest, h), 1080, h)).transpose(Image.FLIP_TOP_BOTTOM).resize((1080, rest)), (0, pt + h))
+    if edge == 'stretch':
+        if pt > 0: c.paste(pg.crop((0, 0, 1080, 6)).resize((1080, pt)), (0, 0))
+        if rest > 0: c.paste(pg.crop((0, h - 6, 1080, h)).resize((1080, rest)), (0, pt + h))
+    else:
+        if pt > 0:
+            c.paste(pg.crop((0, 0, 1080, min(pt, h))).transpose(Image.FLIP_TOP_BOTTOM).resize((1080, pt)), (0, 0))
+        if rest > 0:
+            c.paste(pg.crop((0, h - min(rest, h), 1080, h)).transpose(Image.FLIP_TOP_BOTTOM).resize((1080, rest)), (0, pt + h))
     stack = np.stack([np.asarray(c.filter(ImageFilter.GaussianBlur(r)) if r else c, dtype=np.float32) for r in LEVELS])
     y = np.arange(1920, dtype=np.float32)
     # t: 0 = sharp, 1 = full blur. Ramps start inside the page and finish outside it.
@@ -42,4 +47,5 @@ P = sys.argv[1] if len(sys.argv) > 1 else 'brochure/pages/'   # folder with the 
 plate(P + 'b01.jpg', (0, 0, 1240, 1754), 166, 'assets/plate_b01.jpg', feather_top=(60, 60), feather_bot=(150, 150))
 plate(P + 'b04.jpg', (0, 140, 1240, 1754), 227, 'assets/plate_b04.jpg')
 plate(P + 'b06.jpg', (0, 140, 1240, 1754), 227, 'assets/plate_b06.jpg')
+plate(P + 'b16.jpg', (0, 215, 1240, 1754), 260, 'assets/plate_b16.jpg', feather_top=(10, 120), feather_bot=(20, 260), edge='stretch')
 plate(P + 'b08.jpg', (0, 140, 1240, 1754), 227, 'assets/plate_b08.jpg')
