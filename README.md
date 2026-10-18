@@ -32,3 +32,6 @@ Copied as-is into `.claude/skills/` so Claude can build the animation as HTML + 
 | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-performance`, `gsap-utils`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks` | [greensock/gsap-skills](https://github.com/greensock/gsap-skills) @ `aed9cfd` | MIT |
 
 Update with `npx hyperframes skills update` / `npx skills add https://github.com/greensock/gsap-skills`.
+
+### From open-design (nexu-io/open-design, Apache-2.0; some skills carry their own MIT licence)
+Installed with an `od-` prefix so the names don't clash with the existing skills: `od-animate`, `od-ui-animation`, `od-review-animations`, `od-emil-design-eng`, `od-emilkowalski-motion`, `od-motion-design`, `od-frame-glitch-title`, `od-frame-liquid-bg-hero`, `od-frame-logo-outro`, `od-video-hyperframes`, `od-mockup-device-3d`, `od-shader-dev`, `od-design-review`, `od-impeccable-design-polish`. The rest of the repo (the OpenDesign app and its MCP plugin) needs the local `od` server and is not installed.

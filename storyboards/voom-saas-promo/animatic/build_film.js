@@ -68,7 +68,8 @@ async function renderRange(browser, htmlPath, frames) {
   fs.rmSync(path.join(OUT, 'frames'), { recursive: true, force: true });
   fs.mkdirSync(path.join(OUT, 'frames'), { recursive: true });
   const htmlPath = path.join(OUT, 'film.html');
-  fs.writeFileSync(htmlPath, html);
+  // BG_ONLY=1: the animated gradient background alone (same timeline, same dark/light changes), no scenes or effects
+  fs.writeFileSync(htmlPath, process.env.BG_ONLY ? html.replace('</style>', '.scene,#fxtop{display:none!important}</style>') : html);
   if (process.env.HTML_ONLY) { console.log('wrote', htmlPath); return; }   // page only, no frames (used by the live preview)
   const total = CUES.scenes[CUES.scenes.length - 1].end;
   const n = Math.round(total * FPS);
@@ -83,7 +84,7 @@ async function renderRange(browser, htmlPath, frames) {
   const video = path.join(OUT, 'video_only.mp4');
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-framerate', String(FPS), '-i', path.join(OUT, 'frames', '%05d.jpg'),
     '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', video]);
-  const mp4 = path.join(OUT, 'voom_saas-promo_film_16x9_ar_v03.mp4');
+  const mp4 = path.join(OUT, process.env.BG_ONLY ? 'voom_saas-promo_background_16x9_v03.mp4' : 'voom_saas-promo_film_16x9_ar_v03.mp4');
   if (VO) {
     const segs = CUES.audio.segments, fd = CUES.audio.fade;
     const parts = segs.map((s, i) => `[1:a]atrim=${s.from}:${s.to},asetpts=PTS-STARTPTS,afade=t=in:d=${fd},afade=t=out:st=${(s.to - s.from - fd).toFixed(3)}:d=${fd},adelay=${Math.round(s.at * 1000)}:all=1[a${i}]`);
