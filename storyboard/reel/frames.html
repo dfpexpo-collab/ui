@@ -46,17 +46,17 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 .page .bgblur{position:absolute;left:-90px;top:-90px;width:1260px;height:2100px;object-fit:cover;filter:blur(46px) saturate(1.15) brightness(.82)}
 .page .pg{position:absolute;left:0;top:var(--pt);width:1080px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 93%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 93%,transparent 100%)}
 #f5 .box{left:36px;top:330px;width:1008px;border-radius:30px;box-shadow:0 40px 100px rgba(0,0,36,.7)}
-/* ---------- F1 hook: scattered modules pulled into one point ---------- */
-#f1{background:radial-gradient(80% 45% at 50% 66%,rgba(0,18,214,.85),transparent 72%),radial-gradient(70% 40% at 50% 10%,rgba(0,18,214,.45),transparent 70%),var(--deep)}
-#f1 .hk-net{inset:0;width:1080px;height:1920px}
-#f1 .hk-q{top:380px;left:0;right:0;text-align:center;font-size:116px;line-height:1.22}
-#f1 .hk-orb{left:470px;top:1180px;width:140px;height:140px;border-radius:50%;
-  background:radial-gradient(circle at 50% 45%,#ffffff 0,#bfe9ff 18%,#00b3ff 45%,rgba(0,18,214,.0) 72%);
-  box-shadow:0 0 80px 20px rgba(0,179,255,.55),0 0 220px 60px rgba(0,18,214,.6)}
-#f1 .hchip{transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;white-space:nowrap;padding:14px 22px;border-radius:999px;
-  background:linear-gradient(180deg,rgba(241,241,241,.12),rgba(241,241,241,.04));border:1.5px solid var(--glass-line);backdrop-filter:blur(16px);
-  font:600 27px/1 var(--lat);letter-spacing:-.01em;color:var(--off);direction:ltr;box-shadow:0 14px 40px rgba(0,0,36,.5)}
-#f1 .hchip i{width:10px;height:10px;border-radius:50%;background:var(--light);box-shadow:0 0 12px var(--light)}
+/* ---------- F1 hook: Voom take on the fluted-glass window reference (plate from make_hook.py) ---------- */
+#f1{background:var(--deep)}
+#f1 .hk-plate{inset:0;width:1080px;height:1920px}
+#f1 .hk-shade{left:0;top:980px;width:1080px;height:760px;background:radial-gradient(60% 55% at 78% 55%,rgba(0,0,36,.88),rgba(0,0,36,.55) 55%,transparent 80%)}
+#f1 .hk-win{left:64px;top:300px;width:952px;height:1270px;border:2px solid rgba(241,241,241,.55);border-radius:30px}
+#f1 .hk-win i{position:absolute;top:30px;width:14px;height:14px;border-radius:50%;border:2px solid rgba(241,241,241,.75)}
+#f1 .hk-win i:nth-child(1){left:34px} #f1 .hk-win i:nth-child(2){left:60px} #f1 .hk-win i:nth-child(3){left:86px}
+#f1 .hk-ast{position:absolute;top:22px;right:30px;width:34px;height:34px}
+#f1 .hk-q{right:116px;top:1150px;text-align:right;font-size:80px;font-weight:500;line-height:1.24;color:var(--off)}
+#f1 .hk-q .acc{color:var(--light)}
+#f1 .hk-by{right:116px;top:1478px;font:500 28px var(--lat);letter-spacing:-.01em;color:var(--off);opacity:.85;direction:ltr}
 /* ---------- F2 cover ---------- */
 #f2 .logo{left:50%;transform:translateX(-50%);width:300px;--lw:300px}
 #f2 .head{top:430px;left:0;right:0;text-align:center;font-size:136px}
@@ -160,17 +160,11 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 
 <!-- F1 -->
 <section class="frame" id="f1">
-  <div class="glow" style="left:240px;top:950px;width:600px;height:600px;background:#00b3ff;opacity:.28"></div>
-  <svg class="abs hk-net" viewBox="0 0 1080 1920" fill="none">
-    <defs><radialGradient id="hkfade" cx="540" cy="1250" r="460" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#00b3ff" stop-opacity=".9"/><stop offset="1" stop-color="#7fd0ff" stop-opacity=".12"/></radialGradient></defs>
-    <circle cx="540" cy="1250" r="150" stroke="#00b3ff" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="6 10"/>
-    <circle cx="540" cy="1250" r="300" stroke="#00b3ff" stroke-opacity=".2" stroke-width="1.5" stroke-dasharray="3 12"/>
-    <ellipse cx="540" cy="1250" rx="420" ry="330" stroke="#7fd0ff" stroke-opacity=".12" stroke-width="1.5"/>
-    <g stroke="url(#hkfade)" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"><line x1="240" y1="1075" x2="540" y2="1250"/><line x1="520" y1="965" x2="540" y2="1250"/><line x1="825" y1="1050" x2="540" y2="1250"/><line x1="910" y1="1235" x2="540" y2="1250"/><line x1="840" y1="1425" x2="540" y2="1250"/><line x1="560" y1="1535" x2="540" y2="1250"/><line x1="250" y1="1445" x2="540" y2="1250"/><line x1="250" y1="1260" x2="540" y2="1250"/></g>
-  </svg>
-  <div class="abs hk-orb"></div>
-  <div class="abs hchip" style="left:240px;top:1075px"><i></i>PropTech Solutions</div><div class="abs hchip" style="left:825px;top:1050px"><i></i>AI Voice Sales Agent</div><div class="abs hchip" style="left:250px;top:1260px"><i></i>Community Management</div><div class="abs hchip" style="left:910px;top:1235px"><i></i>ERP</div><div class="abs hchip" style="left:250px;top:1445px"><i></i>E-CRM Sales Agent</div><div class="abs hchip" style="left:840px;top:1425px"><i></i>Digital Twin</div><div class="abs hchip" style="left:520px;top:965px"><i></i>Computer Vision</div><div class="abs hchip" style="left:560px;top:1535px"><i></i>Cinematic video</div>
-  <div class="abs hk-q ar h-ar kb" data-max="2"><span class="ln">هل يم~كن أن تُ~دار</span><span class="ln">شركتك العقارية كلها</span><span class="ln grad">من مك~ان واح~د؟</span></div>
+  <img class="abs hk-plate" src="assets/hook_plate.jpg" alt="">
+  <div class="abs hk-shade"></div>
+  <div class="abs hk-win"><i></i><i></i><i></i><svg class="hk-ast" viewBox="0 0 24 24" fill="none" stroke="#00b3ff" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg></div>
+  <div class="abs hk-q ar"><span class="ln">هل يمكن أن تُدار</span><span class="ln">شركتك العقارية كلها</span><span class="ln acc">من مكان واحد؟</span></div>
+  <div class="abs hk-by">Powered by VOOM.</div>
   <div class="safe"></div>
 </section>
 
