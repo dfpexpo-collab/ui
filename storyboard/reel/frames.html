@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<title>VOOM Reel frames</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700;800&display=block">
+<style>
+/* 9:16 Reel frames, 1080x1920. Safe area: top 230, bottom 346 (y<=1574), sides 72. One focal per frame. */
+:root{
+  --deep:#000024; --blue:#0012d6; --light:#00b3ff; --off:#f1f1f1; --mute:#b9c6f2;
+  --sky1:#eaf7ff; --sky2:#7fd0ff;               /* brochure headline gradient (pale sky -> light blue) */
+  --glass:rgba(241,241,241,.06); --glass-line:rgba(127,208,255,.35);
+  --ar:"thmanyah sans","Thmanyah Sans","Alexandria",sans-serif;
+  --lat:"Gabarito",sans-serif;
+  --sx:72px; --top:230px; --bot:1574px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000}
+.frame{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--off);font-family:var(--ar);
+  background:radial-gradient(90% 55% at 70% 18%,rgba(0,18,214,.75),transparent 70%),radial-gradient(120% 70% at 30% 100%,rgba(0,18,214,.9),transparent 70%),var(--deep)}
+.frame[hidden]{display:none}
+.abs{position:absolute}
+.grad{background:linear-gradient(180deg,var(--sky1) 10%,var(--sky2) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.glow{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+.ar{font-family:var(--ar);direction:rtl}
+.lat{font-family:var(--lat);direction:ltr;letter-spacing:-.03em}
+.h-ar{font-weight:700;line-height:1.18}
+.h-lat{font-weight:700;line-height:.92}
+.eyebrow{font-family:var(--lat);font-weight:500;font-size:40px;letter-spacing:-.01em;color:var(--mute);direction:ltr}
+.chip{display:inline-flex;align-items:center;gap:16px;padding:16px 28px;border-radius:999px;background:var(--glass);border:1.5px solid var(--glass-line);backdrop-filter:blur(18px);font-family:var(--lat);font-weight:600;font-size:34px;letter-spacing:-.01em}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--light);box-shadow:0 0 18px var(--light)}
+.card{background:linear-gradient(180deg,rgba(241,241,241,.10),rgba(241,241,241,.03));border:1.5px solid var(--glass-line);border-radius:32px;backdrop-filter:blur(22px);box-shadow:0 30px 80px rgba(0,0,36,.55)}
+.ln{display:block;white-space:nowrap}
+.logo{position:absolute;top:var(--top);width:240px}
+.lk img{display:block;width:100%}
+.lk span{display:block;margin-top:6px;text-align:center;font:500 calc(var(--lw,240px)*.098)/1 var(--lat);letter-spacing:.03em;color:var(--off);white-space:nowrap}
+.safe{position:absolute;inset:var(--top) var(--sx) calc(1920px - var(--bot)) var(--sx);outline:2px dashed rgba(255,80,80,.0)}
+body.guides .safe{outline-color:rgba(255,80,80,.6)}
+.fadeimg{position:absolute;object-fit:cover}
+
+/* ---------- F1 cover ---------- */
+#f1 .logo{left:50%;transform:translateX(-50%);width:300px;--lw:300px}
+#f1 .head{top:430px;left:0;right:0;text-align:center;font-size:136px}
+#f1 .sub{top:800px;left:0;right:0;text-align:center;font-size:56px;font-weight:500;color:var(--off);opacity:.9}
+#f1 .wheel{left:50%;top:930px;width:740px;height:740px;transform:translateX(-50%);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 58%,transparent 71%);mask-image:radial-gradient(circle at 50% 50%,#000 58%,transparent 71%)}
+#f1 .url{bottom:240px;left:0;right:0;text-align:center;font:500 34px var(--lat);color:var(--mute)}
+
+/* ---------- F2 interactive experience ---------- */
+#f2 .logo{right:var(--sx)}
+#f2 .eyebrow{top:390px;right:var(--sx);text-align:right}
+#f2 .head{top:450px;right:var(--sx);text-align:right;font-size:132px}
+#f2 .tower{left:-40px;top:900px;width:560px;height:1120px;object-position:50% 0;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 70%,transparent 96%),linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 70%,transparent 96%);}
+#f2 .rows{top:1000px;right:var(--sx);width:500px;display:flex;flex-direction:column;gap:22px}
+#f2 .row{padding:26px 30px;text-align:right}
+#f2 .row b{display:block;font:700 36px/1 var(--lat);letter-spacing:-.02em;direction:ltr;text-align:right}
+#f2 .row span{display:block;margin-top:12px;font-size:31px;font-weight:500;color:var(--sky2)}
+
+/* ---------- F3 masterplan 10X ---------- */
+#f3{background:var(--deep)}
+#f3 .plan{inset:0;width:100%;height:100%;object-position:62% 50%;transform:scale(1.02)}
+#f3 .shade{inset:0;background:linear-gradient(180deg,rgba(0,0,36,.85) 0,rgba(0,0,36,.15) 26%,rgba(0,0,36,0) 45%,rgba(0,0,36,.55) 62%,rgba(0,0,36,.96) 84%)}
+#f3 .chip{top:var(--top);right:var(--sx)}
+#f3 .qr{width:40px;height:40px}
+#f3 .head{top:880px;right:var(--sx);text-align:right;font-size:150px;line-height:1.08}
+#f3 .ten{top:1230px;right:var(--sx);font:900 340px/1 var(--lat);letter-spacing:-.05em;direction:ltr}
+#f3 .legend{top:340px;right:var(--sx);padding:26px 30px;display:grid;gap:16px;font:500 30px var(--lat);direction:ltr}
+#f3 .legend i{display:inline-block;width:20px;height:20px;border-radius:50%;margin-right:14px;vertical-align:-2px}
+
+/* ---------- F4 it looks like voom ---------- */
+#f4 .logo{left:var(--sx)}
+#f4 .y{top:calc(var(--top) + 18px);right:var(--sx);font:600 34px var(--lat);color:var(--mute)}
+#f4 .q{top:340px;left:var(--sx);font:500 54px/1.1 var(--lat);letter-spacing:-.02em;color:var(--off);direction:ltr}
+#f4 .head{top:480px;left:var(--sx);font-size:172px}
+#f4 .ar1{top:820px;left:var(--sx);right:var(--sx);text-align:right;font-size:44px;font-weight:500;line-height:1.35;color:var(--off)}
+#f4 .dash{top:1110px;left:var(--sx);right:var(--sx);padding:18px}
+#f4 .dash img{display:block;width:100%;border-radius:18px}
+#f4 .laptop{top:1270px;right:-80px;width:520px;transform:rotate(-4deg);filter:drop-shadow(0 30px 50px rgba(0,0,36,.7));border-radius:18px}
+#f4 .ctl{top:975px;left:var(--sx);font:600 40px var(--lat);letter-spacing:-.02em;direction:ltr}
+#f4 .ar2{top:1032px;left:var(--sx);font-size:34px;font-weight:500;color:var(--sky2)}
+
+/* ---------- F5 ai voice agent ---------- */
+#f5 .logo{right:var(--sx)}
+#f5 .head{top:380px;left:var(--sx);font-size:150px}
+#f5 .sm{top:690px;left:var(--sx);font:500 40px var(--lat);color:var(--mute);direction:ltr;letter-spacing:-.01em}
+#f5 .ar1{top:780px;right:var(--sx);text-align:right;font-size:52px;font-weight:500}
+#f5 .ar2{top:850px;right:var(--sx);text-align:right;font-size:104px}
+#f5 .agent{left:0;top:1190px;width:1080px;height:800px;object-position:30% 0;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%);mask-image:linear-gradient(180deg,transparent 0,#000 18%)}
+#f5 .stats{top:1060px;left:var(--sx);right:var(--sx);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+#f5 .stat{padding:26px 26px 24px;direction:ltr}
+#f5 .stat b{display:block;font:800 76px/1 var(--lat);letter-spacing:-.04em}
+#f5 .stat span{display:block;margin-top:10px;font:500 28px var(--lat);color:var(--mute)}
+
+/* ---------- F6 digital twin ---------- */
+#f6 .twin{inset:0;width:100%;height:100%;object-position:50% 60%;transform:scale(1.2);transform-origin:50% 70%}
+#f6 .shade{inset:0;background:linear-gradient(180deg,rgba(0,0,36,.96) 0,rgba(0,0,36,.75) 30%,rgba(0,0,36,.05) 52%,rgba(0,0,36,0) 80%,rgba(0,0,36,.7) 100%)}
+#f6 .logo{right:var(--sx)}
+#f6 .head{top:380px;left:var(--sx);font-size:150px}
+#f6 .ar{top:660px;right:var(--sx);text-align:right;font-size:112px}
+#f6 .cc{padding:22px 24px;width:400px;direction:ltr;font-family:var(--lat)}
+#f6 .cc h4{font:700 30px var(--lat);letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:center}
+#f6 .cc h4 em{font:600 22px var(--lat);font-style:normal;color:#5fe39a;display:flex;align-items:center;gap:8px}
+#f6 .cc h4 em::before{content:"";width:10px;height:10px;border-radius:50%;background:#5fe39a}
+#f6 .cc dl{display:grid;grid-template-columns:1fr auto;gap:8px 12px;margin-top:14px;font:500 25px var(--lat);color:var(--mute)}
+#f6 .cc dd{color:var(--off);font-weight:600;text-align:right}
+#f6 .lead{position:absolute;height:2px;background:linear-gradient(90deg,var(--light),rgba(0,179,255,.2));transform-origin:0 50%}
+
+/* ---------- F7 PropTech Summit end card ---------- */
+#f7{background:radial-gradient(70% 38% at 50% 92%,rgba(0,179,255,.55),transparent 70%),radial-gradient(110% 60% at 50% 70%,rgba(0,18,214,.95),transparent 72%),var(--deep)}
+#f7 .tower{left:50%;top:160px;width:640px;transform:translateX(-50%);opacity:.28}
+#f7 .floor{left:0;bottom:0;width:1080px;height:620px;opacity:.35;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 60%);mask-image:linear-gradient(180deg,transparent,#000 60%)}
+#f7 .logo{left:50%;transform:translateX(-50%);width:260px;--lw:260px}
+#f7 .wait{top:420px;left:0;right:0;text-align:center;font-size:104px;font-weight:700}
+#f7 .ps{top:560px;left:0;right:0;text-align:center;font-size:206px;line-height:.9;font-weight:800}
+#f7 .info{top:972px;left:var(--sx);right:var(--sx);padding:34px 40px;display:grid;gap:26px}
+#f7 .info .r{display:flex;align-items:center;gap:26px;direction:ltr}
+#f7 .info svg{flex:none;width:56px;height:56px}
+#f7 .info b{font:700 66px/1 var(--lat);letter-spacing:-.03em}
+#f7 .info .loc b{font-size:56px}
+#f7 .info small{display:block;margin-top:8px;font:500 36px var(--lat);color:var(--mute)}
+#f7 .sep{height:1.5px;background:var(--glass-line)}
+#f7 .booth{top:1300px;left:var(--sx);right:var(--sx);height:250px;border-radius:36px;background:linear-gradient(135deg,#00b3ff,#0a7dff 55%,#0012d6);display:flex;align-items:center;justify-content:space-between;padding:0 44px;box-shadow:0 30px 90px rgba(0,179,255,.45)}
+#f7 .booth .t{direction:rtl;text-align:right;color:var(--deep)}
+#f7 .booth .t span{display:block;font-size:64px;font-weight:700;line-height:1}
+#f7 .booth .t b{display:block;font:800 132px/1 var(--lat);letter-spacing:-.04em;direction:ltr;margin-top:6px}
+#f7 .plan{width:300px;height:186px}
+#f7 .url{top:1548px;left:0;right:0;text-align:center;font:500 32px var(--lat);color:var(--mute)}
+</style>
+</head>
+<body>
+
+<!-- F1 -->
+<section class="frame" id="f1">
+  <div class="glow" style="left:240px;top:1050px;width:600px;height:600px;background:#00b3ff;opacity:.35"></div>
+  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
+  <div class="abs head ar h-ar grad kb"><span class="ln">حلول عقار~ية</span><span class="ln">متكا~ملة</span></div>
+  <div class="abs sub ar">مدعومة بالذكاء الاصطناعي</div>
+  <img class="abs wheel" src="assets/wheel.jpg" alt="">
+  <div class="safe"></div>
+</section>
+
+<!-- F2 -->
+<section class="frame" id="f2" hidden>
+  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
+  <div class="abs eyebrow">Your project. one interactive Experience</div>
+  <div class="abs head ar h-ar grad kb"><span class="ln">مستقب~ل بيع</span><span class="ln">العقا~رات</span><span class="ln">يبد~أ من هنا</span></div>
+  <img class="fadeimg tower" src="assets/tower.jpg" alt="">
+  <div class="abs rows">
+    <div class="card row"><b>Real time availability</b><span class="ar">مشروعك بطريقة مختلفة</span></div>
+    <div class="card row"><b>From master plan to unit</b><span class="ar">كل التفاصيل في تجربة واحدة</span></div>
+    <div class="card row"><b>Built for smarter sales</b><span class="ar">تقنية تخدم مبيعاتك</span></div>
+  </div>
+  <div class="safe"></div>
+</section>
+
+<!-- F3 -->
+<section class="frame" id="f3" hidden>
+  <img class="fadeimg plan" src="assets/plan.jpg" alt="">
+  <div class="abs shade"></div>
+  <div class="abs chip"><svg class="qr" viewBox="0 0 10 10"><path fill="#f1f1f1" d="M0 0h4v4H0zM6 0h4v4H6zM0 6h4v4H0zM1 1v2h2V1zM7 1v2h2V1zM1 7v2h2V7zM5 5h1v1H5zM6 6h2v1H6zM8 5h2v1H8zM5 7h1v3H5zM7 8h3v2H7z" fill-rule="evenodd"/></svg>Scan to Explore</div>
+  <div class="abs card legend"><div><i style="background:#2fb344"></i>Available</div><div><i style="background:#e8c200"></i>Reserved</div><div><i style="background:#e03131"></i>Sold</div><div><i style="background:#7a7a7a"></i>Unlaunched</div></div>
+  <div class="abs head ar h-ar kb"><span class="ln">ضاعـ~ـف</span><span class="ln">مبيعا~تك</span></div>
+  <div class="abs ten grad">10X</div>
+  <div class="safe"></div>
+</section>
+
+<!-- F4 -->
+<section class="frame" id="f4" hidden>
+  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
+  <div class="abs y">2026</div>
+  <div class="abs q">What does smarter<br>selling look like?</div>
+  <div class="abs head lat h-lat"><span class="ln">It looks</span><span class="ln">like <span class="grad">Voom</span></span></div>
+  <div class="abs ar1 ar">كل تفصيلة في مشروعك تتحول<br>لجزء من تجربة البيع مع Voom</div>
+  <div class="abs card dash"><img src="assets/dash.jpg" alt=""></div>
+  <div class="abs ctl">Full Control. Clear Insights. One Dashboard.</div>
+  <div class="abs ar2 ar">حلّل بيانات مشاريعك، تابع الأداء، واتخذ قرارات أفضل</div>
+  <div class="safe"></div>
+</section>
+
+<!-- F5 -->
+<section class="frame" id="f5" hidden>
+  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
+  <div class="abs head lat h-lat"><span class="ln">AI Voice</span><span class="ln grad">Sales Agent</span></div>
+  <div class="abs sm">Smart conversations | Better experiences</div>
+  <div class="abs ar1 ar">يتفاعل، يتحدث، يتابع، يحلل محادثات</div>
+  <div class="abs ar2 ar h-ar grad kb" data-k="2"><span class="ln">العم~لاء في أي وق~ت</span></div>
+  <img class="fadeimg agent" src="assets/agent.jpg" alt="">
+  <div class="abs stats">
+    <div class="card stat"><b>+20</b><span>Languages</span></div>
+    <div class="card stat"><b>24/7</b><span>Availability</span></div>
+    <div class="card stat"><b style="font-size:58px;line-height:1.3">Instant</b><span>Responses</span></div>
+  </div>
+  <div class="safe"></div>
+</section>
+
+<!-- F6 -->
+<section class="frame" id="f6" hidden>
+  <img class="fadeimg twin" src="assets/twin.jpg" alt="">
+  <div class="abs shade"></div>
+  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
+  <div class="abs head lat h-lat"><span class="ln">Digital Twin</span><span class="ln">Solution</span></div>
+  <div class="abs ar h-ar grad kb" data-k="2"><span class="ln">ت~وأم رقمي ذكي</span></div>
+  <div class="abs card cc" style="left:var(--sx);top:1000px"><h4>CCTV Camera 01<em>Live</em></h4><dl><dt>People Count</dt><dd>12</dd><dt>Motion Detection</dt><dd>OK</dd><dt>Status</dt><dd>Online</dd></dl></div>
+  <div class="abs card cc" style="right:var(--sx);top:1060px"><h4>Smart Building Hub</h4><dl><dt>BMS</dt><dd>Connected</dd><dt>IoT Devices</dt><dd>48</dd><dt>System Status</dt><dd>Healthy</dd></dl></div>
+  <div class="abs card cc" style="left:var(--sx);top:1300px"><h4>Indoor Environment (L10)</h4><dl><dt>Temperature</dt><dd>23.5 °C</dd><dt>Humidity</dt><dd>42%</dd><dt>CO2</dt><dd>580 ppm</dd></dl></div>
+  <div class="abs card cc" style="right:var(--sx);top:1360px"><h4>Energy Meter (Main Riser)</h4><dl><dt>Power Usage</dt><dd>1.24 MW</dd><dt>HVAC Load</dt><dd>52%</dd><dt>Status</dt><dd>Normal</dd></dl></div>
+  <div class="safe"></div>
+</section>
+
+<!-- F7 -->
+<section class="frame" id="f7" hidden>
+  <svg class="abs tower" viewBox="0 0 400 1300" fill="none" stroke="#7fd0ff" stroke-width="3" stroke-linejoin="round">
+    <!-- Faisaliah Tower: four ribs converging to a spire, glass globe near the top, lantern tip -->
+    <path d="M110 1300 L196 110 M290 1300 L204 110 M150 1300 L198 240 M250 1300 L202 240"/>
+    <path d="M196 110 L200 20 L204 110"/>
+    <circle cx="200" cy="330" r="34"/><path d="M166 330 h68 M200 296 v68"/>
+    <path d="M128 1050 H272 M140 880 H260 M152 710 H248 M165 540 H235 M176 420 H224" stroke-width="2" opacity=".7"/>
+    <path d="M60 1300 H340" stroke-width="4"/>
+  </svg>
+  <svg class="abs floor" viewBox="0 0 1080 620" fill="none" stroke="#7fd0ff" stroke-width="1.5">
+    <g id="fl"></g>
+  </svg>
+  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
+  <div class="abs wait ar kb" data-k="2"><span class="ln">انتظ~رونا في</span></div>
+  <div class="abs ps lat"><span class="ln">PropTech</span><span class="ln grad">Summit</span></div>
+  <div class="abs card info">
+    <div class="r"><svg viewBox="0 0 24 24" fill="none" stroke="#00b3ff" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><b>25-26 Oct 2026</b></div>
+    <div class="sep"></div>
+    <div class="r loc"><svg viewBox="0 0 24 24" fill="none" stroke="#00b3ff" stroke-width="1.8" stroke-linejoin="round"><path d="M12 22s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg><div><b>Faisaliah Tower</b><small>Riyadh, Saudi Arabia</small></div></div>
+  </div>
+  <div class="abs booth">
+    <svg class="plan" viewBox="0 0 300 186">
+      <!-- exhibition hall: booth rows; E3 + E4 lit as one stand -->
+      <g fill="rgba(0,0,36,.18)" stroke="rgba(0,0,36,.35)" stroke-width="2">
+        <rect x="4" y="4" width="64" height="50" rx="8"/><rect x="78" y="4" width="64" height="50" rx="8"/><rect x="152" y="4" width="64" height="50" rx="8"/><rect x="226" y="4" width="64" height="50" rx="8"/>
+        <rect x="4" y="68" width="64" height="50" rx="8"/><rect x="226" y="68" width="64" height="50" rx="8"/>
+        <rect x="4" y="132" width="64" height="50" rx="8"/><rect x="78" y="132" width="64" height="50" rx="8"/><rect x="152" y="132" width="64" height="50" rx="8"/><rect x="226" y="132" width="64" height="50" rx="8"/>
+      </g>
+      <rect x="78" y="68" width="138" height="50" rx="8" fill="#000024"/>
+      <text x="147" y="101" text-anchor="middle" font-family="Gabarito" font-weight="700" font-size="26" fill="#00b3ff">E3 · E4</text>
+    </svg>
+    <div class="t"><span class="ar">جناح</span><b>E3-E4</b></div>
+  </div>
+  <div class="safe"></div>
+</section>
+
+<script>
+// perspective exhibition floor for F7
+(function(){
+  const g=document.getElementById('fl'),NS='http://www.w3.org/2000/svg',vx=540,vy=-260;
+  for(let i=-10;i<=10;i++){const l=document.createElementNS(NS,'line');l.setAttribute('x1',vx);l.setAttribute('y1',vy);l.setAttribute('x2',540+i*150);l.setAttribute('y2',620);g.appendChild(l);}
+  for(let k=1;k<9;k++){const y=620-620*Math.pow(.72,k);const l=document.createElementNS(NS,'line');l.setAttribute('x1',0);l.setAttribute('x2',1080);l.setAttribute('y1',y);l.setAttribute('y2',y);g.appendChild(l);}
+})();
+
+// Kashida balance: "~" marks a stretch point. A tatweel is added there step by step (max 5 per point)
+// until the line reaches the width of the block's widest line. Thmanyah swaps in curved stretched forms.
+function balance(block){
+  const lines=[...block.querySelectorAll('.ln')];
+  lines.forEach(l=>{ l.dataset.src=l.dataset.src||l.textContent; l.textContent=l.dataset.src.replace(/~/g,''); });
+  const solo=lines.length===1;
+  const target=Math.max(...lines.map(inkW));
+  lines.forEach(l=>{
+    const src=l.dataset.src, marks=(src.match(/~/g)||[]).length; if(!marks) return;
+    const set=n=>{ let i=0; l.textContent=src.replace(/~/g,()=>'ـ'.repeat(Math.floor(n/marks)+((i++)<n%marks?1:0))); };
+    if(solo){ set(+block.dataset.k||2*marks); return; }   // single line: fixed emphasis level
+    let n=0; set(0);
+    while(n<5*marks && inkW(l)<target-4){ n++; set(n); }
+    if(inkW(l)>target+12 && n>0){ set(n-1); }
+  });
+}
+// keep every headline inside the 936px safe width: shrink the size until it fits
+function inkW(el){ // width of the glyphs themselves, per visual line (block spans would report the full frame width)
+  const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT); let lo=1e9,hi=-1e9,n,lines={};
+  while((n=w.nextNode())){ const r=document.createRange(); r.selectNodeContents(n); for(const x of r.getClientRects()){ const k=Math.round(x.top/10); const L=lines[k]||(lines[k]={l:1e9,r:-1e9}); L.l=Math.min(L.l,x.left); L.r=Math.max(L.r,x.right); } }
+  return Math.max(0,...Object.values(lines).map(L=>L.r-L.l)); }
+function fit(el){ let fs=parseFloat(getComputedStyle(el).fontSize); while(inkW(el)>936 && fs>40){ fs-=2; el.style.fontSize=fs+'px'; if(el.classList.contains('kb')) balance(el); } }
+function show(n){ document.querySelectorAll('.frame').forEach((f,i)=>f.hidden=(i+1)!==n); document.querySelectorAll('#f'+n+' .kb').forEach(balance); document.querySelectorAll('#f'+n+' .kb, #f'+n+' .head').forEach(fit); }
+const q=new URLSearchParams(location.search);
+if(q.has('guides')) document.body.classList.add('guides');
+document.fonts.ready.then(()=>{ show(+(q.get('f')||1)); document.body.dataset.ready='1'; });
+</script>
+</body>
+</html>
