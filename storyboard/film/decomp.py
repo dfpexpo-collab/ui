@@ -282,6 +282,11 @@ def twin():
     a = np.clip((d - 18) / 40, 0, 1)
     a = cv2.GaussianBlur(a, (0, 0), 3)
     a = np.maximum(a, np.clip((yy - 600) / 200, 0, 1))      # lower city fully opaque
+    # sky above the city is transparent (the live gradient shows through); only the tower column keeps its cut-out
+    xx = np.arange(a.shape[1], dtype=np.float32)[None, :]
+    col = np.clip((xx - 430) / 40, 0, 1) * np.clip((800 - xx) / 40, 0, 1)
+    ramp = np.clip((yy - 560) / 260, 0, 1)
+    a = np.maximum(a * col, ramp) * np.clip((yy - 0) / 80, 0, 1)
     sc.save('photo', np.dstack([crop, a * 255]), 0, y0, dict(kind='element'))
     p = sc.plate(bg)
     sc.done(p)

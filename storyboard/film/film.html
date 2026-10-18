@@ -176,6 +176,12 @@ function ping(parent, x, y, t, { r = 90, color = '0,179,255' } = {}) {
     tl.fromTo(c, { scale: .2, opacity: 0 }, { opacity: .9, duration: .04 }, t + k * .18); tl.to(c, { scale: 1.3, opacity: 0, duration: .9, ease: eSettle }, t + k * .18 + .04); }
 }
 
+const WAVES = [];
+function drawWaves(t) { for (const w of WAVES) { const c = w.c; c.clearRect(0, 0, 760, 90); if (t < w.t0 || t > w.t1) continue;
+  const a = Math.min(1, (t - w.t0) / .5) * Math.min(1, (w.t1 - t) / .5), n = 48;
+  for (let i = 0; i < n; i++) { const x = i * (760 / n) + 4, env = Math.sin(Math.PI * i / (n - 1)),
+    v = (.35 + .65 * Math.abs(Math.sin(t * 7.3 + i * .55) * Math.sin(t * 3.1 + i * .23 + 1.7))) * env;
+    const h = 6 + 70 * v; c.fillStyle = `rgba(${i % 7 === 0 ? '234,247,255' : '0,179,255'},${.85 * a})`; c.beginPath(); c.roundRect(x, 45 - h / 2, 7, h, 4); c.fill(); } } }
 // ===== S1 hook (6 beats): hand behind fluted glass, window, the question
 let hookCanvas, hookCtx, hookImgs = {};
 scene(beat(6), (cam, t0, s, bgl) => {
@@ -223,7 +229,11 @@ scene(beat(7), (cam, t0, s, bgl) => {
   tl.fromTo(core, { rotation: -10 }, { rotation: 0, duration: 1.4, ease: eSettle }, t0); sfx('pop_low', t0);
   const order = [5, 6, 7, 0, 1, 2, 3, 4];
   order.forEach((k, i) => { const d = sprite(cam, findL(M, 'seg' + k)); setO(d); const t = t0 + beat(.5) + i * beat(.25);
-    tl.fromTo(d, { scale: .72, opacity: 0, filter: 'blur(10px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: .55, ease: soft }, t); sfx('pop', t, i); });
+    const L = findL(M, 'seg' + k), an = L.angle * Math.PI / 180, ux = Math.cos(an), uy = Math.sin(an);
+    tl.fromTo(d, { x: ux * 340, y: uy * 340, z: -500, rotationX: uy * -55, rotationY: ux * 55, rotation: (i % 2 ? 18 : -18), opacity: 0, filter: 'blur(12px)' },
+      { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotation: 0, opacity: 1, filter: 'blur(0px)', duration: .85, ease: eLaunch }, t);
+    tl.set(d, { filter: 'none' }, t + .86); sfx('pop', t + .3, i); });
+  s.style.perspective = '1600px'; cam.style.transformStyle = 'preserve-3d';
   const logo = sprite(cam, findL(M, 'logo'));
   tl.fromTo(logo.querySelector('.wi'), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: .8, ease: eLaunch }, t0 + beat(2));
   const lw = parseFloat(logo.style.width);
@@ -276,7 +286,9 @@ scene(beat(7), (cam, t0, s, bgl) => {
   maskRise(c1.words, t0 + beat(3)); maskRise(c2.words, t0 + beat(3) + .08);
   const dash = el('div', 'abs card', cam, { left: '72px', top: '1110px', width: '936px', padding: '18px' });
   const img = el('img', '', dash, { display: 'block', width: '100%', borderRadius: '18px' }); img.src = 'assets/own/dash.jpg';
-  tl.fromTo(dash, { y: 320, opacity: 0, rotationX: 18, filter: 'blur(14px)' }, { y: 0, opacity: 1, rotationX: 0, filter: 'blur(0px)', duration: 1.1, ease: eLaunch }, t0 + beat(2.75));
+  s.style.perspective = '1400px';
+  tl.fromTo(dash, { opacity: 0, rotationX: -88, y: -40 }, { opacity: 1, rotationX: 0, y: 0, duration: 1.15, ease: eLaunch }, t0 + beat(2.75));
+  tl.fromTo(dash, { boxShadow: '0 0 0 rgba(0,179,255,0)' }, { boxShadow: '0 40px 120px rgba(0,179,255,.35)', duration: 1.2 }, t0 + beat(2.75));
   dash.style.transformOrigin = '50% 0%'; sfx('whoosh_up', t0 + beat(2.75));
   const k = 900 / 1120, OX = 18, OY = 18;
   [[302, 128, 365, 147, '#1a00ff', '#ffffff', 3420], [188, 321, 240, 338, '#fbfbfb', '#0a0a1e', 1245], [401, 321, 444, 338, '#fbfbfb', '#0a0a1e', 52, '%'],
@@ -342,6 +354,8 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const scr = el('div', 'abs', cam, { left: '396px', top: '927px', width: '590px', height: '410px', borderRadius: '24px', background: 'radial-gradient(closest-side,rgba(0,179,255,.45),transparent)', mixBlendMode: 'screen', opacity: 0 });
   tl.fromTo(scr, { opacity: 0 }, { opacity: 1, duration: .3 }, t0 + beat(5)); tl.to(scr, { opacity: 0, duration: 1.2, ease: eSettle }, t0 + beat(5) + .3);
   ping(cam, 690, 1360, t0 + beat(5), { r: 160 }); sfx('glass', t0 + beat(5), 1);
+  const wv = el('canvas', 'abs', cam, { left: '300px', top: '1490px', width: '760px', height: '90px', transform: 'scale(.85)', transformOrigin: '0 0' }); wv.width = 760; wv.height = 90; const wx = wv.getContext('2d');
+  WAVES.push({ c: wx, t0: t0 + beat(1.5), t1: t0 + beat(7) + .5 });
 });
 TRANS.push(['push', 6, { dx: 0, dy: -1 }]);
 
@@ -350,7 +364,15 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const M = MAN.s7; plate(bgl, M.plate);
   cameraMove(cam, bgl, t0, beat(7), { from: { scale: 1.08, y: 30 }, to: { scale: 1.0, y: -10 }, origin: '55% 65%' });
   const ph = sprite(cam, findL(M, 'photo')); bottomFade(ph, M.pageBottom, parseFloat(ph.style.top), 220);
-  tl.fromTo(ph, { y: 260, opacity: 0, filter: 'blur(16px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.4, ease: eLaunch }, t0 - .1); drift(ph, t0 + 1.3, beat(6), { y: -12 }); sfx('rise', t0);
+  const php = findL(M, 'photo'), ghost = sprite(cam, php); bottomFade(ghost, M.pageBottom, parseFloat(ghost.style.top), 220); cam.insertBefore(ghost, ph);
+  ghost.style.filter = 'grayscale(1) brightness(.55) sepia(1) hue-rotate(185deg) saturate(3)';
+  tl.fromTo(ghost, { y: 160, opacity: 0 }, { y: 0, opacity: .9, duration: 1.1, ease: eLaunch }, t0 - .15);
+  const sc = { p: 100 }, line = el('div', 'abs', cam, { left: 0, width: '1080px', height: '4px', background: 'linear-gradient(90deg,transparent,#00b3ff 20%,#eaf7ff 50%,#00b3ff 80%,transparent)', boxShadow: '0 0 40px 12px rgba(0,179,255,.55)', opacity: 0 });
+  const y0 = php.y, hh = php.h;
+  const upd = () => { ph.style.clipPath = `inset(${sc.p}% 0 0 0)`; line.style.top = (y0 + hh * sc.p / 100) + 'px'; };
+  tl.set(ph, { opacity: 1 }, t0 - .2); tl.fromTo(line, { opacity: 0 }, { opacity: 1, duration: .15 }, t0 + .35);
+  tl.fromTo(sc, { p: 100 }, { p: 0, duration: 1.7, ease: 'power2.inOut', onUpdate: upd }, t0 + .35); tl.to(line, { opacity: 0, duration: .3 }, t0 + 2.0);
+  upd(); drift(ph, t0 + 1.3, beat(6), { y: -12 }); drift(ghost, t0 + 1.3, beat(6), { y: -12 }); sfx('rise', t0 + .35);
   echoIn(spriteWords(cam, findL(M, 't_title')), t0 + beat(1), { dir: 'left' });
   echoIn(spriteWords(cam, findL(M, 't_ar')), t0 + beat(1.75));
   M.layers.filter(l => l.id.startsWith('c_')).forEach((L, i) => { const d = sprite(cam, L); const dx = L.side === 'left' ? -90 : 90; const t = t0 + beat(2.75) + i * beat(.375);
@@ -385,12 +407,12 @@ TRANS.push(['push', 8, { dx: 1, dy: 0 }]);
 
 // ===== S9 global presence (7 beats): flags pop on the 8ths, counts, offices, contact + QR
 scene(beat(7), (cam, t0, s, bgl) => {
-  const M = MAN.s9; plate(bgl, M.plate);
+  const M = MAN.s9; plate(bgl, M.plate); s.style.perspective = '1200px'; cam.style.transformStyle = 'preserve-3d';
   cameraMove(cam, bgl, t0, beat(7), { from: { x: -22, scale: 1.02 }, to: { x: 22, scale: 1.05 }, origin: '50% 45%' });
   maskRise(spriteWords(cam, findL(M, 't_en')), t0 + .05);
   echoIn(spriteWords(cam, findL(M, 't_ar')), t0 + beat(.5));
   for (let i = 0; i < 7; i++) { const f = sprite(cam, findL(M, 'flag' + i)), l = sprite(cam, findL(M, 'flagl' + i)); const t = t0 + beat(1.25) + i * beat(.25);
-    tl.fromTo(f, { scale: .5, opacity: 0, y: 14, filter: 'blur(8px)' }, { scale: 1, opacity: 1, y: 0, filter: 'blur(0px)', duration: .5, ease: soft }, t);
+    f.style.transformOrigin = '50% 50%'; tl.fromTo(f, { rotationY: -100, opacity: 0, z: -80 }, { rotationY: 0, opacity: 1, z: 0, duration: .75, ease: eLaunch }, t);
     tl.fromTo(l, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .4, ease: eSettle }, t + .1); sfx('pop', t, i); }
   M.nums.forEach((n, i) => { const L = findL(M, n.id);
     const d = el('div', 'count grad', cam, { left: (L.x - 14) + 'px', top: (L.y - 4) + 'px', width: L.w + 'px', textAlign: 'right', font: `700 ${L.h * .78}px/1.1 Gabarito`, letterSpacing: '-.02em' });
@@ -587,7 +609,7 @@ TRANS.forEach(([type, i, o]) => {
 });
 tl.set({}, {}, TOTAL);
 window.TOTAL = TOTAL; window.SFX = SFX; window.SCENES = SC.map(c => [c.t0, c.dur]); window.BPM = BPM;
-window.seek = t => { tl.time(Math.min(t, TOTAL - 1e-3)); drawBG(t); drawHook(t); drawSpark(t); };
+window.seek = t => { tl.time(Math.min(t, TOTAL - 1e-3)); drawBG(t); drawHook(t); drawSpark(t); drawWaves(t); };
 const imgs = [...document.images];
 window.ready = Promise.all([document.fonts.ready, ...imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })), ...Object.values(hookImgs).map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))]);
 window.ready.then(() => { document.body.dataset.ready = '1'; const p = new URLSearchParams(location.search); window.seek(+(p.get('t') || 0)); });
