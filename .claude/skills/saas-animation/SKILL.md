@@ -95,6 +95,8 @@ Scenes have a transparent background (the shader sits behind everything). So any
 - **thmanyah** (Sans, Serif Text, Serif Display; Light–Black) is installed locally with `tools/fonts/install_thmanyah.sh <zip>`. The licence forbids uploading or redistributing the font files.
   - Never commit them, and never embed them as `@font-face` in a published page.
   - Outline the text to SVG paths, which is allowed for design work.
+  - **Kashida:** type tatweel `ـ` (U+0640) after a letter, 1 to 5 of them. The font swaps in that letter's own stretched form (`yehAr.medi_kashida…`, up to 5 levels). The result is a real curved extension, not a flat line, and HarfBuzz and Chrome shape it automatically.
+  - Animating a kashida means stepping through the levels 0→5, each step re-shaped and outlined. Use it on one word for emphasis, not across a whole line.
 
 ## Working with this user
 
