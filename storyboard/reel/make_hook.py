@@ -1,60 +1,51 @@
-# Hook plate (1080x1920): duotone tower photo, fluted-glass band with a light-blue glow, deep-blue field.
+# Hook plate (1080x1920), Voom take on the fluted-glass reference: B&W hand on the deep-blue field,
+# fingers seen through vertical glass ribs that refract them and glow light blue.
 import numpy as np
 from PIL import Image, ImageFilter
 W, H = 1080, 1920
 DEEP = np.array([0, 0, 36], np.float32); OFF = np.array([241, 241, 241], np.float32)
 BLUE = np.array([0, 18, 214], np.float32); LIGHT = np.array([0, 179, 255], np.float32)
+PALE = np.array([205, 238, 255], np.float32)
 
-src = Image.open('assets/hook_src.jpg').convert('RGB').crop((0, 40, 1130, 940))
-# subject placement: tower on the left half (RTL mirror of the reference), photo bleeds past the window top
-s = 1440 / src.height; src = src.resize((round(src.width * s), 1440), Image.LANCZOS)
-cx_src = int(0.53 * src.width)            # tower centre in the photo
-x0 = 400 - cx_src; y0 = 150
-canvas = np.zeros((H, W, 3), np.float32)
-lum = np.zeros((H, W), np.float32); alpha = np.zeros((H, W), np.float32)
-g = np.asarray(src.convert('L'), np.float32) / 255
-xs, xe = max(0, x0), min(W, x0 + src.width); ys, ye = y0, y0 + src.height
-lum[ys:ye, xs:xe] = g[:, xs - x0:xe - x0]
-# soft photo edges: fade out to the field on every side
+src = Image.open('assets/hand_src.jpg').convert('L')
+s = W / src.width; src = src.resize((W, round(src.height * s)), Image.LANCZOS)
+lum = np.zeros((H, W), np.float32)
+dy = -150                                   # lift the hand so the question sits clear below the fingers
+g = np.asarray(src, np.float32) / 255
+y0, y1 = max(0, dy), min(H, dy + g.shape[0])
+lum[y0:y1] = g[y0 - dy:y1 - dy]
+lum = np.clip((lum - .03) / .9, 0, 1)
 yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-def ramp(v, a, b): return np.clip((v - a) / (b - a), 0, 1)
-alpha = (ramp(yy, ys, ys + 260) * (1 - ramp(yy, ye - 420, ye)) * (1 - ramp(xx, 760, 1080)) * ramp(xx, -40, 120))
-alpha *= (lum > 0)
-lum = np.clip((lum - .08) * 1.35, 0, 1) ** 1.1              # contrast
-# duotone: deep blue shadows -> cool off-white highlights
-mid = np.array([40, 52, 120], np.float32)
-def duo(l):
-    l = l[..., None]
-    return np.where(l < .5, DEEP + (mid - DEEP) * (l / .5), mid + (OFF - mid) * ((l - .5) / .5))
-photo = duo(lum)
-# glow version (behind the glass): deep -> blue -> light blue -> pale
-def glowtone(l):
-    l = l[..., None]
-    pale = np.array([200, 236, 255], np.float32)
-    return np.where(l < .45, DEEP + (BLUE - DEEP) * (l / .45), np.where(l < .8, BLUE + (LIGHT - BLUE) * ((l - .45) / .35), LIGHT + (pale - LIGHT) * ((l - .8) / .2)))
-glow_img = glowtone(np.clip(lum * 1.15, 0, 1))
-# fluted glass band: vertical ribs, each one magnifies and shifts its slice; ribs cover the tower's right side
-band0, band1, rib = 300, 760, 46
-fl = photo.copy(); flg = glow_img.copy(); fa = alpha.copy()
-for x in range(band0, band1):
-    k = (x - band0) % rib; r0 = x - k
-    sx = int(np.clip(r0 + k * .58 + rib * .55 - 34, 0, W - 1))   # compressed + shifted sample
-    fl[:, x] = photo[:, sx]; flg[:, x] = glow_img[:, sx]; fa[:, x] = alpha[:, sx]
-ribpos = ((xx - band0) % rib) / rib
-inband = ((xx >= band0) & (xx < band1)).astype(np.float32)
-bandmask = inband * ramp(xx, band0, band0 + 90) * (1 - ramp(xx, band1 - 140, band1))
-# colour inside the band leans to the glow tone, strongest in the middle of the band
-gw = bandmask * (0.35 + 0.65 * np.exp(-((yy - 900) / 520) ** 2))
-img = photo * (1 - inband[..., None]) + (fl * (1 - gw[..., None]) + flg * gw[..., None]) * inband[..., None]
-a = alpha * (1 - inband) + fa * inband
-# rib shading: bright edge on the left of each rib, soft shadow to the right
-shade = (np.exp(-(ribpos / .06) ** 2) * .55 - ribpos * .18) * bandmask
-img = img + shade[..., None] * np.array([150, 200, 255], np.float32) * a[..., None]
-# field: deep blue with a blue glow, plus a light-blue bloom behind the glass
-field = np.broadcast_to(DEEP, (H, W, 3)).copy()
-d = np.exp(-(((xx - 520) / 520) ** 2 + ((yy - 860) / 640) ** 2)); field += (BLUE - DEEP) * d[..., None] * .55
-bloom = np.exp(-(((xx - 560) / 260) ** 2 + ((yy - 820) / 520) ** 2)) * .45
-field += (LIGHT - DEEP) * bloom[..., None] * .55
-out = field * (1 - a[..., None]) + img * a[..., None]
-out += (LIGHT * bloom[..., None] * .18) * bandmask[..., None]
-Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(.5)).save('assets/hook_plate.jpg', quality=93)
+
+def tone(l, stops):                          # piecewise colour ramp
+    l = l[..., None]; out = np.zeros(l.shape[:2] + (3,), np.float32)
+    for (a, ca), (b, cb) in zip(stops, stops[1:]):
+        m = (l >= a) & (l <= b); t = (l - a) / (b - a)
+        out = np.where(m, ca + (cb - ca) * t, out)
+    return out
+bw = tone(lum, [(0, DEEP), (.35, np.array([34, 40, 86], np.float32)), (1, OFF)])        # hand outside the glass
+gl = tone(np.clip(lum * 1.1, 0, 1), [(0, DEEP), (.25, BLUE), (.6, LIGHT), (1, PALE)])   # hand behind the glass
+
+# fluted glass: ribs between x0 and x1; each rib compresses its slice and pulls it sideways (refraction)
+x0, x1, rib = 470, 1080, 52
+img = bw.copy(); band = (xx >= x0) & (xx < x1)
+for x in range(x0, x1):
+    k = (x - x0) % rib
+    sx = int(np.clip(x - k + k * .62 - 30, 0, W - 1))
+    sy_shift = 0
+    img[:, x] = gl[:, sx]
+# glass edge fade-in on the left so the hand passes smoothly from clear to refracted
+fade = np.clip((xx - x0) / 120, 0, 1)
+img = bw * (1 - fade[..., None]) + img * fade[..., None]
+# rib shading: a thin bright edge and a soft falloff per rib, visible even over the empty field
+ribpos = ((xx - x0) % rib) / rib
+edge = np.exp(-(ribpos / .045) ** 2) * .16 + np.exp(-((1 - ribpos) / .03) ** 2) * .06 - ribpos * .05
+vert = np.exp(-((yy - 880) / 760) ** 2)     # ribs strongest around the hand, fading top and bottom
+img += (edge * fade * band * vert)[..., None] * np.array([120, 190, 255], np.float32)
+# light-blue bloom behind the refracted fingers
+bloom = np.exp(-(((xx - 760) / 300) ** 2 + ((yy - 880) / 300) ** 2)) * band * fade
+img += bloom[..., None] * LIGHT * .22
+# quiet blue glow in the field
+glow = np.exp(-(((xx - 540) / 700) ** 2 + ((yy - 950) / 900) ** 2))
+img += glow[..., None] * (BLUE - DEEP) * .18 * (1 - lum[..., None])
+Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(.4)).save('assets/hook_plate.jpg', quality=93)
