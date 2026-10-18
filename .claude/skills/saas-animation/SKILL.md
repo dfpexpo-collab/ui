@@ -89,6 +89,13 @@ Scenes have a transparent background (the shader sits behind everything). So any
 2. **Full render:** `python3 tools/motion-qa/check_video.py <mp4> --cues cues.json` must exit 0. It flags FLASH (an old scene popping back), EMPTY (the picture going blank for more than 0.2s) and JUMP (a hard change away from a cut). An EMPTY you keep on purpose (a beat that waits for the VO) needs a one-line reason.
 3. Make a 1fps contact sheet of the final MP4 and check it before sending.
 
+## Fonts
+
+- VOOM brand: Gabarito, IBM Plex Sans Arabic and Poppins (in `voom-brand`).
+- **thmanyah** (Sans, Serif Text, Serif Display; Light–Black) is installed locally with `tools/fonts/install_thmanyah.sh <zip>`. The licence forbids uploading or redistributing the font files.
+  - Never commit them, and never embed them as `@font-face` in a published page.
+  - Outline the text to SVG paths, which is allowed for design work.
+
 ## Working with this user
 
 - Ask before the final render when anything is open. Keep token use low: no re-analysing references already analysed, small edits, spot renders before full renders.
