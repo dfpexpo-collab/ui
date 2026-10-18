@@ -204,7 +204,8 @@ sfx = np.stack([L, R])
 # ---------------- mix
 def rms(x): return np.sqrt(np.mean(x ** 2) + 1e-12)
 music *= .2 / rms(music); sfx *= .16 / max(rms(sfx), 1e-6)
-mix = music + sfx
+import os
+mix = (0 if os.environ.get('SFX_ONLY') else 1) * music + sfx
 # fade out the last 1.2 s, soft clip, normalise peak
 n_end = int(TOTAL * SR); fade = np.ones(mix.shape[1]); fl = int(1.2 * SR)
 fade[n_end - fl:n_end] = np.linspace(1, 0, fl) ** 1.5; fade[n_end:] = 0
@@ -213,7 +214,7 @@ mix = np.tanh(mix * 1.1) / np.tanh(1.1)
 mix *= .89 / np.max(np.abs(mix))
 mix = mix[:, :n_end]
 import wave
-with wave.open('soundtrack.wav', 'wb') as w:
+with wave.open(os.environ.get('OUT_WAV', 'soundtrack.wav'), 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((mix.T * 32767).astype(np.int16).tobytes())
 print('soundtrack.wav', mix.shape[1] / SR, 's')
