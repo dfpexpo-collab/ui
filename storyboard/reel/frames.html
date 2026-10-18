@@ -20,7 +20,7 @@ html,body{background:#000}
   background:radial-gradient(90% 55% at 70% 18%,rgba(0,18,214,.75),transparent 70%),radial-gradient(120% 70% at 30% 100%,rgba(0,18,214,.9),transparent 70%),var(--deep)}
 .frame[hidden]{display:none}
 .abs{position:absolute}
-.grad{background:linear-gradient(180deg,var(--sky1) 10%,var(--sky2) 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad{background:linear-gradient(180deg,var(--sky1) 10%,var(--sky2) 95%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-block:.12em .3em;margin-block:-.12em -.3em} /* padding keeps dots under the baseline (في، أي) inside the painted gradient */
 .glow{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
 .ar{font-family:var(--ar);direction:rtl}
 .lat{font-family:var(--lat);direction:ltr;letter-spacing:-.03em}
@@ -39,9 +39,12 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 .fadeimg{position:absolute;object-fit:cover}
 
 
-/* brochure page used as designed (F2, F6): fit the width, sit on the bottom edge, sky continues above */
-.page{background:linear-gradient(180deg,#00135f 0%,#00136a 60%,#011066 100%)}
-.page .pg{position:absolute;left:0;bottom:0;width:1080px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 7%);mask-image:linear-gradient(180deg,transparent 0,#000 7%)}
+/* brochure page used as designed (F1, F2, F6): plates built by make_pages.py, page centred on the Reel safe band,
+   its own edges continued above/below as a gaussian-blurred fill instead of a hard crop */
+.page{background:#00135f}
+.page .plate{position:absolute;inset:0;width:1080px;height:1920px}
+.page .bgblur{position:absolute;left:-90px;top:-90px;width:1260px;height:2100px;object-fit:cover;filter:blur(46px) saturate(1.15) brightness(.82)}
+.page .pg{position:absolute;left:0;top:var(--pt);width:1080px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 93%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 93%,transparent 100%)}
 #f3 .box{left:36px;top:330px;width:1008px;border-radius:30px;box-shadow:0 40px 100px rgba(0,0,36,.7)}
 /* ---------- F1 cover ---------- */
 #f1 .logo{left:50%;transform:translateX(-50%);width:300px;--lw:300px}
@@ -88,13 +91,14 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 
 /* ---------- F5 ai voice agent ---------- */
 #f5 .logo{right:var(--sx)}
-#f5 .head{top:260px;left:var(--sx);font-size:150px}
-#f5 .sm{top:570px;left:var(--sx);font:500 40px var(--lat);color:var(--mute);direction:ltr;letter-spacing:-.01em}
-#f5 .ar1{top:650px;right:var(--sx);text-align:right;font-size:52px;font-weight:500}
-#f5 .ar2{top:720px;right:var(--sx);text-align:right;font-size:104px}
-#f5 .agent{left:0;top:1030px;width:1080px;height:800px;object-position:30% 0;
-  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%);mask-image:linear-gradient(180deg,transparent 0,#000 18%)}
-#f5 .stats{top:930px;left:var(--sx);right:var(--sx);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+#f5 .head{top:250px;left:var(--sx);font-size:150px}
+#f5 .sm{top:548px;left:var(--sx);font:500 40px var(--lat);color:var(--mute);direction:ltr;letter-spacing:-.01em}
+#f5 .ar1{top:622px;right:var(--sx);text-align:right;font-size:52px;font-weight:500}
+#f5 .ar2{top:690px;right:var(--sx);text-align:right;font-size:104px}
+#f5 .agent{left:0;top:960px;width:1080px;height:739px;object-fit:cover;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 90%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 90%,transparent 100%)}
+#f5 .agentblur{left:-90px;top:1300px;width:1260px;height:720px;object-fit:cover;object-position:50% 100%;filter:blur(46px) saturate(1.1) brightness(.8)}
+#f5 .stats{top:870px;left:var(--sx);right:var(--sx);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 #f5 .stat{padding:26px 26px 24px;direction:ltr}
 #f5 .stat b{display:block;font:800 76px/1 var(--lat);letter-spacing:-.04em}
 #f5 .stat span{display:block;margin-top:10px;font:500 28px var(--lat);color:var(--mute)}
@@ -139,18 +143,14 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 <body>
 
 <!-- F1 -->
-<section class="frame" id="f1">
-  <div class="glow" style="left:240px;top:1050px;width:600px;height:600px;background:#00b3ff;opacity:.35"></div>
-  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
-  <div class="abs head ar h-ar grad kb"><span class="ln">حلول عقار~ية</span><span class="ln">متكا~ملة</span></div>
-  <div class="abs sub ar">مدعومة بالذكاء الاصطناعي</div>
-  <img class="abs wheel" src="assets/wheel.jpg" alt="">
+<section class="frame page" id="f1" style="--pt:166px">
+  <img class="plate" src="assets/plate_b01.jpg" alt="">
   <div class="safe"></div>
 </section>
 
 <!-- F2 -->
-<section class="frame page" id="f2" hidden>
-  <img class="pg" src="assets/page_b04.jpg" alt="">
+<section class="frame page" id="f2" hidden style="--pt:227px">
+  <img class="plate" src="assets/plate_b04.jpg" alt="">
   <div class="safe"></div>
 </section>
 
@@ -181,6 +181,7 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
   <div class="abs sm">Smart conversations | Better experiences</div>
   <div class="abs ar1 ar">يتفاعل، يتحدث، يتابع، يحلل محادثات</div>
   <div class="abs ar2 ar h-ar grad kb" data-k="2"><span class="ln">العم~لاء في أي وق~ت</span></div>
+  <img class="fadeimg agentblur" src="assets/agent.jpg" alt="">
   <img class="fadeimg agent" src="assets/agent.jpg" alt="">
   <div class="abs stats">
     <div class="card stat"><b>+20</b><span>Languages</span></div>
@@ -191,8 +192,8 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 </section>
 
 <!-- F6 -->
-<section class="frame page" id="f6" hidden>
-  <img class="pg" src="assets/page_b08.jpg" alt="">
+<section class="frame page" id="f6" hidden style="--pt:227px">
+  <img class="plate" src="assets/plate_b08.jpg" alt="">
   <div class="safe"></div>
 </section>
 
