@@ -38,6 +38,11 @@ html,body{background:#000}
 body.guides .safe{outline-color:rgba(255,80,80,.6)}
 .fadeimg{position:absolute;object-fit:cover}
 
+
+/* brochure page used as designed (F2, F6): fit the width, sit on the bottom edge, sky continues above */
+.page{background:linear-gradient(180deg,#00135f 0%,#00136a 60%,#011066 100%)}
+.page .pg{position:absolute;left:0;bottom:0;width:1080px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 7%);mask-image:linear-gradient(180deg,transparent 0,#000 7%)}
+#f3 .box{left:36px;top:330px;width:1008px;border-radius:30px;box-shadow:0 40px 100px rgba(0,0,36,.7)}
 /* ---------- F1 cover ---------- */
 #f1 .logo{left:50%;transform:translateX(-50%);width:300px;--lw:300px}
 #f1 .head{top:430px;left:0;right:0;text-align:center;font-size:136px}
@@ -64,8 +69,8 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 #f3 .shade{inset:0;background:linear-gradient(180deg,rgba(0,0,36,.85) 0,rgba(0,0,36,.15) 26%,rgba(0,0,36,0) 45%,rgba(0,0,36,.55) 62%,rgba(0,0,36,.96) 84%)}
 #f3 .chip{top:var(--top);right:var(--sx)}
 #f3 .qr{width:40px;height:40px}
-#f3 .head{top:880px;right:var(--sx);text-align:right;font-size:150px;line-height:1.08}
-#f3 .ten{top:1230px;right:var(--sx);font:900 340px/1 var(--lat);letter-spacing:-.05em;direction:ltr}
+#f3 .head{top:1110px;right:var(--sx);text-align:right;font-size:128px;line-height:1.08}
+#f3 .ten{top:1120px;left:var(--sx);font:900 300px/1 var(--lat);letter-spacing:-.05em;direction:ltr}
 #f3 .legend{top:340px;right:var(--sx);padding:26px 30px;display:grid;gap:16px;font:500 30px var(--lat);direction:ltr}
 #f3 .legend i{display:inline-block;width:20px;height:20px;border-radius:50%;margin-right:14px;vertical-align:-2px}
 
@@ -83,13 +88,13 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 
 /* ---------- F5 ai voice agent ---------- */
 #f5 .logo{right:var(--sx)}
-#f5 .head{top:380px;left:var(--sx);font-size:150px}
-#f5 .sm{top:690px;left:var(--sx);font:500 40px var(--lat);color:var(--mute);direction:ltr;letter-spacing:-.01em}
-#f5 .ar1{top:780px;right:var(--sx);text-align:right;font-size:52px;font-weight:500}
-#f5 .ar2{top:850px;right:var(--sx);text-align:right;font-size:104px}
-#f5 .agent{left:0;top:1190px;width:1080px;height:800px;object-position:30% 0;
+#f5 .head{top:260px;left:var(--sx);font-size:150px}
+#f5 .sm{top:570px;left:var(--sx);font:500 40px var(--lat);color:var(--mute);direction:ltr;letter-spacing:-.01em}
+#f5 .ar1{top:650px;right:var(--sx);text-align:right;font-size:52px;font-weight:500}
+#f5 .ar2{top:720px;right:var(--sx);text-align:right;font-size:104px}
+#f5 .agent{left:0;top:1030px;width:1080px;height:800px;object-position:30% 0;
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%);mask-image:linear-gradient(180deg,transparent 0,#000 18%)}
-#f5 .stats{top:1060px;left:var(--sx);right:var(--sx);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+#f5 .stats{top:930px;left:var(--sx);right:var(--sx);display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 #f5 .stat{padding:26px 26px 24px;direction:ltr}
 #f5 .stat b{display:block;font:800 76px/1 var(--lat);letter-spacing:-.04em}
 #f5 .stat span{display:block;margin-top:10px;font:500 28px var(--lat);color:var(--mute)}
@@ -124,7 +129,7 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 #f7 .info small{display:block;margin-top:8px;font:500 36px var(--lat);color:var(--mute)}
 #f7 .sep{height:1.5px;background:var(--glass-line)}
 #f7 .booth{top:1300px;left:var(--sx);right:var(--sx);height:250px;border-radius:36px;background:linear-gradient(135deg,#00b3ff,#0a7dff 55%,#0012d6);display:flex;align-items:center;justify-content:space-between;padding:0 44px;box-shadow:0 30px 90px rgba(0,179,255,.45)}
-#f7 .booth .t{direction:rtl;text-align:right;color:var(--deep)}
+#f7 .booth .t{direction:rtl;text-align:right;color:#fff}
 #f7 .booth .t span{display:block;font-size:64px;font-weight:700;line-height:1}
 #f7 .booth .t b{display:block;font:800 132px/1 var(--lat);letter-spacing:-.04em;direction:ltr;margin-top:6px}
 #f7 .plan{width:300px;height:186px}
@@ -144,33 +149,22 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 </section>
 
 <!-- F2 -->
-<section class="frame" id="f2" hidden>
-  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
-  <div class="abs eyebrow">Your project. one interactive Experience</div>
-  <div class="abs head ar h-ar grad kb"><span class="ln">مستقب~ل بيع</span><span class="ln">العقا~رات</span><span class="ln">يبد~أ من هنا</span></div>
-  <img class="fadeimg tower" src="assets/tower.jpg" alt="">
-  <div class="abs rows">
-    <div class="card row"><b>Real time availability</b><span class="ar">مشروعك بطريقة مختلفة</span></div>
-    <div class="card row"><b>From master plan to unit</b><span class="ar">كل التفاصيل في تجربة واحدة</span></div>
-    <div class="card row"><b>Built for smarter sales</b><span class="ar">تقنية تخدم مبيعاتك</span></div>
-  </div>
+<section class="frame page" id="f2" hidden>
+  <img class="pg" src="assets/page_b04.jpg" alt="">
   <div class="safe"></div>
 </section>
 
 <!-- F3 -->
 <section class="frame" id="f3" hidden>
-  <img class="fadeimg plan" src="assets/plan.jpg" alt="">
-  <div class="abs shade"></div>
-  <div class="abs chip"><svg class="qr" viewBox="0 0 10 10"><path fill="#f1f1f1" d="M0 0h4v4H0zM6 0h4v4H6zM0 6h4v4H0zM1 1v2h2V1zM7 1v2h2V1zM1 7v2h2V7zM5 5h1v1H5zM6 6h2v1H6zM8 5h2v1H8zM5 7h1v3H5zM7 8h3v2H7z" fill-rule="evenodd"/></svg>Scan to Explore</div>
-  <div class="abs card legend"><div><i style="background:#2fb344"></i>Available</div><div><i style="background:#e8c200"></i>Reserved</div><div><i style="background:#e03131"></i>Sold</div><div><i style="background:#7a7a7a"></i>Unlaunched</div></div>
-  <div class="abs head ar h-ar kb"><span class="ln">ضاعـ~ـف</span><span class="ln">مبيعا~تك</span></div>
+  <div class="glow" style="left:140px;top:420px;width:800px;height:600px;background:#0012d6;opacity:.8"></div>
+  <img class="abs box" src="assets/plan_box.jpg" alt="">
+  <div class="abs head ar h-ar grad kb"><span class="ln">ضاعـ~ـف</span><span class="ln">مبيعا~تك</span></div>
   <div class="abs ten grad">10X</div>
   <div class="safe"></div>
 </section>
 
 <!-- F4 -->
 <section class="frame" id="f4" hidden>
-  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
   <div class="abs y">2026</div>
   <div class="abs q">What does smarter<br>selling look like?</div>
   <div class="abs head lat h-lat"><span class="ln">It looks</span><span class="ln">like <span class="grad">Voom</span></span></div>
@@ -183,7 +177,6 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 
 <!-- F5 -->
 <section class="frame" id="f5" hidden>
-  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
   <div class="abs head lat h-lat"><span class="ln">AI Voice</span><span class="ln grad">Sales Agent</span></div>
   <div class="abs sm">Smart conversations | Better experiences</div>
   <div class="abs ar1 ar">يتفاعل، يتحدث، يتابع، يحلل محادثات</div>
@@ -198,16 +191,8 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 </section>
 
 <!-- F6 -->
-<section class="frame" id="f6" hidden>
-  <img class="fadeimg twin" src="assets/twin.jpg" alt="">
-  <div class="abs shade"></div>
-  <div class="logo lk"><img src="assets/voom-wordmark-white.png" alt="VOOM"><span>End -to- End solutions</span></div>
-  <div class="abs head lat h-lat"><span class="ln">Digital Twin</span><span class="ln">Solution</span></div>
-  <div class="abs ar h-ar grad kb" data-k="2"><span class="ln">ت~وأم رقمي ذكي</span></div>
-  <div class="abs card cc" style="left:var(--sx);top:1000px"><h4>CCTV Camera 01<em>Live</em></h4><dl><dt>People Count</dt><dd>12</dd><dt>Motion Detection</dt><dd>OK</dd><dt>Status</dt><dd>Online</dd></dl></div>
-  <div class="abs card cc" style="right:var(--sx);top:1060px"><h4>Smart Building Hub</h4><dl><dt>BMS</dt><dd>Connected</dd><dt>IoT Devices</dt><dd>48</dd><dt>System Status</dt><dd>Healthy</dd></dl></div>
-  <div class="abs card cc" style="left:var(--sx);top:1300px"><h4>Indoor Environment (L10)</h4><dl><dt>Temperature</dt><dd>23.5 °C</dd><dt>Humidity</dt><dd>42%</dd><dt>CO2</dt><dd>580 ppm</dd></dl></div>
-  <div class="abs card cc" style="right:var(--sx);top:1360px"><h4>Energy Meter (Main Riser)</h4><dl><dt>Power Usage</dt><dd>1.24 MW</dd><dt>HVAC Load</dt><dd>52%</dd><dt>Status</dt><dd>Normal</dd></dl></div>
+<section class="frame page" id="f6" hidden>
+  <img class="pg" src="assets/page_b08.jpg" alt="">
   <div class="safe"></div>
 </section>
 
