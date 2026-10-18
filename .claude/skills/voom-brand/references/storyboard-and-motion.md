@@ -179,3 +179,8 @@ Locked view of a masterplan, sun tile and moon tile pill at the top; morph day -
 - Use shape layers for the gradient (3 color stops, angle 135 degrees) so direction is editable.
 - Pre-comp the logo reveal once and reuse; keep the logo as the supplied artwork (import PNG at 2x or recreate as vector if the brand owner provides the AI/SVG).
 - CSS/Web: use `tokens/voom.css` variables; prefer `transform`/`opacity` animations, `prefers-reduced-motion` fallback = fade only.
+
+
+## 15. Premium bar (learned 2026-10 from reference films)
+
+For any Voom promo or Reel, also follow `.claude/skills/premium-motion-reels/SKILL.md`: a guide object (the light-blue rocket flare) that travels through the film and triggers each event, transitions chosen by meaning (morph, zoom-through, match cut, film-strip whip, light flood, text-led cut), no dead holds (a new event every 0.5-1 s), depth layers with bokeh, word-level SFX on a beat grid, and the mandatory self-review before delivery.
