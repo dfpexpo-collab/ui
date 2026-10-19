@@ -1,6 +1,6 @@
 # Creative library index
 
-77 complete skills + 3 external packs (creative-director, designer-skills: 111 skills) (motion, design, content, brand, Adobe production) bundled inside the art director. Each folder keeps the original skill with its references, rules and scripts; the entry file is renamed SKILL.md → GUIDE.md so it does not register twice.
+77 complete skills + external packs (designer-skills: 111 skills, art-direction) (motion, design, content, brand, Adobe production) bundled inside the art director. Each folder keeps the original skill with its references, rules and scripts; the entry file is renamed SKILL.md → GUIDE.md so it does not register twice.
 
 The Voom brand system stays in its own skill: `../../voom-brand/` (single source of truth).
 
@@ -148,11 +148,6 @@ Read `library/<name>/GUIDE.md` for the craft, then judge with the gate in ../SKI
 | [`adobe-edit-quick-cut`](adobe-edit-quick-cut/GUIDE.md) | Create a punchy highlight cut from a video with Adobe Quick Cut — for requests like \"make a sizzle reel\", \"make a highlight reel\", \"quick cut this\", \"cut the best parts\", \… |
 | [`adobe-design-to-pdf`](adobe-design-to-pdf/GUIDE.md) | Find an Adobe Express template, customize its text or background color, and turn it into a print-ready PDF, packet, or shareable link |
 
-## External pack: Creative Director (Serge Shima, CC BY 4.0)
-
-| Skill | What it covers |
-|---|---|
-| [`creative-director`](creative-director/GUIDE.md) | Big Idea / campaign concepts with structural methods (SIT, TRIZ, lateral thinking, bisociation), insight-first, scoring on 6 weighted criteria calibrated to Cannes / D&AD, recursive refinement to 9+, checked against 569 legendary campaigns (`references/legendary-campaigns/`). Credit: Serge Shima — github.com/smixs/creative-director-skill (see `LICENSE`, `NOTICE`). |
 
 ## External pack: Designer Skills (MC Dean, MIT) — 111 skills, `designer-skills/<category>/skills/<name>/GUIDE.md`
 

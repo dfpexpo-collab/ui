@@ -37,7 +37,7 @@ House rule: ask the user before any full render. Stills and contact sheets are f
 
 ## 2. Route to the specialists
 
-77 skills plus three external packs live **inside this skill** in `library/`: motion, design, content/marketing, brand guidelines and Adobe production (full copies with their references, rules and scripts). Index: `library/INDEX.md`. The Voom brand system stays in its own skill `voom-brand` (single source of truth). Read `library/<name>/GUIDE.md` for the craft; if the same skill is also installed globally, either copy is fine.
+77 skills plus two external packs (designer-skills, art-direction) live **inside this skill** in `library/`: motion, design, content/marketing, brand guidelines and Adobe production (full copies with their references, rules and scripts). Index: `library/INDEX.md`. The Voom brand system stays in its own skill `voom-brand` (single source of truth). Read `library/<name>/GUIDE.md` for the craft; if the same skill is also installed globally, either copy is fine.
 Lessons from the user's earlier sessions are in `library/saas-animation` (house rules) and `library/premium-motion-reels`. Read both for any promo/reel work.
 
 Load what the piece needs; the art director judges, the specialists know the craft.
@@ -53,7 +53,6 @@ Load what the piece needs; the art director judges, the specialists know the cra
 | Logo reveals | `logo-animation` |
 | Build tech | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-utils`, `gsap-performance`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks`, `hyperframes`, `hyperframes-core`, `hyperframes-animation`, `hyperframes-keyframes`, `hyperframes-creative`, `hyperframes-cli`, `remotion-motion-graphics` |
 | Visual language sheet (palette, mood, lighting, composition, texture, references) | `art-direction` (use its output block inside the direction, §4) |
-| Big Idea, campaign concept, insight, concept scoring (Cannes-calibrated) | `creative-director` (run it during kick-off §1a step 3 to generate and score the core idea; credit Serge Shima, CC BY 4.0) |
 | UX/UI design laws, visual critique by dimension, design systems, research, UX strategy, design ops | `designer-skills/*` (111): `visual-critique/*` for critiques (composition, typography, colour, hierarchy, brand consistency, density, affordance), `ui-design/*` for layout/type/colour/grid, `interaction-design/*` for micro-interactions and motion in UI, `design-systems/*` incl. `motion-system`, `ux-strategy/*` for briefs and principles |
 | Generative / art visuals | `algorithmic-art`, `od-shader-dev`, `od-frame-liquid-bg-hero` |
 | UI animation, design-engineering polish | `od-ui-animation`, `od-animate`, `od-emil-design-eng`, `od-emilkowalski-motion`, `od-motion-design` |
@@ -127,7 +126,7 @@ More patterns and examples: `references/creative-direction.md`.
 
 ## 5. Review method
 
-0. **Critique lenses.** For static design, walk the `designer-skills/visual-critique/*` lenses (composition, typography, colour, visual hierarchy, brand consistency, information density, affordance); for ideas, score with `creative-director`'s 6 criteria.
+0. **Critique lenses.** For static design, walk the `designer-skills/visual-critique/*` lenses (composition, typography, colour, visual hierarchy, brand consistency, information density, affordance).
 1. **Collect evidence.** Contact sheet at 2 fps (`scripts/contact_sheet.sh`), frames ±0.4 s around each transition, full-res crops of every text block, side-by-side with the reference frame.
 2. **Measure what the eye misses.** Text stability (`scripts/text_stability.mjs` for HTML/GSAP films; it flags any copy that moves after its reveal), loudness and peaks (`scripts/audio_check.sh`).
 3. **Walk the gate** A–F. Write each finding with time / frame, what is wrong, why it matters, the exact fix.
