@@ -1,10 +1,12 @@
-# Motion library index
+# Creative library index
 
-49 complete motion skills bundled inside the art director. Each folder keeps the original skill (entry file renamed SKILL.md → GUIDE.md so it does not register twice) with all its references, rules and scripts.
+77 complete skills (motion, design, content, brand, Adobe production) bundled inside the art director. Each folder keeps the original skill with its references, rules and scripts; the entry file is renamed SKILL.md → GUIDE.md so it does not register twice.
+
+The Voom brand system stays in its own skill: `../../voom-brand/` (single source of truth).
 
 Read `library/<name>/GUIDE.md` for the craft, then judge with the gate in ../SKILL.md.
 
-## Direction & principles
+## Direction & principles (motion)
 
 | Skill | What it covers |
 |---|---|
@@ -63,15 +65,6 @@ Read `library/<name>/GUIDE.md` for the craft, then judge with the gate in ../SKI
 |---|---|
 | [`beat-sync-editing`](beat-sync-editing/GUIDE.md) | This skill should be used when the user asks to "cut to the beat", "fix the pacing", "edit this sequence", "sync cuts to music/BPM", "add a match cut / J-cut / L-cut", "build a spe… |
 
-## Review & QA
-
-| Skill | What it covers |
-|---|---|
-| [`od-review-animations`](od-review-animations/GUIDE.md) |  Reviews animation and motion code against a high craft bar derived from Emil Kowalski's design engineering philosophy |
-| [`od-design-review`](od-design-review/GUIDE.md) |  Designer Who Codes: visual audit then fixes with atomic commits and before/after screenshots |
-| [`od-impeccable-design-polish`](od-impeccable-design-polish/GUIDE.md) |  Follow-up design polish skill inspired by Impeccable |
-| [`design-qa`](design-qa/GUIDE.md) | Mandatory self-review for any designed frame, storyboard, slide, social post or UI mockup before showing it to the user - automated layout check (overlapping pills/cards, colliding… |
-
 ## Build: GSAP
 
 | Skill | What it covers |
@@ -97,3 +90,60 @@ Read `library/<name>/GUIDE.md` for the craft, then judge with the gate in ../SKI
 | [`hyperframes-cli`](hyperframes-cli/GUIDE.md) |  Use the HyperFrames CLI development loop: init, add, catalog, capture, lint, check, snapshot, compare, grade-compare, preview, play, present, beats, keyframes, single or batch ren… |
 | [`od-video-hyperframes`](od-video-hyperframes/GUIDE.md) | Hyperframes / Remotion-compatible continuous frame animation with autoplay support. |
 | [`remotion-motion-graphics`](remotion-motion-graphics/GUIDE.md) | Create and edit professional motion graphics videos with Remotion (React-based video) |
+
+## Design: visual & key visuals
+
+| Skill | What it covers |
+|---|---|
+| [`canvas-design`](canvas-design/GUIDE.md) | Create beautiful visual art in .png and .pdf documents using design philosophy |
+| [`creative-brief-to-key-visuals`](creative-brief-to-key-visuals/GUIDE.md) | Build an ad campaign creative brief and take it through idea generation, mood boarding, sketching and AI key-visual execution, following the Barn's workflow. |
+| [`theme-factory`](theme-factory/GUIDE.md) | Toolkit for styling artifacts with a theme |
+| [`brand-guidelines`](brand-guidelines/GUIDE.md) | Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel |
+| [`design-system`](design-system/GUIDE.md) | Audit, document, or extend your design system |
+| [`design-handoff`](design-handoff/GUIDE.md) | Generate developer handoff specs from a design |
+
+## Design: critique, UX, accessibility, research
+
+| Skill | What it covers |
+|---|---|
+| [`design-critique`](design-critique/GUIDE.md) | Get structured design feedback on usability, hierarchy, and consistency |
+| [`ux-copy`](ux-copy/GUIDE.md) | Write or review UX copy — microcopy, error messages, empty states, CTAs |
+| [`accessibility-review`](accessibility-review/GUIDE.md) | Run a WCAG 2.1 AA accessibility audit on a design or page |
+| [`user-research`](user-research/GUIDE.md) | Plan, conduct, and synthesize user research |
+| [`research-synthesis`](research-synthesis/GUIDE.md) | Synthesize user research into themes, insights, and recommendations |
+
+## Review & QA
+
+| Skill | What it covers |
+|---|---|
+| [`od-review-animations`](od-review-animations/GUIDE.md) |  Reviews animation and motion code against a high craft bar derived from Emil Kowalski's design engineering philosophy |
+| [`od-design-review`](od-design-review/GUIDE.md) |  Designer Who Codes: visual audit then fixes with atomic commits and before/after screenshots |
+| [`od-impeccable-design-polish`](od-impeccable-design-polish/GUIDE.md) |  Follow-up design polish skill inspired by Impeccable |
+| [`design-qa`](design-qa/GUIDE.md) | Mandatory self-review for any designed frame, storyboard, slide, social post or UI mockup before showing it to the user - automated layout check (overlapping pills/cards, colliding… |
+
+## Content & marketing
+
+| Skill | What it covers |
+|---|---|
+| [`content-creation`](content-creation/GUIDE.md) | Draft marketing content across channels — blog posts, social media, email newsletters, landing pages, press releases, and case studies |
+| [`draft-content`](draft-content/GUIDE.md) | Draft blog posts, social media, email newsletters, landing pages, press releases, and case studies with channel-specific formatting and SEO recommendations |
+| [`campaign-plan`](campaign-plan/GUIDE.md) | Generate a full campaign brief with objectives, audience, messaging, channel strategy, content calendar, and success metrics |
+| [`brand-review`](brand-review/GUIDE.md) | Review content against your brand voice, style guide, and messaging pillars, flagging deviations by severity with specific before/after fixes |
+| [`competitive-brief`](competitive-brief/GUIDE.md) | Research competitors and generate a positioning and messaging comparison with content gaps, opportunities, and threats |
+| [`email-sequence`](email-sequence/GUIDE.md) | Design and draft multi-email sequences with full copy, timing, branching logic, exit conditions, and performance benchmarks |
+| [`seo-audit`](seo-audit/GUIDE.md) | Run a comprehensive SEO audit — keyword research, on-page analysis, content gaps, technical checks, and competitor comparison |
+| [`performance-report`](performance-report/GUIDE.md) | Build a marketing performance report with key metrics, trend analysis, wins and misses, and prioritized optimization recommendations |
+| [`doc-coauthoring`](doc-coauthoring/GUIDE.md) | Guide users through a structured workflow for co-authoring documentation |
+
+## Adobe creative production (needs the Adobe connector signed in)
+
+| Skill | What it covers |
+|---|---|
+| [`adobe-design-from-template`](adobe-design-from-template/GUIDE.md) | Create any visual design using Adobe Express templates — flyers, posters, social media posts (Instagram, Facebook, LinkedIn), business cards, invitations, greeting cards, resumes, … |
+| [`adobe-create-social-variations`](adobe-create-social-variations/GUIDE.md) | Resize, crop, or export any image or video into platform-ready social media assets using Adobe Creative Cloud tools |
+| [`adobe-fonts`](adobe-fonts/GUIDE.md) | Finds, searches, and previews real, licensable Adobe Fonts typefaces: contextual recommendations, direct lookup by name or facets (foundry, designer, style), metadata (language sup… |
+| [`adobe-batch-edit-photos`](adobe-batch-edit-photos/GUIDE.md) | Apply consistent photo adjustments across a set of images so they look like they were edited together |
+| [`adobe-retouch-portraits`](adobe-retouch-portraits/GUIDE.md) | Bulk-retouch a folder of portrait photos using Adobe tools — designed for wedding photographers and event photographers who need fast, walk-away batch processing |
+| [`adobe-resize-photos-and-videos`](adobe-resize-photos-and-videos/GUIDE.md) | Resize photos and videos to exact pixel dimensions or aspect ratios using Adobe tools |
+| [`adobe-edit-quick-cut`](adobe-edit-quick-cut/GUIDE.md) | Create a punchy highlight cut from a video with Adobe Quick Cut — for requests like \"make a sizzle reel\", \"make a highlight reel\", \"quick cut this\", \"cut the best parts\", \… |
+| [`adobe-design-to-pdf`](adobe-design-to-pdf/GUIDE.md) | Find an Adobe Express template, customize its text or background color, and turn it into a print-ready PDF, packet, or shareable link |
