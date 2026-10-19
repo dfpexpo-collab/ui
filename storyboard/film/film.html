@@ -104,7 +104,17 @@ function scene(dur, build) {
       background: ring ? 'none' : `radial-gradient(closest-side,rgba(${k % 2 ? '0,179,255' : '0,60,255'},.55),transparent)`,
       border: ring ? '2px solid rgba(127,208,255,.35)' : 'none', filter: ring ? 'blur(2px)' : 'blur(30px)', opacity: ring ? .5 : .32 });
     tl.fromTo(c, { x: -40 + rnd() * 80, y: -40 + rnd() * 80, scale: .9 }, { x: -60 + rnd() * 120, y: -80 + rnd() * 160, scale: 1.12, duration: dur + 1, ease: 'sine.inOut' }, t0 - .5); }
-  SC.push({ s, cam, bgl, bok, t0, dur, blur: g, blurId: f.id }); build(cam, t0, s, bgl); T += dur; return s; }
+  SC.push({ s, cam, bgl, bok, t0, dur, blur: g, blurId: f.id }); build(cam, t0, s, bgl);
+  // only the hero images ride the camera move; plates behind them and copy in front stay planted,
+  // so text never floats, bobs or pixel-snaps after it lands. DOM order (z-order) is kept exactly.
+  const kids = [...cam.children], hero = c => c.matches('img,canvas,video') || (c.querySelector('img,canvas,video') && !c.querySelector('.tw'))
+    ? c.offsetWidth * c.offsetHeight > 1080 * 1920 * .12 : false;
+  const hi = kids.map(hero), first = hi.indexOf(true), last = hi.lastIndexOf(true);
+  if (first >= 0) {
+    const back = el('div', 'cam', s, { pointerEvents: 'none' }), front = el('div', 'cam', s, { pointerEvents: 'none' }); s.insertBefore(back, cam);
+    kids.forEach((c, k) => { if (k < first) back.appendChild(c); else if (k > last) front.appendChild(c); });
+  } else { const front = el('div', 'cam', s, { pointerEvents: 'none' }); kids.forEach(c => front.appendChild(c)); }
+  T += dur; return s; }
 function plate(layer, src) { return null; }   // backgrounds come from the live gradient
 function camPush(cam, t0, dur, from = 1, to = 1.045, extra = {}) { tl.fromTo(cam, Object.assign({ scale: from }, extra.from || {}), Object.assign({ scale: to, duration: dur + .6, ease: 'sine.inOut' }, extra.to || {}), t0 - .3); }
 function riseIn(e, t, dist = 140, dur = 1.2) { tl.fromTo(e, { y: dist, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: dur, ease: eLaunch }, t); }
@@ -219,7 +229,6 @@ function maskRise(words, t0, { stagger = 0, dur = .6 } = {}) {
 // kashida grows inside a featured word (Thmanyah swaps in its curved stretched forms)
 function kashida(w, base, at, t, { from = 0, to = 4, dur = .7 } = {}) {
   const wi = w.querySelector('.wi'), bx = { n: from }, set = () => { wi.textContent = base.slice(0, at) + 'ـ'.repeat(Math.round(bx.n)) + base.slice(at); };
-  lockWidth(w, base.slice(0, at) + 'ـ'.repeat(to) + base.slice(at), 'right', wi); w.style.fontVariantNumeric = '';
   set(); tl.fromTo(bx, { n: from }, { n: to, duration: dur, ease: eSettle, onUpdate: set, immediateRender: false }, t); SFX.push(['spark', +(t + .1).toFixed(3), 0]);
 }
 function cameraMove(cam, bgl, t0, dur, { from = {}, to = {}, origin = '50% 50%', par = .35 } = {}) {
