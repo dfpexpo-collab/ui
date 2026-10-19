@@ -27,6 +27,9 @@ House rule: ask the user before any full render. Stills and contact sheets are f
 
 ## 2. Route to the specialists
 
+All 49 motion skills live **inside this skill** in `library/` (full copies with their references, rules and scripts). Index: `library/INDEX.md`. Read `library/<name>/GUIDE.md` for the craft; if the same skill is also installed globally, either copy is fine.
+Lessons from the user's earlier sessions are in `library/saas-animation` (house rules) and `library/premium-motion-reels`. Read both for any promo/reel work.
+
 Load what the piece needs; the art director judges, the specialists know the craft.
 
 | Need | Skills |
@@ -39,7 +42,11 @@ Load what the piece needs; the art director judges, the specialists know the cra
 | Colour in motion, gradients, backgrounds | `color-motion`, `motion-background` |
 | Logo reveals | `logo-animation` |
 | Build tech | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-utils`, `gsap-performance`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks`, `hyperframes`, `hyperframes-core`, `hyperframes-animation`, `hyperframes-keyframes`, `hyperframes-creative`, `hyperframes-cli`, `remotion-motion-graphics` |
-| Generative / art visuals | `algorithmic-art` |
+| Generative / art visuals | `algorithmic-art`, `od-shader-dev`, `od-frame-liquid-bg-hero` |
+| UI animation, design-engineering polish | `od-ui-animation`, `od-animate`, `od-emil-design-eng`, `od-emilkowalski-motion`, `od-motion-design` |
+| Ready frames (titles, outros, device mockups) | `od-frame-glitch-title`, `od-frame-logo-outro`, `od-mockup-device-3d`, `od-video-hyperframes` |
+| SaaS / product animation house rules | `saas-animation` |
+| Review & QA aids | `od-review-animations`, `od-design-review`, `od-impeccable-design-polish`, `design-qa` |
 | Static design critique, UX copy, accessibility | `design:design-critique`, `design:ux-copy`, `design:accessibility-review` |
 | Campaign, copy, content | `marketing:content-creation`, `marketing:draft-content`, `marketing:brand-review`, `marketing:campaign-plan` |
 | Ads / key visuals | `ad-creative-video`, `creative-brief-to-key-visuals`, `canvas-design` |
