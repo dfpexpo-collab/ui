@@ -33,12 +33,13 @@ Load what the piece needs; the art director judges, the specialists know the cra
 |---|---|
 | Brand (Voom) colours, type, logo, tone, kashida | `voom-brand` (always for Voom work) |
 | Motion language, pacing, restraint, hierarchy | `motion-art-direction`, `animation-principles` |
-| Promo / reel / launch film structure, transitions, beat grid, SFX | `premium-motion-reels`, `motion-prompt-playbook`, `product-launch-video`, `launch-video`, `product-film` |
+| Promo / reel / launch film structure, transitions, beat grid, SFX | `premium-motion-reels`, `motion-prompt-playbook`, `prompt-motion-templates`, `product-launch-video`, `launch-video`, `product-film`, `motion-graphics`, `general-video` |
 | Text animation | `kinetic-typography` |
 | Framing, safe areas, focal point, camera | `shot-composition` |
 | Colour in motion, gradients, backgrounds | `color-motion`, `motion-background` |
 | Logo reveals | `logo-animation` |
-| Build tech | `gsap-*`, `hyperframes-*`, `remotion-motion-graphics` |
+| Build tech | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-utils`, `gsap-performance`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks`, `hyperframes`, `hyperframes-core`, `hyperframes-animation`, `hyperframes-keyframes`, `hyperframes-creative`, `hyperframes-cli`, `remotion-motion-graphics` |
+| Generative / art visuals | `algorithmic-art` |
 | Static design critique, UX copy, accessibility | `design:design-critique`, `design:ux-copy`, `design:accessibility-review` |
 | Campaign, copy, content | `marketing:content-creation`, `marketing:draft-content`, `marketing:brand-review`, `marketing:campaign-plan` |
 | Ads / key visuals | `ad-creative-video`, `creative-brief-to-key-visuals`, `canvas-design` |
