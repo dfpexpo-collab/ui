@@ -1,6 +1,6 @@
 # Creative library index
 
-77 complete skills + 2 external packs (creative-director, designer-skills: 111 skills) (motion, design, content, brand, Adobe production) bundled inside the art director. Each folder keeps the original skill with its references, rules and scripts; the entry file is renamed SKILL.md → GUIDE.md so it does not register twice.
+77 complete skills + 3 external packs (creative-director, designer-skills: 111 skills) (motion, design, content, brand, Adobe production) bundled inside the art director. Each folder keeps the original skill with its references, rules and scripts; the entry file is renamed SKILL.md → GUIDE.md so it does not register twice.
 
 The Voom brand system stays in its own skill: `../../voom-brand/` (single source of truth).
 
@@ -169,3 +169,9 @@ Read `library/<name>/GUIDE.md` for the craft, then judge with the gate in ../SKI
 | `visual-critique` | [critique-affordance](designer-skills/visual-critique/skills/critique-affordance/GUIDE.md), [critique-brand-consistency](designer-skills/visual-critique/skills/critique-brand-consistency/GUIDE.md), [critique-color](designer-skills/visual-critique/skills/critique-color/GUIDE.md), [critique-composition](designer-skills/visual-critique/skills/critique-composition/GUIDE.md), [critique-information-density](designer-skills/visual-critique/skills/critique-information-density/GUIDE.md), [critique-typography](designer-skills/visual-critique/skills/critique-typography/GUIDE.md), [critique-visual-hierarchy](designer-skills/visual-critique/skills/critique-visual-hierarchy/GUIDE.md) |
 
 Slash-command templates for these live in `designer-skills/<category>/commands/` (reference only; not installed as commands).
+
+## External: Art Direction (ruflow, MIT)
+
+| Skill | What it covers |
+|---|---|
+| [`art-direction`](art-direction/GUIDE.md) | Visual-language sheet for a script or concept: palette (3-5 hex), mood, lighting setup, composition, environment, texture, typography, real-world references, do-nots. Source: github.com/henryalouf/ruflow (`LICENSE`). |

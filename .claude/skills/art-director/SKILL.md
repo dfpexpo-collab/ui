@@ -37,7 +37,7 @@ House rule: ask the user before any full render. Stills and contact sheets are f
 
 ## 2. Route to the specialists
 
-77 skills plus two external packs live **inside this skill** in `library/`: motion, design, content/marketing, brand guidelines and Adobe production (full copies with their references, rules and scripts). Index: `library/INDEX.md`. The Voom brand system stays in its own skill `voom-brand` (single source of truth). Read `library/<name>/GUIDE.md` for the craft; if the same skill is also installed globally, either copy is fine.
+77 skills plus three external packs live **inside this skill** in `library/`: motion, design, content/marketing, brand guidelines and Adobe production (full copies with their references, rules and scripts). Index: `library/INDEX.md`. The Voom brand system stays in its own skill `voom-brand` (single source of truth). Read `library/<name>/GUIDE.md` for the craft; if the same skill is also installed globally, either copy is fine.
 Lessons from the user's earlier sessions are in `library/saas-animation` (house rules) and `library/premium-motion-reels`. Read both for any promo/reel work.
 
 Load what the piece needs; the art director judges, the specialists know the craft.
@@ -52,6 +52,7 @@ Load what the piece needs; the art director judges, the specialists know the cra
 | Colour in motion, gradients, backgrounds | `color-motion`, `motion-background` |
 | Logo reveals | `logo-animation` |
 | Build tech | `gsap-core`, `gsap-timeline`, `gsap-plugins`, `gsap-utils`, `gsap-performance`, `gsap-scrolltrigger`, `gsap-react`, `gsap-frameworks`, `hyperframes`, `hyperframes-core`, `hyperframes-animation`, `hyperframes-keyframes`, `hyperframes-creative`, `hyperframes-cli`, `remotion-motion-graphics` |
+| Visual language sheet (palette, mood, lighting, composition, texture, references) | `art-direction` (use its output block inside the direction, §4) |
 | Big Idea, campaign concept, insight, concept scoring (Cannes-calibrated) | `creative-director` (run it during kick-off §1a step 3 to generate and score the core idea; credit Serge Shima, CC BY 4.0) |
 | UX/UI design laws, visual critique by dimension, design systems, research, UX strategy, design ops | `designer-skills/*` (111): `visual-critique/*` for critiques (composition, typography, colour, hierarchy, brand consistency, density, affordance), `ui-design/*` for layout/type/colour/grid, `interaction-design/*` for micro-interactions and motion in UI, `design-systems/*` incl. `motion-system`, `ux-strategy/*` for briefs and principles |
 | Generative / art visuals | `algorithmic-art`, `od-shader-dev`, `od-frame-liquid-bg-hero` |
@@ -117,6 +118,7 @@ Before work starts, and whenever the piece is "correct but flat", write a direct
 4. **Motion language**: easing family, speed, how things enter and leave, camera behaviour, what never moves.
 5. **Typography direction**: which word is the hero, its treatment (kashida growth, weight shift, highlight), what stays quiet.
 6. **Transitions plan**: per cut, the type and why (shared object → match cut, deeper idea → zoom through …).
+6b. **Visual language**: palette (3-5 hex from the brand), lighting, texture, environment and real references, in the `art-direction` sheet format (`library/art-direction/GUIDE.md`).
 7. **Sound direction**: palette, where it drops, what each sound marks.
 8. **Do-nots**: the 3 things that would make it look cheap for this piece.
 
