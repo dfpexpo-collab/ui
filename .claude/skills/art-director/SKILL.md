@@ -32,13 +32,20 @@ House rule: ask the user before any full render. Stills and contact sheets are f
 1. **Brief check**: goal, audience, platform and format (size, duration), deliverables, deadline, reference material (brochure, storyboard, brand), must-say copy, what the user explicitly asked to animate. Ask only for what is missing and cannot be inferred.
 2. **Reference pass**: collect the source assets and the brand skill; decide what is sacred (layouts, copy, kashida, logo use) and what is open to invention.
 3. **Direction** (§4) in the user's language, short, with a hero moment per scene.
-4. **Production plan**: storyboard → stills → (user OK) → full render → gate → delivery. Name the skills from `library/` each step uses.
+4. **Production plan**: storyboard → stills → (user OK) → full render → gate → delivery. Name the skills each step uses (§2).
 5. **Definition of done**: the gate (§3) passes and the user's per-scene brief is met.
 
 ## 2. Route to the specialists
 
-77 skills plus two external packs (designer-skills, art-direction) live **inside this skill** in `library/`: motion, design, content/marketing, brand guidelines and Adobe production (full copies with their references, rules and scripts). Index: `library/INDEX.md`. The Voom brand system stays in its own skill `voom-brand` (single source of truth). Read `library/<name>/GUIDE.md` for the craft; if the same skill is also installed globally, either copy is fine.
-Lessons from the user's earlier sessions are in `library/saas-animation` (house rules) and `library/premium-motion-reels`. Read both for any promo/reel work.
+Where the skills are, in this order:
+1. **Live skills in the repo** (`.claude/skills/<name>/SKILL.md`): motion, video, GSAP, HyperFrames, Remotion, UI motion, design QA. They are the only copy and change over time, so always read the live file.
+2. **`/Mado.md`**: the user's up-to-date catalog of every skill and agent in the repo, rebuilt whenever one is added. Check it at the start of every project: a skill in Mado that is not in the table below is new; read its `SKILL.md`, decide where it fits, use it when it serves the piece, and add it to the table below and to `library/INDEX.md` in the same session.
+3. **Skills available in the session** (claude.ai and plugin skills such as `design:*`, `marketing:*`, `adobe-for-creativity:*`, `anthropic-skills:*`): use the installed one when it exists.
+4. **`library/`**: copies of skills that are not installed in the repo, plus the external packs `designer-skills` and `art-direction`. Index of everything: `library/INDEX.md`.
+
+The Voom brand system stays in its own skill `voom-brand` (single source of truth). Lessons from the user's earlier sessions are in `saas-animation` (house rules) and `premium-motion-reels`. Read both for any promo/reel work.
+
+**Choosing between overlapping skills.** Pick one lead skill per job and add others only for a gap it leaves. Promo / SaaS / product films: `saas-animation` is the house method (its own GSAP + Playwright + ffmpeg renderer), `premium-motion-reels` the quality bar, `motion-prompt-playbook` / `prompt-motion-templates` for the brief. Other video and motion graphics: HyperFrames by default; Remotion only when the project is already Remotion or the user asks. GSAP skills are the API reference inside any of them. Name the lead skill and why in the production plan.
 
 Load what the piece needs; the art director judges, the specialists know the craft.
 

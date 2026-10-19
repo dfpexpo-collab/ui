@@ -126,6 +126,24 @@ def main():
         placed.update(present)
         lines += [f"## {heading}", ""] + table(present)
 
+    lib = SKILLS / "art-director" / "library"
+    extras = sorted(d for d in lib.iterdir() if d.is_dir()) if lib.is_dir() else []
+    if extras:
+        lines += [
+            "## جوه مكتبة الـ Art Director",
+            "",
+            "Skills مش متثبتة لوحدها في الريبو، محفوظة في `.claude/skills/art-director/library/` والـ Art Director بيقراها من هناك.",
+            "",
+            "| Skill | بيعمل إيه | ملفات |",
+            "|---|---|---|",
+        ]
+        for d in extras:
+            entry = d / "GUIDE.md"
+            desc = summary(frontmatter(entry).get("description")) if entry.is_file() else "حزمة خارجية، فهرسها في `library/INDEX.md`"
+            files = sum(1 for f in d.rglob("*") if f.is_file())
+            lines.append(f"| `{d.name}` | {desc} | {files} |")
+        lines.append("")
+
     unsorted = [n for n in skills if n not in placed]
     if unsorted:
         lines += ["## Unsorted", "", "أضفها لـ `CATEGORIES` في `tools/mado/build_mado.py`.", ""] + table(unsorted)
