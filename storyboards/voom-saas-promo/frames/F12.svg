@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
+<title>F12 - من الماستر بلان لحد أصغر وحدة</title>
+<defs>
+  <linearGradient id="gSignature" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#000024"/><stop offset="0.55" stop-color="#0012d6"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <radialGradient id="gGlowBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.9"/><stop offset="0.55" stop-color="#0012d6" stop-opacity="0.25"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.75"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.35"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.22"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gVignette" cx="0.5" cy="0.5" r="0.75">
+    <stop offset="0.55" stop-color="#000024" stop-opacity="0"/><stop offset="1" stop-color="#000024" stop-opacity="0.85"/>
+  </radialGradient>
+  <radialGradient id="gTileGlow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gShadow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.16"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gTile" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff"/><stop offset="1" stop-color="#0012d6"/>
+  </linearGradient>
+  <linearGradient id="gGlassFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.10"/><stop offset="1" stop-color="#f1f1f1" stop-opacity="0.03"/>
+  </linearGradient>
+  <linearGradient id="gGlassSheen" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.07"/><stop offset="0.45" stop-color="#f1f1f1" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gGlassStroke" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#f1f1f1" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.55"/>
+  </linearGradient>
+  <linearGradient id="gGlassStrokeLight" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.7"/><stop offset="0.5" stop-color="#0012d6" stop-opacity="0.08"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.45"/>
+  </linearGradient>
+  <linearGradient id="gSheenLight" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.4" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gTextFade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <linearGradient id="gStreak" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="1"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gScreen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03063a"/><stop offset="0.6" stop-color="#0012d6" stop-opacity="0.55"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.5"/>
+  </linearGradient>
+  <linearGradient id="gHorizon" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.9"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<g id="L01_BG">
+<g id="BG_FILL"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="#000024"/></g><ellipse id="GLOW_MAIN" cx="960" cy="640" rx="980" ry="620" fill="url(#gGlowBlue)"/><ellipse id="GLOW_ACCENT" cx="1500" cy="180" rx="520" ry="380" fill="url(#gGlowSoftLight)"/><g id="VIGNETTE"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="url(#gVignette)"/></g>
+</g>
+<g id="L05_STEP_PLAN">
+<g id="GLASS"><rect x="1300" y="380" width="460" height="420" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="1301.5" y="381.5" width="457" height="417" rx="26.5" fill="url(#gGlassSheen)"/></g><rect x="1320" y="400" width="420" height="310" rx="18" fill="url(#gScreen)"/><g id="UNIT_GRID"><rect x="1346" y="426" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1388" y="426" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1430" y="426" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1472" y="426" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1514" y="426" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1556" y="426" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1598" y="426" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1640" y="426" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1682" y="426" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1346" y="468" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1388" y="468" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1430" y="468" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1472" y="468" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1514" y="468" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1556" y="468" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1598" y="468" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1640" y="468" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1682" y="468" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1346" y="510" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1388" y="510" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1430" y="510" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1472" y="510" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1514" y="510" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1556" y="510" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1598" y="510" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1640" y="510" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1682" y="510" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1346" y="552" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1388" y="552" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1430" y="552" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1472" y="552" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1514" y="552" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1556" y="552" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1598" y="552" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1640" y="552" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1682" y="552" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1346" y="594" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1388" y="594" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1430" y="594" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1472" y="594" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1514" y="594" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1556" y="594" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/><rect x="1598" y="594" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1640" y="594" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1682" y="594" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1346" y="636" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1388" y="636" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1430" y="636" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.85"/><rect x="1472" y="636" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.18"/><rect x="1514" y="636" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1556" y="636" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1598" y="636" width="32" height="32" rx="7.04" fill="#0012d6" opacity="0.55"/><rect x="1640" y="636" width="32" height="32" rx="7.04" fill="#0012d6"/><rect x="1682" y="636" width="32" height="32" rx="7.04" fill="#00b3ff" opacity="0.35"/></g><g id="ICON_TILE_plan"><circle cx="1708.0" cy="752.0" r="53.199999999999996" fill="url(#gTileGlow)"/><rect x="1680" y="724" width="56" height="56" rx="14.56" fill="url(#gTile)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><path id="ICON_plan" d="M3 3h18v18H3zM3 10h8M11 3v11M15 10v11M15 14h6" transform="translate(1693.44 737.44) scale(1.2133333333333334)" fill="none" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/></g><text id="TXT_الماستر_بلان" x="1660" y="766" font-family="IBM Plex Sans Arabic" font-size="32" font-weight="600" fill="#f1f1f1" text-anchor="start" direction="rtl">الماستر بلان</text>
+</g>
+<g id="L06_STEP_BUILDING">
+<g id="GLASS_2"><rect x="760" y="430" width="380" height="360" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="761.5" y="431.5" width="377" height="357" rx="26.5" fill="url(#gGlassSheen)"/></g><rect x="780" y="450" width="340" height="250" rx="18" fill="url(#gScreen)"/><rect x="870" y="480" width="160" height="22" rx="5" fill="#f1f1f1" opacity="0.25"/><rect x="870" y="510" width="160" height="22" rx="5" fill="#f1f1f1" opacity="0.25"/><rect x="870" y="540" width="160" height="22" rx="5" fill="#f1f1f1" opacity="0.25"/><rect x="870" y="570" width="160" height="22" rx="5" fill="#00b3ff"/><rect x="870" y="600" width="160" height="22" rx="5" fill="#f1f1f1" opacity="0.25"/><rect x="870" y="630" width="160" height="22" rx="5" fill="#f1f1f1" opacity="0.25"/><rect x="870" y="660" width="160" height="22" rx="5" fill="#f1f1f1" opacity="0.25"/><g id="ICON_TILE_building"><circle cx="1088.0" cy="742.0" r="53.199999999999996" fill="url(#gTileGlow)"/><rect x="1060" y="714" width="56" height="56" rx="14.56" fill="url(#gTile)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><path id="ICON_building" d="M4 21V6l8-3 8 3v15M2 21h20M9 21v-4h6v4M8 8h2M14 8h2M8 12h2M14 12h2" transform="translate(1073.44 727.44) scale(1.2133333333333334)" fill="none" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/></g><text id="TXT_المبنى" x="1040" y="756" font-family="IBM Plex Sans Arabic" font-size="32" font-weight="600" fill="#f1f1f1" text-anchor="start" direction="rtl">المبنى</text>
+</g>
+<g id="L07_STEP_UNITS">
+<g id="GLASS_3"><rect x="270" y="470" width="320" height="290" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="271.5" y="471.5" width="317" height="287" rx="26.5" fill="url(#gGlassSheen)"/></g><rect x="290" y="490" width="280" height="180" rx="18" fill="url(#gScreen)"/><g fill="none" stroke="#f1f1f1" stroke-width="3" opacity="0.85"><rect x="320" y="515" width="220" height="130" rx="6"/><path d="M410 515v80M320 580h90M470 580v65"/></g><g id="ICON_TILE_units"><circle cx="538.0" cy="712.0" r="53.199999999999996" fill="url(#gTileGlow)"/><rect x="510" y="684" width="56" height="56" rx="14.56" fill="url(#gTile)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><path id="ICON_units" d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" transform="translate(523.44 697.44) scale(1.2133333333333334)" fill="none" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/></g><text id="TXT_الوحدة" x="490" y="726" font-family="IBM Plex Sans Arabic" font-size="32" font-weight="600" fill="#f1f1f1" text-anchor="start" direction="rtl">الوحدة</text>
+</g>
+<g id="L08_ARROWS">
+<g fill="none" stroke="#00b3ff" stroke-width="3"><path d="M1290 590 L1160 600"/><path d="M1172 588 L1158 600 L1172 612"/><path d="M750 610 L610 615"/><path d="M622 603 L608 615 L622 627"/></g>
+</g>
+<g id="L09_16K_PILL">
+<g id="PILL_16K_zoom"><g id="GLASS_4"><rect x="1415.0" y="272.7" width="230" height="54.6" rx="27.3" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="1416.5" y="274.2" width="227" height="51.6" rx="25.8" fill="url(#gGlassSheen)"/></g><g id="ICON_TILE_zoom"><circle cx="1442.3" cy="300.0" r="36.67" fill="url(#gTileGlow)"/><rect x="1423.0" y="280.7" width="38.6" height="38.6" rx="10.036000000000001" fill="url(#gTile)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><path id="ICON_zoom" d="M10 3a7 7 0 1 1 0 14 7 7 0 0 1 0-14zM21 21l-6-6M10 7v6M7 10h6" transform="translate(1432.264 289.964) scale(0.8363333333333335)" fill="none" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/></g><text id="TXT_16K_zoom" x="1549.3" y="309.36" font-family="Gabarito" font-size="26" font-weight="500" fill="#f1f1f1" text-anchor="middle">16K zoom</text></g>
+</g>
+<g id="L10_HEADLINE">
+<text id="TXT_من_الماستر_بلان_لحد_أصغر_وحدة" x="960" y="200" font-family="IBM Plex Sans Arabic" font-size="92" font-weight="600" fill="#f1f1f1" text-anchor="middle" direction="rtl">من الماستر بلان لحد <tspan fill="#00b3ff">أصغر وحدة</tspan></text>
+</g>
+
+</svg>

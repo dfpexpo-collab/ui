@@ -1,0 +1,516 @@
+<title>__TITLE__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700&family=Poppins:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: an editing bay — the stage and its timeline on the left, an inspector column on the right; stacks on phones. Deliberately single dark look, like a motion app. */
+:root {
+  --bg: #0f1218; --panel: #161a22; --raised: #1e2330; --line: #2a3140;
+  --fg: #e7e9ef; --muted: #8d95a8; --accent: #7fb2ff; --accent-ink: #0b1220; --ok: #5fd39a;
+  --ui: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font: 13px/1.45 var(--ui); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px; box-sizing: border-box; }
+header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+header h1 { font-size: 15px; font-weight: 600; margin: 0; letter-spacing: .01em; }
+header .sub { color: var(--muted); font-size: 12px; }
+header .spacer { flex: 1; }
+.bay { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 14px; align-items: start; }
+@media (max-width: 900px) { .bay { grid-template-columns: minmax(0, 1fr); } }
+.stagewrap { min-width: 0; display: grid; gap: 10px; }
+.stage { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.scene { position: absolute; inset: 0; visibility: hidden; }
+.scene svg { width: 100%; height: 100%; display: block; }
+.slate { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2%; background: radial-gradient(ellipse at 50% 60%, #0012d6 0%, #000024 70%); color: #f1f1f1; font-family: "IBM Plex Sans Arabic", sans-serif; }
+.slate b { font-size: clamp(14px, 4vw, 44px); font-weight: 600; direction: rtl; }
+.slate span { font: 500 clamp(9px, 1.2vw, 14px) var(--mono); color: #00b3ff; letter-spacing: .25em; }
+.transport { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.loop { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; cursor: pointer; }
+.loop input { accent-color: var(--accent); }
+.transport output { font: 500 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; min-width: 92px; }
+.scrub { position: relative; flex: 1; min-width: 200px; }
+.scrub input { width: 100%; }
+.marks { position: relative; height: 18px; margin-top: 2px; }
+.marks button { position: absolute; top: 0; transform: translateX(-50%); font: 500 10px var(--mono); color: var(--muted); background: none; border: 0; padding: 0 2px; cursor: pointer; }
+.marks button:hover, .marks button:focus-visible { color: var(--fg); }
+button.btn { font: 500 12px var(--ui); color: var(--fg); background: var(--raised); border: 1px solid var(--line); border-radius: 6px; padding: 6px 11px; cursor: pointer; }
+button.btn:hover { border-color: var(--muted); }
+button.btn:disabled { opacity: .4; cursor: default; }
+button.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.inspector { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 12px; min-width: 0; }
+.inspector h2 { margin: 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.group { display: grid; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 46px; align-items: center; gap: 8px; }
+.row label { color: var(--muted); font-size: 12px; }
+.row output { font: 12px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.row.full { grid-template-columns: 96px minmax(0, 1fr); }
+select, input[type="color"] { width: 100%; background: var(--raised); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; font: 12px var(--ui); box-sizing: border-box; }
+input[type="color"] { padding: 2px; height: 28px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.target select { font-family: "IBM Plex Sans Arabic", var(--ui); }
+.badge { display: inline-block; font: 500 10px var(--mono); padding: 2px 6px; border-radius: 4px; background: var(--raised); color: var(--muted); }
+.badge.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.status { font-size: 12px; color: var(--muted); min-height: 1.4em; }
+.status.ok { color: var(--ok); }
+.graphwrap { display: grid; gap: 6px; }
+.graphwrap > label { color: var(--muted); font-size: 12px; }
+.graph svg { width: 100%; height: auto; display: block; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; touch-action: none; }
+.graph .grid line { stroke: var(--line); stroke-width: 1; }
+.graph .axis { stroke: var(--muted); stroke-width: 1; opacity: .5; }
+.graph .curve { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.graph .arm { stroke: var(--muted); stroke-width: 1.2; }
+.graph .h { fill: var(--fg); stroke: var(--accent); stroke-width: 2; cursor: grab; }
+.graph .h:active { cursor: grabbing; }
+.graph .presets { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.graph .presets button { font: 500 11px var(--ui); color: var(--fg); background: var(--raised); border: 1px solid var(--line); border-radius: 5px; padding: 3px 7px; cursor: pointer; }
+.graph .presets button:hover { border-color: var(--muted); }
+.graph .val { font: 11px var(--mono); color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+textarea { width: 100%; box-sizing: border-box; height: 90px; background: var(--raised); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; font: 11px var(--mono); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<header>
+  <h1>__TITLE__</h1>
+  <span class="sub">Echo + blur per word · preview with the VO, then Save for the final render</span>
+  <span class="spacer"></span>
+  <span class="badge" id="dbBadge">local only</span>
+</header>
+
+<div class="bay">
+  <section class="stagewrap" aria-label="Preview">
+    <div class="stage" id="stage">__SCENES__</div>
+    <div class="transport">
+      <button class="btn" id="toStart" type="button" title="Play from the start">⏮ From start</button>
+      <button class="btn primary" id="play" type="button">Play</button>
+      <button class="btn" id="replay" type="button" title="Replay the current scene">Replay scene</button>
+      <label class="loop"><input id="loop" type="checkbox" checked> Loop scene</label>
+      <output id="clock">0.00 / 0.00</output>
+      <div class="scrub">
+        <input id="scrub" type="range" min="0" max="100" step="0.01" value="0" aria-label="Timeline">
+        <div class="marks" id="marks"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="inspector" aria-label="Text settings">
+    <div class="target">
+      <h2>Text</h2>
+      <select id="target" aria-label="Which text to edit"></select>
+      <div class="status" id="scope"></div>
+    </div>
+
+    <div id="headCtl">
+    <div class="group">
+      <h2>Motion</h2>
+      <div class="row full"><label for="preset">Effect</label>
+        <select id="preset"><option value="echo">Echo + blur</option><option value="blur">Blur only</option><option value="fade">Slide only</option><option value="none">No animation</option></select></div>
+      <div class="row full"><label for="direction">Comes from</label>
+        <select id="direction"><option value="right">Right</option><option value="left">Left</option><option value="up">Above</option><option value="down">Below</option><option value="none">In place</option></select></div>
+      <div class="row"><label for="distance">Distance</label><input id="distance" type="range" min="0" max="200" step="2"><output data-for="distance"></output></div>
+      <div class="row"><label for="duration">Speed (s)</label><input id="duration" type="range" min="0.2" max="1.6" step="0.05"><output data-for="duration"></output></div>
+      <div class="row"><label for="blur">Word blur</label><input id="blur" type="range" min="0" max="40" step="1"><output data-for="blur"></output></div>
+      <div class="row"><label for="delay">Delay (s)</label><input id="delay" type="range" min="-1" max="1" step="0.05"><output data-for="delay"></output></div>
+      <div class="row full"><label for="bounce">Bounce</label><label class="loop"><input id="bounce" type="checkbox"> Land with a bounce</label></div>
+      <div class="row"><label for="bounces">Bounces</label><input id="bounces" type="range" min="1" max="5" step="1"><output data-for="bounces"></output></div>
+      <div class="graphwrap"><label>Word motion graph</label><div class="graph" id="ease" tabindex="0" aria-label="Word motion curve"></div></div>
+    </div>
+
+    <div class="group">
+      <h2>Echo</h2>
+      <div class="row full"><label for="echoColor">Colour (dark)</label><input id="echoColor" type="color"></div>
+      <div class="row full"><label for="echoColorLight">Colour (light)</label><input id="echoColorLight" type="color"></div>
+      <div class="row"><label for="ghosts">Copies</label><input id="ghosts" type="range" min="0" max="6" step="1"><output data-for="ghosts"></output></div>
+      <div class="row"><label for="ghostGap">Gap (frames)</label><input id="ghostGap" type="range" min="0" max="6" step="1"><output data-for="ghostGap"></output></div>
+      <div class="row"><label for="echoBlur">Echo blur</label><input id="echoBlur" type="range" min="0" max="50" step="1"><output data-for="echoBlur"></output></div>
+      <div class="row"><label for="ghostOpacity">Opacity</label><input id="ghostOpacity" type="range" min="0" max="1" step="0.05"><output data-for="ghostOpacity"></output></div>
+      <div class="row"><label for="lead">Lead (frames)</label><input id="lead" type="range" min="0" max="12" step="1"><output data-for="lead"></output></div>
+      <div class="row"><label for="glow">Glow</label><input id="glow" type="range" min="0" max="1" step="0.05"><output data-for="glow"></output></div>
+      <div class="row"><label for="glowStay">Glow stays</label><input id="glowStay" type="range" min="0" max="0.6" step="0.02"><output data-for="glowStay"></output></div>
+      <div class="graphwrap"><label>Echo motion graph</label><div class="graph" id="echoEase" tabindex="0" aria-label="Echo motion curve"></div></div>
+      <div class="row full"><label for="tint">Colour fade</label>
+        <select id="tint"><option value="1">Word starts in echo colour</option><option value="0">Word keeps its colour</option></select></div>
+    </div>
+    </div>
+
+    <div id="countCtl" hidden>
+    <div class="group">
+      <h2>Numbers (count up)</h2>
+      <div class="row full"><label for="c_preset">Effect</label>
+        <select id="c_preset"><option value="count">Count up from zero</option><option value="none">No animation</option></select></div>
+      <div class="row"><label for="c_duration">Speed (s)</label><input id="c_duration" type="range" min="0.2" max="3" step="0.05"><output data-for="c_duration"></output></div>
+      <div class="row"><label for="c_blur">Motion blur</label><input id="c_blur" type="range" min="0" max="40" step="1"><output data-for="c_blur"></output></div>
+      <div class="row"><label for="c_rise">Rise (px)</label><input id="c_rise" type="range" min="0" max="80" step="1"><output data-for="c_rise"></output></div>
+      <div class="row"><label for="c_delay">Delay (s)</label><input id="c_delay" type="range" min="-1" max="1.5" step="0.05"><output data-for="c_delay"></output></div>
+      <div class="row full"><label for="c_bounce">Bounce</label><label class="loop"><input id="c_bounce" type="checkbox"> Land with a bounce</label></div>
+      <div class="row"><label for="c_bounces">Bounces</label><input id="c_bounces" type="range" min="1" max="5" step="1"><output data-for="c_bounces"></output></div>
+      <div class="graphwrap"><label>Count graph</label><div class="graph" id="c_ease" tabindex="0" aria-label="Count curve"></div></div>
+    </div>
+    </div>
+
+    <div id="fieldCtl" hidden>
+    <div class="group">
+      <h2>Typewriter</h2>
+      <div class="row full"><label for="f_preset">Effect</label>
+        <select id="f_preset"><option value="type">Typewriter (letter by letter)</option><option value="none">No animation</option></select></div>
+      <div class="row"><label for="f_typeSpeed">Letters / s</label><input id="f_typeSpeed" type="range" min="8" max="90" step="1"><output data-for="f_typeSpeed"></output></div>
+      <div class="row"><label for="f_stagger">Between fields</label><input id="f_stagger" type="range" min="0" max="0.3" step="0.005"><output data-for="f_stagger"></output></div>
+      <div class="row"><label for="f_delay">Delay (s)</label><input id="f_delay" type="range" min="-1" max="1.5" step="0.05"><output data-for="f_delay"></output></div>
+      <div class="row full"><label for="f_cursor">Cursor</label>
+        <select id="f_cursor"><option value="1">Show cursor</option><option value="0">No cursor</option></select></div>
+      <div class="row full"><label for="f_cursorColor">Cursor (dark)</label><input id="f_cursorColor" type="color"></div>
+      <div class="row full"><label for="f_cursorColorLight">Cursor (light)</label><input id="f_cursorColorLight" type="color"></div>
+    </div>
+    </div>
+
+    <div class="group">
+      <div class="actions">
+        <button class="btn" id="undo" type="button" title="Undo (Ctrl/Cmd+Z)" disabled>↶ Undo</button>
+        <button class="btn" id="redo" type="button" title="Redo (Shift+Ctrl/Cmd+Z)" disabled>↷ Redo</button>
+      </div>
+      <div class="actions">
+        <button class="btn" id="toAll" type="button">Apply to the whole group</button>
+        <button class="btn" id="useGlobal" type="button">Use global</button>
+        <button class="btn" id="reset" type="button">Reset</button>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="save" type="button">Save for render</button>
+        <button class="btn" id="copy" type="button">Copy settings</button>
+      </div>
+      <div class="status" id="status"></div>
+      <textarea id="json" aria-label="Settings JSON" hidden readonly></textarea>
+    </div>
+  </aside>
+</div>
+
+<audio id="vo" preload="auto" src="__AUDIO__"></audio>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>__TEXTFX__</script>
+<script>
+const SCENES = __SCENES_JSON__;
+const TOTAL = SCENES[SCENES.length - 1].end;
+// headline controls use their key as the element id; field controls are prefixed "f_"
+const HKEYS = ['preset','direction','distance','duration','blur','delay','ease','echoEase','bounce','bounces','echoColor','echoColorLight','ghosts','ghostGap','echoBlur','ghostOpacity','lead','glow','glowStay','tint'];
+const FKEYS = ['preset','typeSpeed','stagger','delay','cursor','cursorColor','cursorColorLight'];
+const CKEYS = ['preset','duration','blur','rise','delay','ease','bounce','bounces'];
+const HDEF = Object.assign({}, TextFX.DEFAULTS, { delay: 0 });
+const FDEF = Object.assign({}, TextFX.TYPE_DEFAULTS);
+const CDEF = Object.assign({}, TextFX.COUNT_DEFAULTS);
+const fresh = () => ({ global: Object.assign({}, HDEF), fields: Object.assign({}, FDEF), counts: Object.assign({}, CDEF), overrides: {} });
+let settings = fresh();
+let tl = null, playing = false, t = 0, clockStart = 0, selected = '*', range = null;
+const $ = id => document.getElementById(id);
+const stage = $('stage'), audio = $('vo');
+
+// ---- After Effects-style value graph: drag the two bezier handles; presets below
+const EASE_PRESETS = { 'Easy Ease': [0.33, 0, 0.67, 1], 'Launch': [0.16, 1, 0.3, 1], 'Settle': [0.22, 1, 0.36, 1], 'Ease out': [0, 0, 0.2, 1], 'Linear': [0, 0, 1, 1], 'Overshoot': [0.34, 1.56, 0.64, 1] };
+const GRAPHS = {};
+function makeGraph(el) {
+  const W = 260, H = 200, P = 18, Y0 = -0.4, Y1 = 1.5;      // visible value range allows overshoot
+  const sx = x => P + x * (W - 2 * P), sy = y => H - P - (y - Y0) / (Y1 - Y0) * (H - 2 * P);
+  const ix = px => Math.min(1, Math.max(0, (px - P) / (W - 2 * P))), iy = py => Math.min(Y1, Math.max(Y0, Y0 + (H - P - py) / (H - 2 * P) * (Y1 - Y0)));
+  const NS = 'http://www.w3.org/2000/svg', mk = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const svg = mk('svg', { viewBox: `0 0 ${W} ${H}` });
+  const grid = mk('g', { class: 'grid' });
+  for (let i = 0; i <= 4; i++) { grid.appendChild(mk('line', { x1: sx(i / 4), y1: sy(Y0), x2: sx(i / 4), y2: sy(Y1) })); }
+  [0, 0.5, 1].forEach(v => grid.appendChild(mk('line', { x1: sx(0), y1: sy(v), x2: sx(1), y2: sy(v) })));
+  svg.appendChild(grid);
+  svg.appendChild(mk('line', { class: 'axis', x1: sx(0), y1: sy(0), x2: sx(1), y2: sy(0) }));
+  svg.appendChild(mk('line', { class: 'axis', x1: sx(0), y1: sy(1), x2: sx(1), y2: sy(1) }));
+  const curve = mk('path', { class: 'curve' }), a1 = mk('line', { class: 'arm' }), a2 = mk('line', { class: 'arm' });
+  const h1 = mk('circle', { class: 'h', r: 7 }), h2 = mk('circle', { class: 'h', r: 7 });
+  [curve, a1, a2, h1, h2].forEach(n => svg.appendChild(n));
+  el.appendChild(svg);
+  const val = document.createElement('div'); val.className = 'val'; el.appendChild(val);
+  const pres = document.createElement('div'); pres.className = 'presets'; el.appendChild(pres);
+  let v = [0.16, 1, 0.3, 1];
+  function draw() {
+    const [x1, y1, x2, y2] = v;
+    curve.setAttribute('d', `M${sx(0)} ${sy(0)} C${sx(x1)} ${sy(y1)} ${sx(x2)} ${sy(y2)} ${sx(1)} ${sy(1)}`);
+    a1.setAttribute('x1', sx(0)); a1.setAttribute('y1', sy(0)); a1.setAttribute('x2', sx(x1)); a1.setAttribute('y2', sy(y1));
+    a2.setAttribute('x1', sx(1)); a2.setAttribute('y1', sy(1)); a2.setAttribute('x2', sx(x2)); a2.setAttribute('y2', sy(y2));
+    h1.setAttribute('cx', sx(x1)); h1.setAttribute('cy', sy(y1)); h2.setAttribute('cx', sx(x2)); h2.setAttribute('cy', sy(y2));
+    val.textContent = 'cubic-bezier(' + v.map(n => n.toFixed(2)).join(', ') + ')';
+  }
+  const emit = () => el.dispatchEvent(new Event('input', { bubbles: true }));
+  function drag(which) {
+    return e => {
+      e.preventDefault(); const r = svg.getBoundingClientRect();
+      const move = ev => {
+        const px = (ev.clientX - r.left) / r.width * W, py = (ev.clientY - r.top) / r.height * H;
+        const x = +ix(px).toFixed(3), y = +iy(py).toFixed(3);
+        if (which === 1) { v[0] = x; v[1] = y; } else { v[2] = x; v[3] = y; }
+        draw(); emit();
+      };
+      const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+      window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+    };
+  }
+  h1.addEventListener('pointerdown', drag(1)); h2.addEventListener('pointerdown', drag(2));
+  Object.entries(EASE_PRESETS).forEach(([name, pv]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = name;
+    b.addEventListener('click', () => { v = pv.slice(); draw(); emit(); }); pres.appendChild(b);
+  });
+  draw();
+  return { get: () => v.slice(), set: nv => { v = (Array.isArray(nv) ? nv : [0.16, 1, 0.3, 1]).slice(); draw(); } };
+}
+['ease', 'echoEase', 'c_ease'].forEach(k => GRAPHS[k] = makeGraph(document.getElementById(k)));
+
+// ---- collect every text. Headlines (L1x layers, big numbers) get echo + blur; text in bars, sheets and fields types.
+const ITEMS = [];
+SCENES.forEach((sc, i) => {
+  const el = document.getElementById('S' + i); sc.el = el;
+  const svg = el.querySelector('svg'); if (!svg) return;
+  const bg = svg.querySelector('#BG_FILL rect');
+  sc.light = !!bg && /^#f1f1f1$/i.test(bg.getAttribute('fill') || '');
+  const layers = Array.from(svg.children).filter(n => n.tagName === 'g' && /^L\d/.test(n.id) && !/^L9\d/.test(n.id));
+  let fieldIdx = 0;
+  const headWords = [];
+  layers.forEach(layer => {
+    const head = /^L1\d/.test(layer.id) || /BIG_10X|COUNTER/.test(layer.id);
+    layer.querySelectorAll('g[id^="TXT_"]').forEach(g => {
+      if (g.id.includes('__w')) return;
+      const words = Array.from(g.querySelectorAll(':scope > g[id*="__w"]'));
+      if (!words.length) return;
+      const item = { key: sc.id + '/' + g.id, scene: sc, g, label: g.id.replace(/^TXT_/, '').replace(/_\d+$/, '').replace(/_/g, ' '), words, kind: TextFX.isCount(g.dataset.text) ? 'count' : head ? 'head' : 'field', inHead: head, idx: head ? 0 : fieldIdx++ };
+      if (head) headWords.push(...words);
+      ITEMS.push(item);
+    });
+  });
+  sc.headWords = headWords;
+});
+
+function voTimes(sc, n) {
+  if (sc.words) return Array.from({ length: n }, (_, i) => sc.words[Math.min(i, sc.words.length - 1)]);
+  const [a, b] = sc.vo || [sc.start + 0.2, sc.start + (sc.end - sc.start) * 0.6];
+  const span = Math.max(0.1, (b - a) * 0.85);
+  return Array.from({ length: n }, (_, i) => a + (n > 1 ? span * i / (n - 1) : 0));
+}
+const kindOf = sel => sel === '*' ? 'head' : sel === '#' ? 'field' : sel === '%' ? 'count' : (ITEMS.find(i => i.key === sel) || {}).kind;
+const GROUPS = { '*': 'head', '#': 'field', '%': 'count' };
+const base = kind => kind === 'field' ? settings.fields : kind === 'count' ? settings.counts : settings.global;
+function eff(key) { const k = kindOf(key); if (GROUPS[key]) return base(k); return Object.assign({}, base(k), settings.overrides[key] || {}); }
+
+// ---- build the timeline from the current settings
+function build() {
+  if (tl) tl.kill();
+  TextFX.clean(stage);
+  tl = gsap.timeline({ paused: true });
+  SCENES.forEach(sc => {
+    tl.set(sc.el, { visibility: 'visible' }, sc.start);
+    tl.set(sc.el, { visibility: 'hidden' }, sc.end);
+    if (!sc.headWords) return;
+    const vt = voTimes(sc, sc.headWords.length);
+    ITEMS.filter(it => it.scene === sc).forEach(it => {
+      const s = eff(it.key);
+      if (it.kind === 'count') {
+        const at = it.inHead ? (sc.big != null ? sc.big : voTimes(sc, 1)[0]) : sc.start + 0.25 + it.idx * settings.fields.stagger;
+        const t0 = Math.max(sc.start, at + s.delay);
+        TextFX.countUp(tl, it.g, t0, s);
+        it.shownAt = t0 + s.duration * (s.bounce ? 1.3 : 1) + 0.05;
+      } else if (it.kind === 'field') {
+        const t0 = Math.max(sc.start, sc.start + 0.25 + it.idx * s.stagger + s.delay);
+        TextFX.typewrite(tl, it.g, t0, s, sc.light);
+        it.shownAt = t0 + Math.max(1, it.label.replace(/ /g, '').length) / s.typeSpeed + 0.05;
+      } else {
+        const times = it.words.map(w => Math.max(sc.start, vt[sc.headWords.indexOf(w)] + s.delay));
+        TextFX.apply(tl, it.words, times, s, sc.light);
+        it.shownAt = Math.max(...times) + s.duration * (s.bounce ? 1.4 : 1) + 0.05;
+      }
+    });
+  });
+  tl.set({}, {}, TOTAL);
+  tl.seek(t, false);
+}
+
+// ---- transport
+function show(time) {
+  t = Math.max(0, Math.min(TOTAL, time));
+  if (tl) tl.seek(t, false);
+  $('scrub').value = (t / TOTAL * 100).toFixed(2);
+  $('clock').value = t.toFixed(2) + ' / ' + TOTAL.toFixed(2);
+}
+function tick() {
+  if (!playing) return;
+  const now = t0Clock();   // the clock drives the picture; the audio follows it
+  try { if (!audio.paused && Math.abs(audio.currentTime - now) > 0.25) audio.currentTime = now; } catch (e) {}
+  if (range && now >= range[1]) {
+    if ($('loop').checked) { play(range[0], range); return; }
+    show(range[1]); stop(); return;
+  }
+  show(now);
+  if (now >= TOTAL) { stop(); return; }
+  requestAnimationFrame(tick);
+}
+function t0Clock() { return (performance.now() - clockStart) / 1000; }
+function play(from, r) {
+  range = r || null;
+  playing = true; $('play').textContent = 'Pause';
+  show(from ?? t);
+  clockStart = performance.now() - t * 1000;
+  try { audio.currentTime = t; audio.play().catch(() => {}); } catch (e) {}
+  requestAnimationFrame(tick);
+}
+function stop() { playing = false; $('play').textContent = 'Play'; try { audio.pause(); } catch (e) {} }
+$('play').addEventListener('click', () => playing ? stop() : play(t >= TOTAL - 0.05 ? 0 : t));
+$('toStart').addEventListener('click', () => { stop(); play(0); });
+$('loop').addEventListener('change', () => { if (!$('loop').checked) range = null; });
+$('scrub').addEventListener('input', e => { const v = e.target.value / 100 * TOTAL; if (playing) stop(); show(v); });
+function currentScene() {
+  const it = ITEMS.find(i => i.key === selected);
+  return it ? it.scene : SCENES.find(s => t >= s.start && t < s.end) || SCENES[0];
+}
+function replayScene() { const sc = currentScene(); play(Math.max(0, sc.start - 0.05), [Math.max(0, sc.start - 0.05), sc.end]); }
+$('replay').addEventListener('click', replayScene);
+const marks = $('marks');
+SCENES.forEach(sc => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.textContent = sc.id === 'SLATE' ? '▮' : sc.id.replace('F', '');
+  b.title = sc.id; b.style.left = (sc.start / TOTAL * 100) + '%';
+  b.addEventListener('click', () => { stop(); show(sc.start + 0.01); });
+  marks.appendChild(b);
+});
+
+// ---- inspector
+const target = $('target');
+const keysFor = kind => kind === 'field' ? FKEYS : kind === 'count' ? CKEYS : HKEYS;
+const idFor = (kind, k) => kind === 'field' ? 'f_' + k : kind === 'count' ? 'c_' + k : k;
+function fillTargets() {
+  target.innerHTML = '';
+  target.add(new Option('All headlines (echo + blur)', '*'));
+  target.add(new Option('All fields (typewriter)', '#'));
+  target.add(new Option('All numbers (count up)', '%'));
+  SCENES.forEach(sc => {
+    const its = ITEMS.filter(i => i.scene === sc); if (!its.length) return;
+    const og = document.createElement('optgroup'); og.label = sc.id;
+    its.forEach(it => og.appendChild(new Option((settings.overrides[it.key] ? '● ' : '') + (it.kind === 'field' ? '⌨ ' : it.kind === 'count' ? '# ' : '') + it.label, it.key)));
+    target.appendChild(og);
+  });
+  target.value = selected;
+}
+function readUI(kind) {
+  const o = {};
+  keysFor(kind).forEach(k => {
+    const el = $(idFor(kind, k));
+    if (GRAPHS[idFor(kind, k)]) { o[k] = GRAPHS[idFor(kind, k)].get(); return; }
+    if (el.type === 'checkbox') { o[k] = el.checked; return; }
+    let v = el.value;
+    if (el.type === 'range') v = parseFloat(v);
+    if (k === 'tint' || k === 'cursor') v = v === '1';
+    o[k] = v;
+  });
+  return o;
+}
+function writeUI() {
+  const kind = kindOf(selected), s = eff(selected);
+  $('headCtl').hidden = kind !== 'head'; $('fieldCtl').hidden = kind !== 'field'; $('countCtl').hidden = kind !== 'count';
+  keysFor(kind).forEach(k => {
+    const id = idFor(kind, k), el = $(id);
+    if (GRAPHS[id]) { GRAPHS[id].set(s[k]); return; }
+    if (el.type === 'checkbox') { el.checked = !!s[k]; return; }
+    el.value = (k === 'tint' || k === 'cursor') ? (s[k] ? '1' : '0') : s[k];
+    const out = document.querySelector(`output[data-for="${id}"]`); if (out) out.value = s[k];
+  });
+  const it = ITEMS.find(i => i.key === selected);
+  const groupName = { head: 'headlines', field: 'fields', count: 'numbers' }[kind];
+  $('toAll').textContent = GROUPS[selected] ? 'Clear single-text settings (' + groupName + ')' : 'Use this for all ' + groupName;
+  $('useGlobal').hidden = !!GROUPS[selected];
+  $('scope').textContent = selected === '*' ? 'Editing every headline without its own settings.' :
+    selected === '#' ? 'Editing every text inside bars, sheets and fields.' :
+    selected === '%' ? 'Editing every number and price.' :
+    (settings.overrides[selected] ? 'This text has its own settings.' : 'Using its group settings. Change anything to give it its own.') + ' · ' + it.scene.id;
+}
+// ---- undo / redo: one snapshot per edit burst (a whole slider drag is one step)
+const past = [], future = [];
+let burstTimer = null;
+function snapshot() { past.push(JSON.stringify(settings)); if (past.length > 100) past.shift(); future.length = 0; syncUndo(); }
+function burst() { if (!burstTimer) snapshot(); clearTimeout(burstTimer); burstTimer = setTimeout(() => { burstTimer = null; }, 700); }
+function syncUndo() { $('undo').disabled = !past.length; $('redo').disabled = !future.length; }
+function restore(json) { settings = JSON.parse(json); build(); fillTargets(); writeUI(); markDirty(); syncUndo(); }
+function undo() { if (!past.length) return; clearTimeout(burstTimer); burstTimer = null; future.push(JSON.stringify(settings)); restore(past.pop()); status('Undone.'); }
+function redo() { if (!future.length) return; past.push(JSON.stringify(settings)); restore(future.pop()); status('Redone.'); }
+$('undo').addEventListener('click', undo);
+$('redo').addEventListener('click', redo);
+document.addEventListener('keydown', e => {
+  if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'z' || /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName) && document.activeElement.type !== 'range' && document.activeElement.type !== 'checkbox') return;
+  e.preventDefault(); e.shiftKey ? redo() : undo();
+});
+
+let pending = null;
+function onEdit() {
+  burst();
+  const kind = kindOf(selected), vals = readUI(kind);
+  keysFor(kind).forEach(k => { const out = document.querySelector(`output[data-for="${idFor(kind, k)}"]`); if (out) out.value = vals[k]; });
+  if (selected === '*') settings.global = Object.assign({}, settings.global, vals);
+  else if (selected === '#') settings.fields = Object.assign({}, settings.fields, vals);
+  else if (selected === '%') settings.counts = Object.assign({}, settings.counts, vals);
+  else {
+    const b = base(kind), diff = {};
+    keysFor(kind).forEach(k => { if (JSON.stringify(vals[k]) !== JSON.stringify(b[k])) diff[k] = vals[k]; });
+    if (Object.keys(diff).length) settings.overrides[selected] = diff; else delete settings.overrides[selected];
+  }
+  clearTimeout(pending); pending = setTimeout(() => { build(); fillTargets(); writeUI(); }, 250);
+  markDirty();
+}
+HKEYS.forEach(k => $(k).addEventListener('input', onEdit));
+FKEYS.forEach(k => $('f_' + k).addEventListener('input', onEdit));
+CKEYS.forEach(k => $('c_' + k).addEventListener('input', onEdit));
+target.addEventListener('change', () => {
+  selected = target.value; writeUI();
+  const it = ITEMS.find(i => i.key === selected);
+  if (it) { stop(); show(Math.min(it.scene.end - 0.02, it.shownAt ?? it.scene.start + 0.5)); }
+});
+$('toAll').addEventListener('click', () => {
+  snapshot();
+  const kind = kindOf(selected), s = Object.assign({}, eff(selected));
+  if (kind === 'field') settings.fields = s; else if (kind === 'count') settings.counts = s; else settings.global = s;
+  ITEMS.filter(i => i.kind === kind).forEach(i => delete settings.overrides[i.key]);
+  build(); fillTargets(); writeUI(); markDirty(); status('Applied to the whole group.');
+});
+$('useGlobal').addEventListener('click', () => {
+  if (GROUPS[selected]) return; snapshot(); delete settings.overrides[selected];
+  build(); fillTargets(); writeUI(); markDirty();
+});
+$('reset').addEventListener('click', () => {
+  snapshot();
+  settings = fresh();
+  build(); fillTargets(); writeUI(); markDirty(); status('Back to the default look.');
+});
+
+// ---- save: shared store (Claude reads it for the render) with a copy fallback
+let db = null;
+function status(msg, ok) { const s = $('status'); s.textContent = msg; s.classList.toggle('ok', !!ok); }
+function markDirty() { status('Unsaved changes.'); }
+$('save').addEventListener('click', async () => {
+  if (!db) { status('Saving needs the shared store. Use Copy settings and paste them to Claude.'); return; }
+  try {
+    await db.doc('textfx/current').set({ settings: JSON.stringify(settings), savedAt: new Date().toISOString() });
+    status('Saved. Claude will use these settings for the render.', true);
+  } catch (e) { status('Could not save (' + (e && e.code || 'error') + '). Use Copy settings instead.'); }
+});
+$('copy').addEventListener('click', async () => {
+  const txt = JSON.stringify(settings, null, 1); const ta = $('json'); ta.value = txt;
+  try { await navigator.clipboard.writeText(txt); status('Copied. Paste it to Claude.', true); }
+  catch (e) { ta.hidden = false; ta.select(); status('Select the text below and copy it.'); }
+});
+
+// ---- boot
+fillTargets(); writeUI(); build(); show(0);
+(async () => {
+  db = window.claude ? await window.claude.use('db') : null;
+  if (!db) return;
+  $('dbBadge').textContent = 'shared store'; $('dbBadge').classList.add('on');
+  try {
+    const snap = await db.doc('textfx/current').get();
+    if (snap.exists) {
+      const d = snap.data(); const saved = JSON.parse(d.settings);
+      settings = { global: Object.assign({}, HDEF, saved.global), fields: Object.assign({}, FDEF, saved.fields), counts: Object.assign({}, CDEF, saved.counts), overrides: saved.overrides || {} };
+      fillTargets(); writeUI(); build(); show(t);
+      status('Loaded the settings saved ' + new Date(d.savedAt).toLocaleString() + '.', true);
+    }
+  } catch (e) {}
+})();
+</script>

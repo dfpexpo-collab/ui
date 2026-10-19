@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
+<title>F09 - منصة PropTech مدعومة بالذكاء الاصطناعي</title>
+<defs>
+  <linearGradient id="gSignature" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#000024"/><stop offset="0.55" stop-color="#0012d6"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <radialGradient id="gGlowBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.9"/><stop offset="0.55" stop-color="#0012d6" stop-opacity="0.25"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.75"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.35"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.22"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gVignette" cx="0.5" cy="0.5" r="0.75">
+    <stop offset="0.55" stop-color="#000024" stop-opacity="0"/><stop offset="1" stop-color="#000024" stop-opacity="0.85"/>
+  </radialGradient>
+  <radialGradient id="gTileGlow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gShadow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.16"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gTile" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff"/><stop offset="1" stop-color="#0012d6"/>
+  </linearGradient>
+  <linearGradient id="gGlassFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.10"/><stop offset="1" stop-color="#f1f1f1" stop-opacity="0.03"/>
+  </linearGradient>
+  <linearGradient id="gGlassSheen" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.07"/><stop offset="0.45" stop-color="#f1f1f1" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gGlassStroke" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#f1f1f1" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.55"/>
+  </linearGradient>
+  <linearGradient id="gGlassStrokeLight" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.7"/><stop offset="0.5" stop-color="#0012d6" stop-opacity="0.08"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.45"/>
+  </linearGradient>
+  <linearGradient id="gSheenLight" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.4" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gTextFade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <linearGradient id="gStreak" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="1"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gScreen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03063a"/><stop offset="0.6" stop-color="#0012d6" stop-opacity="0.55"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.5"/>
+  </linearGradient>
+  <linearGradient id="gHorizon" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.9"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<g id="L01_BG">
+<g id="BG_FILL"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="#000024"/></g><ellipse id="GLOW_MAIN" cx="960" cy="700" rx="980" ry="620" fill="url(#gGlowBlue)"/><ellipse id="GLOW_ACCENT" cx="1500" cy="200" rx="520" ry="380" fill="url(#gGlowSoftLight)"/><g id="GRID_FLOOR" stroke="#00b3ff" stroke-width="1" opacity="0.12"><line x1="624" y1="560" x2="-1320" y2="1080"/><line x1="652" y1="560" x2="-1130" y2="1080"/><line x1="680" y1="560" x2="-940" y2="1080"/><line x1="708" y1="560" x2="-750" y2="1080"/><line x1="736" y1="560" x2="-560" y2="1080"/><line x1="764" y1="560" x2="-370" y2="1080"/><line x1="792" y1="560" x2="-180" y2="1080"/><line x1="820" y1="560" x2="10" y2="1080"/><line x1="848" y1="560" x2="200" y2="1080"/><line x1="876" y1="560" x2="390" y2="1080"/><line x1="904" y1="560" x2="580" y2="1080"/><line x1="932" y1="560" x2="770" y2="1080"/><line x1="960" y1="560" x2="960" y2="1080"/><line x1="988" y1="560" x2="1150" y2="1080"/><line x1="1016" y1="560" x2="1340" y2="1080"/><line x1="1044" y1="560" x2="1530" y2="1080"/><line x1="1072" y1="560" x2="1720" y2="1080"/><line x1="1100" y1="560" x2="1910" y2="1080"/><line x1="1128" y1="560" x2="2100" y2="1080"/><line x1="1156" y1="560" x2="2290" y2="1080"/><line x1="1184" y1="560" x2="2480" y2="1080"/><line x1="1212" y1="560" x2="2670" y2="1080"/><line x1="1240" y1="560" x2="2860" y2="1080"/><line x1="1268" y1="560" x2="3050" y2="1080"/><line x1="1296" y1="560" x2="3240" y2="1080"/><line x1="0" y1="640" x2="1920" y2="640"/><line x1="0" y1="700" x2="1920" y2="700"/><line x1="0" y1="770" x2="1920" y2="770"/><line x1="0" y1="850" x2="1920" y2="850"/><line x1="0" y1="950" x2="1920" y2="950"/><line x1="0" y1="1075" x2="1920" y2="1075"/></g><g id="VIGNETTE"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="url(#gVignette)"/></g>
+</g>
+<g id="L05_AI_BAR">
+<g id="GLASS"><rect x="360" y="600" width="1200" height="120" rx="60.0" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="361.5" y="601.5" width="1197" height="117" rx="58.5" fill="url(#gGlassSheen)"/></g><path id="ICON_spark" d="M12 2l2.2 6.3L21 10l-6.8 2L12 19l-2.2-7L3 10l6.8-1.7z" transform="translate(1470 634) scale(2.1666666666666665)" fill="none" stroke="#00b3ff" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/><text id="TXT_اعرض_الوحدات_المتاحة_بـ_3_غرف_تحت_5_" x="1440" y="674" font-family="IBM Plex Sans Arabic" font-size="32" font-weight="400" fill="#f1f1f1" text-anchor="start" direction="rtl" opacity="0.8">اعرض الوحدات المتاحة بـ 3 غرف تحت 5 مليون</text><rect x="380" y="620" width="200" height="80" rx="40" fill="url(#gTile)"/><text id="TXT_AI" x="480" y="672" font-family="Gabarito" font-size="34" font-weight="600" fill="#f1f1f1" text-anchor="middle">AI</text>
+</g>
+<g id="L06_CHIPS">
+<g id="PILL_Smart_filtration"><g id="GLASS_2"><rect x="533.52" y="804.8" width="298.08" height="50.400000000000006" rx="25.200000000000003" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="535.02" y="806.3" width="295.08" height="47.400000000000006" rx="23.700000000000003" fill="url(#gGlassSheen)"/></g><text id="TXT_Smart_filtration" x="682.56" y="838.64" font-family="Gabarito" font-size="24" font-weight="500" fill="#f1f1f1" text-anchor="middle">Smart filtration</text></g><g id="PILL_Live_inventory"><g id="GLASS_3"><rect x="855.5999999999999" y="804.8" width="268.32" height="50.400000000000006" rx="25.200000000000003" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="857.0999999999999" y="806.3" width="265.32" height="47.400000000000006" rx="23.700000000000003" fill="url(#gGlassSheen)"/></g><text id="TXT_Live_inventory" x="989.7599999999999" y="838.64" font-family="Gabarito" font-size="24" font-weight="500" fill="#f1f1f1" text-anchor="middle">Live inventory</text></g><g id="PILL_Availability"><g id="GLASS_4"><rect x="1147.9199999999998" y="804.8" width="238.56" height="50.400000000000006" rx="25.200000000000003" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="1149.4199999999998" y="806.3" width="235.56" height="47.400000000000006" rx="23.700000000000003" fill="url(#gGlassSheen)"/></g><text id="TXT_Availability" x="1267.1999999999998" y="838.64" font-family="Gabarito" font-size="24" font-weight="500" fill="#f1f1f1" text-anchor="middle">Availability</text></g>
+</g>
+<g id="L07_CURSOR">
+<path id="CURSOR" d="M0 0L0 34L9 26L15 40L21 37L15 24L27 24Z" transform="translate(510 670) scale(1.0)" fill="#f1f1f1" stroke="#000024" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g id="L10_HEADLINE">
+<text id="TXT_منصة_PropTech" x="960" y="330" font-family="IBM Plex Sans Arabic" font-size="110" font-weight="600" fill="#f1f1f1" text-anchor="middle" direction="rtl">منصة <tspan fill="#00b3ff">PropTech</tspan></text><text id="TXT_مدعومة_بالذكاء_الاصطناعي" x="960" y="470" font-family="IBM Plex Sans Arabic" font-size="84" font-weight="500" fill="#f1f1f1" text-anchor="middle" direction="rtl">مدعومة بالذكاء الاصطناعي</text>
+</g>
+
+</svg>

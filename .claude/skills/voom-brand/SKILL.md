@@ -28,7 +28,7 @@ Always read `references/visual-system.md` before anything visual. It is short an
 1. **Palette only:** Blue `#0012d6`, Light blue `#00b3ff`, Deep blue `#000024`, Off white `#f1f1f1`. Pure black/white only for monochrome logo on off-palette surfaces.
 2. **Signature background:** diagonal gradient deep blue -> blue -> light blue (or a deep-blue field with a blue glow). Never a flat unapproved color, never a rainbow.
 3. **Logo:** use the files in `assets/logo/`. Off-white on dark, blue or gradient; dark navy on off-white, white or solid light blue. Keep a safe zone of **1/4 logo height** on every side. Never recolor (no two-tone), never stretch, never add effects, never put it on a gradient over a gradient, never on low-contrast backgrounds.
-4. **Type:** Gabarito (Latin), IBM Plex Sans Arabic (Arabic). Sentence case. Heading SemiBold, leading 90%, tracking -30. Subheading Medium, leading 100%, tracking -20. Body Regular, leading 130%, tracking -10. Poppins Bold/Regular is the approved display face used on product sheets and the guidelines deck.
+4. **Type:** Gabarito (Latin), IBM Plex Sans Arabic (Arabic). Sentence case. Heading SemiBold, leading 90%, tracking -30. Subheading Medium, leading 100%, tracking -20. Body Regular, leading 130%, tracking -10. Poppins Bold/Regular is the approved display face used on product sheets and the guidelines deck. **thmanyah** (Sans / Serif Text / Serif Display) is approved by the brand owner (2026-10) as the Arabic display and editorial face, with its own kashida (see `references/visual-system.md` §3). IBM Plex Sans Arabic stays the default Arabic face for UI and body text.
 5. **Highlight with light blue:** emphasize a key phrase by coloring it `#00b3ff`, not by changing font or adding underlines.
 6. **Text on blue is off-white `#f1f1f1`**, not pure white.
 7. **Product screenshots are client-themed** (teal, green, etc.). Do not treat those colors as Voom colors. Voom blue lives on the marketing frame around the screenshot.
@@ -41,6 +41,8 @@ Confident, modern, clear. Short sentences, concrete outcomes ("Sell off-plan wit
 ## Using the assets
 
 - Logos: `assets/logo/voom-logo-full-white.png`, `voom-logo-full-black.png` (with tagline), `voom-wordmark-white.png`, `voom-wordmark-black.png` (no tagline, for small sizes). Transparent PNG, 3000px+ wide.
+- Fonts: `assets/fonts/` (Gabarito, IBM Plex Sans Arabic, Poppins TTFs, OFL). Install before rendering or opening SVG/AI files.
+- thmanyah: licensed and **not** in this repo, because its licence forbids uploading or redistributing the files. Install it locally from the brand owner's zip with `bash tools/fonts/install_thmanyah.sh <zip>`. Outline it to paths in deliverables, and never ship the font files or embed them with `@font-face` in a published page.
 - Tokens: `tokens/voom.css` (import in any HTML), `tokens/voom-tokens.json` (design/motion handoff).
 - Templates: `templates/post-square.html`, `templates/story-vertical.html`, `templates/feature-sheet.html`, `templates/storyboard.md`, `templates/storyboard.html`.
 - Visual reference: `reference/brand-book/` and `reference/features/` (page renders of the source PDFs). Open them to match look and feel.

@@ -74,6 +74,7 @@ The supplied square files (1000x1000, logo centered, tagline included) are the m
 | Body | Gabarito | Regular (400) | Sentence | 18 pt | 130% (x1.3) | -10 |
 | Arabic (all roles) | **IBM Plex Sans Arabic** | Bold / Medium / Regular | - | match Latin sizes | 1.3-1.5 | 0 |
 | Display / decks / product sheets | **Poppins** | Bold headlines, Regular body | Sentence | scale to canvas | 1.0-1.3 | tight (-10 to -30) |
+| Arabic display / editorial (APPROVED 2026-10) | **thmanyah Sans** (headlines, UI-like display), **thmanyah Serif Display** (hero, campaign), **thmanyah Serif Text** (editorial copy) | Light 300 / Regular 400 / Medium 500 / Bold 700 / Black 900 | - | match Latin sizes | 1.2-1.4 | 0 |
 
 Notes:
 - Tracking is in 1/1000 em: -30 = -0.03em, -20 = -0.02em, -10 = -0.01em. Small text stays between 0 and -10.
@@ -82,6 +83,9 @@ Notes:
 - Hierarchy rule from the book: clear and intentional size jumps between heading, subheading and body. Headlines big and tight.
 - Highlight a phrase by switching it to `#00b3ff` (e.g. *"Redefining How off-plan **Real Estate** is Presented"*).
 - Left-align body copy. Center only hero titles on product sheets.
+- **thmanyah (Arabic display):** use it for Arabic headlines, hero lines, campaign and video titles where the brand should feel premium or editorial. Keep IBM Plex Sans Arabic for UI screens, tables, forms and long body text. Don't mix thmanyah and Plex inside one text block. Pair thmanyah Sans with Gabarito, and thmanyah Serif Display with Poppins Bold for big bilingual titles.
+- **Kashida (thmanyah only):** type tatweel `ـ` (U+0640) after a letter, 1 to 5 of them. The font swaps in that letter's own stretched form, a curved extension, not a flat line. Use it on one key word per line for emphasis or to balance a centred title (e.g. «بيـــعة أسرع»). Never use it in body text or with Plex, where tatweel is a flat bar. In motion, a kashida can grow by stepping levels 0→5 on the hero word.
+- **thmanyah licence:** local install only, never committed or embedded as a web font. Deliver it as outlined paths (SVG/AI/PDF/video). See `assets/fonts/README.md`.
 
 ## 4. Grid and layout
 

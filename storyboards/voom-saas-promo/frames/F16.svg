@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
+<title>F16 - أكتر من 200 مشروع اتباع عن طريق VOOM</title>
+<defs>
+  <linearGradient id="gSignature" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#000024"/><stop offset="0.55" stop-color="#0012d6"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <radialGradient id="gGlowBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.9"/><stop offset="0.55" stop-color="#0012d6" stop-opacity="0.25"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.75"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.35"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.22"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gVignette" cx="0.5" cy="0.5" r="0.75">
+    <stop offset="0.55" stop-color="#000024" stop-opacity="0"/><stop offset="1" stop-color="#000024" stop-opacity="0.85"/>
+  </radialGradient>
+  <radialGradient id="gTileGlow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gShadow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.16"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gTile" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff"/><stop offset="1" stop-color="#0012d6"/>
+  </linearGradient>
+  <linearGradient id="gGlassFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.10"/><stop offset="1" stop-color="#f1f1f1" stop-opacity="0.03"/>
+  </linearGradient>
+  <linearGradient id="gGlassSheen" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.07"/><stop offset="0.45" stop-color="#f1f1f1" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gGlassStroke" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#f1f1f1" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.55"/>
+  </linearGradient>
+  <linearGradient id="gGlassStrokeLight" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.7"/><stop offset="0.5" stop-color="#0012d6" stop-opacity="0.08"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.45"/>
+  </linearGradient>
+  <linearGradient id="gSheenLight" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.4" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gTextFade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <linearGradient id="gStreak" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="1"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gScreen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03063a"/><stop offset="0.6" stop-color="#0012d6" stop-opacity="0.55"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.5"/>
+  </linearGradient>
+  <linearGradient id="gHorizon" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.9"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<g id="L01_BG">
+<g id="BG_FILL"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="#000024"/></g><ellipse id="GLOW_MAIN" cx="960" cy="540" rx="980" ry="620" fill="url(#gGlowBlue)"/><ellipse id="GLOW_ACCENT" cx="1500" cy="180" rx="520" ry="380" fill="url(#gGlowSoftLight)"/><g id="VIGNETTE"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="url(#gVignette)"/></g>
+</g>
+<g id="L03_PROJECT_WALL">
+<g transform="matrix(0.92 -0.16 0.22 0.8 -40 150)" opacity="0.9"><g id="TILE"><rect x="-120" y="40" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.51"/><rect x="-100" y="186" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1275"/></g><g id="TILE_2"><rect x="210" y="40" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.6699999999999999"/><rect x="230" y="186" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.16749999999999998"/></g><g id="TILE_3"><rect x="540" y="40" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.43"/><rect x="560" y="186" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1075"/></g><g id="TILE_4"><rect x="870" y="40" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.59"/><rect x="890" y="186" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1475"/></g><g id="TILE_5"><rect x="1200" y="40" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.35"/><rect x="1220" y="186" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.0875"/></g><g id="TILE_6"><rect x="1530" y="40" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.51"/><rect x="1550" y="186" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1275"/></g><g id="TILE_7"><rect x="1860" y="40" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.6699999999999999"/><rect x="1880" y="186" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.16749999999999998"/></g><g id="TILE_8"><rect x="0" y="260" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.43"/><rect x="20" y="406" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1075"/></g><g id="TILE_9"><rect x="330" y="260" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.59"/><rect x="350" y="406" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1475"/></g><g id="TILE_10"><rect x="660" y="260" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.35"/><rect x="680" y="406" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.0875"/></g><g id="TILE_11"><rect x="990" y="260" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.51"/><rect x="1010" y="406" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1275"/></g><g id="TILE_12"><rect x="1320" y="260" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.6699999999999999"/><rect x="1340" y="406" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.16749999999999998"/></g><g id="TILE_13"><rect x="1650" y="260" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.43"/><rect x="1670" y="406" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1075"/></g><g id="TILE_14"><rect x="1980" y="260" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.59"/><rect x="2000" y="406" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1475"/></g><g id="TILE_15"><rect x="-120" y="480" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.35"/><rect x="-100" y="626" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.0875"/></g><g id="TILE_16"><rect x="210" y="480" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.51"/><rect x="230" y="626" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1275"/></g><g id="TILE_17"><rect x="540" y="480" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.6699999999999999"/><rect x="560" y="626" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.16749999999999998"/></g><g id="TILE_18"><rect x="870" y="480" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.43"/><rect x="890" y="626" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1075"/></g><g id="TILE_19"><rect x="1200" y="480" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.59"/><rect x="1220" y="626" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1475"/></g><g id="TILE_20"><rect x="1530" y="480" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.35"/><rect x="1550" y="626" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.0875"/></g><g id="TILE_21"><rect x="1860" y="480" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.51"/><rect x="1880" y="626" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1275"/></g><g id="TILE_22"><rect x="0" y="700" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.6699999999999999"/><rect x="20" y="846" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.16749999999999998"/></g><g id="TILE_23"><rect x="330" y="700" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.43"/><rect x="350" y="846" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1075"/></g><g id="TILE_24"><rect x="660" y="700" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.59"/><rect x="680" y="846" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1475"/></g><g id="TILE_25"><rect x="990" y="700" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.35"/><rect x="1010" y="846" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.0875"/></g><g id="TILE_26"><rect x="1320" y="700" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.51"/><rect x="1340" y="846" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1275"/></g><g id="TILE_27"><rect x="1650" y="700" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.6699999999999999"/><rect x="1670" y="846" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.16749999999999998"/></g><g id="TILE_28"><rect x="1980" y="700" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.43"/><rect x="2000" y="846" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1075"/></g><g id="TILE_29"><rect x="-120" y="920" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.59"/><rect x="-100" y="1066" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1475"/></g><g id="TILE_30"><rect x="210" y="920" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.35"/><rect x="230" y="1066" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.0875"/></g><g id="TILE_31"><rect x="540" y="920" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.51"/><rect x="560" y="1066" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1275"/></g><g id="TILE_32"><rect x="870" y="920" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.6699999999999999"/><rect x="890" y="1066" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.16749999999999998"/></g><g id="TILE_33"><rect x="1200" y="920" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.43"/><rect x="1220" y="1066" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1075"/></g><g id="TILE_34"><rect x="1530" y="920" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.59"/><rect x="1550" y="1066" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.1475"/></g><g id="TILE_35"><rect x="1860" y="920" width="300" height="190" rx="22" fill="url(#gScreen)" stroke="url(#gGlassStroke)" stroke-width="1.2" opacity="0.35"/><rect x="1880" y="1066" width="135.0" height="14" rx="7" fill="#f1f1f1" opacity="0.0875"/></g></g>
+</g>
+<g id="L04_SCRIM">
+<defs><radialGradient id="gScrim" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#000024" stop-opacity="0.92"/><stop offset="0.45" stop-color="#000024" stop-opacity="0.8"/><stop offset="0.75" stop-color="#000024" stop-opacity="0.35"/><stop offset="1" stop-color="#000024" stop-opacity="0"/></radialGradient></defs><ellipse cx="960" cy="545" rx="980" ry="470" fill="url(#gScrim)"/>
+</g>
+<g id="L05_COUNTER">
+<text id="TXT__200" x="960" y="590" font-family="Gabarito" font-size="260" font-weight="700" fill="url(#gTextFade)" text-anchor="middle" letter-spacing="-8">+200</text>
+</g>
+<g id="L10_HEADLINE">
+<text id="TXT_مشروع_اتباع_عن_طريق_VOOM" x="960" y="740" font-family="IBM Plex Sans Arabic" font-size="72" font-weight="600" fill="#f1f1f1" text-anchor="middle" direction="rtl">مشروع اتباع عن طريق <tspan fill="#00b3ff">VOOM</tspan></text>
+</g>
+
+</svg>

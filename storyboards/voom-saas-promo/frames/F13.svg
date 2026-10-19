@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
+<title>F13 - بيانات دقيقة ومحدّثة لحظة بلحظة</title>
+<defs>
+  <linearGradient id="gSignature" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#000024"/><stop offset="0.55" stop-color="#0012d6"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <radialGradient id="gGlowBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.9"/><stop offset="0.55" stop-color="#0012d6" stop-opacity="0.25"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.75"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftLight" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.35"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gGlowSoftBlue" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.22"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gVignette" cx="0.5" cy="0.5" r="0.75">
+    <stop offset="0.55" stop-color="#000024" stop-opacity="0"/><stop offset="1" stop-color="#000024" stop-opacity="0.85"/>
+  </radialGradient>
+  <radialGradient id="gTileGlow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="gShadow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#0012d6" stop-opacity="0.16"/><stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="gTile" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff"/><stop offset="1" stop-color="#0012d6"/>
+  </linearGradient>
+  <linearGradient id="gGlassFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.10"/><stop offset="1" stop-color="#f1f1f1" stop-opacity="0.03"/>
+  </linearGradient>
+  <linearGradient id="gGlassSheen" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1" stop-opacity="0.07"/><stop offset="0.45" stop-color="#f1f1f1" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gGlassStroke" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#f1f1f1" stop-opacity="0.18"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.55"/>
+  </linearGradient>
+  <linearGradient id="gGlassStrokeLight" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.7"/><stop offset="0.5" stop-color="#0012d6" stop-opacity="0.08"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.45"/>
+  </linearGradient>
+  <linearGradient id="gSheenLight" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.4" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gTextFade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f1f1f1"/><stop offset="1" stop-color="#00b3ff"/>
+  </linearGradient>
+  <linearGradient id="gStreak" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="1"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0.45"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="gScreen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03063a"/><stop offset="0.6" stop-color="#0012d6" stop-opacity="0.55"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0.5"/>
+  </linearGradient>
+  <linearGradient id="gHorizon" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00b3ff" stop-opacity="0"/><stop offset="0.5" stop-color="#00b3ff" stop-opacity="0.9"/><stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<g id="L01_BG">
+<g id="BG_FILL"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="#000024"/></g><ellipse id="GLOW_MAIN" cx="1000" cy="620" rx="980" ry="620" fill="url(#gGlowBlue)"/><ellipse id="GLOW_ACCENT" cx="1500" cy="180" rx="520" ry="380" fill="url(#gGlowSoftLight)"/><g id="VIGNETTE"><rect x="0" y="0" width="1920" height="1080" rx="0" fill="url(#gVignette)"/></g>
+</g>
+<g id="L05_STAT_CARDS">
+<g id="GLASS"><rect x="1290" y="360" width="360" height="220" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="1291.5" y="361.5" width="357" height="217" rx="26.5" fill="url(#gGlassSheen)"/></g><circle cx="1610" cy="404" r="9" fill="#2fb344"/><text id="TXT_متاح" x="1590" y="414" font-family="IBM Plex Sans Arabic" font-size="30" font-weight="500" fill="#f1f1f1" text-anchor="start" direction="rtl">متاح</text><text id="TXT_342" x="1470" y="532" font-family="Gabarito" font-size="96" font-weight="600" fill="#f1f1f1" text-anchor="middle">342</text><g id="GLASS_2"><rect x="890" y="360" width="360" height="220" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="891.5" y="361.5" width="357" height="217" rx="26.5" fill="url(#gGlassSheen)"/></g><circle cx="1210" cy="404" r="9" fill="#e8c200"/><text id="TXT_محجوز" x="1190" y="414" font-family="IBM Plex Sans Arabic" font-size="30" font-weight="500" fill="#f1f1f1" text-anchor="start" direction="rtl">محجوز</text><text id="TXT_128" x="1070" y="532" font-family="Gabarito" font-size="96" font-weight="600" fill="#f1f1f1" text-anchor="middle">128</text><g id="GLASS_3"><rect x="490" y="360" width="360" height="220" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="491.5" y="361.5" width="357" height="217" rx="26.5" fill="url(#gGlassSheen)"/></g><circle cx="810" cy="404" r="9" fill="#e03131"/><text id="TXT_مباع" x="790" y="414" font-family="IBM Plex Sans Arabic" font-size="30" font-weight="500" fill="#f1f1f1" text-anchor="start" direction="rtl">مباع</text><text id="TXT_816" x="670" y="532" font-family="Gabarito" font-size="96" font-weight="600" fill="#f1f1f1" text-anchor="middle">816</text>
+</g>
+<g id="L06_CHART">
+<g id="GLASS_4"><rect x="490" y="620" width="1160" height="300" rx="28" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="491.5" y="621.5" width="1157" height="297" rx="26.5" fill="url(#gGlassSheen)"/></g><path id="CHART_AREA" d="M530 820 L610 800 L690 810 L770 770 L850 780 L930 740 L1010 750 L1090 710 L1170 720 L1250 685 L1330 690 L1410 660 L1490 650 L1570 640 L1570 900 L530 900Z" fill="url(#gArea)"/><path id="CHART_LINE" d="M530 820 L610 800 L690 810 L770 770 L850 780 L930 740 L1010 750 L1090 710 L1170 720 L1250 685 L1330 690 L1410 660 L1490 650 L1570 640" fill="none" stroke="#00b3ff" stroke-width="4" stroke-linejoin="round"/><circle id="CHART_DOT" cx="1570" cy="640" r="10" fill="#f1f1f1" stroke="#00b3ff" stroke-width="4"/>
+</g>
+<g id="L07_LIVE_BADGE">
+<g id="GLASS_5"><rect x="1360" y="650" width="260" height="64" rx="32" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="1361.5" y="651.5" width="257" height="61" rx="30.5" fill="url(#gGlassSheen)"/></g><circle cx="1590" cy="682" r="9" fill="#00b3ff"/><text id="TXT_تحديث_الآن" x="1570" y="694" font-family="IBM Plex Sans Arabic" font-size="26" font-weight="500" fill="#f1f1f1" text-anchor="start" direction="rtl">تحديث الآن</text>
+</g>
+<g id="L08_TEAM_PILL">
+<g id="PILL_فريق_المبيعات"><g id="GLASS_6"><rect x="180.0" y="442.7" width="300" height="54.6" rx="27.3" fill="url(#gGlassFill)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><rect x="181.5" y="444.2" width="297" height="51.6" rx="25.8" fill="url(#gGlassSheen)"/></g><g id="ICON_TILE_users"><circle cx="452.7" cy="470.0" r="36.67" fill="url(#gTileGlow)"/><rect x="433.4" y="450.7" width="38.6" height="38.6" rx="10.036000000000001" fill="url(#gTile)" stroke="url(#gGlassStroke)" stroke-width="1.5"/><path id="ICON_users" d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1M16 3.5a4 4 0 0 1 0 7.5M19 14a6 6 0 0 1 3 5.2V21" transform="translate(442.664 459.964) scale(0.8363333333333335)" fill="none" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/></g><text id="TXT_فريق_المبيعات" x="310.7" y="479.36" font-family="IBM Plex Sans Arabic" font-size="26" font-weight="500" fill="#f1f1f1" text-anchor="middle" direction="rtl">فريق المبيعات</text></g>
+</g>
+<g id="L10_HEADLINE">
+<text id="TXT_بيانات_دقيقة_ومحد_ثة_لحظة_بلحظة" x="960" y="220" font-family="IBM Plex Sans Arabic" font-size="88" font-weight="600" fill="#f1f1f1" text-anchor="middle" direction="rtl">بيانات دقيقة ومحدّثة <tspan fill="#00b3ff">لحظة بلحظة</tspan></text>
+</g>
+
+</svg>
