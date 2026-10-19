@@ -54,9 +54,13 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 #f1 .hk-win i{position:absolute;top:30px;width:14px;height:14px;border-radius:50%;border:2px solid rgba(241,241,241,.75)}
 #f1 .hk-win i:nth-child(1){left:34px} #f1 .hk-win i:nth-child(2){left:60px} #f1 .hk-win i:nth-child(3){left:86px}
 #f1 .hk-ast{position:absolute;top:22px;right:30px;width:34px;height:34px}
-#f1 .hk-q{right:116px;top:1160px;text-align:right;font-size:80px;font-weight:500;line-height:1.24;color:var(--off)}
-#f1 .hk-q .acc{color:var(--light)}
-#f1 .hk-by{right:116px;top:1478px;font:500 28px var(--lat);letter-spacing:-.01em;color:var(--off);opacity:.85;direction:ltr}
+#f1 .hk-q{right:116px;bottom:458px;width:848px;text-align:right;color:var(--off);display:flex;flex-direction:column;align-items:flex-start}
+#f1 .hk-h1{font-size:124px;font-weight:700;line-height:1.08;letter-spacing:0}
+#f1 .hk-h2{font-size:76px;font-weight:500;line-height:1.2;margin-top:6px}
+#f1 .hk-rule{width:120px;height:4px;border-radius:4px;background:var(--light);box-shadow:0 0 18px rgba(0,179,255,.7);margin:34px 0 30px}
+#f1 .hk-sub{font-size:44px;font-weight:500;line-height:1.45;color:var(--mute)}
+#f1 .hk-sub .vm{font-family:var(--lat);font-weight:700;letter-spacing:.01em;color:var(--off);unicode-bidi:isolate;direction:ltr}
+#f1 .hk-by{right:116px;top:1508px;font:500 28px var(--lat);letter-spacing:-.01em;color:var(--off);opacity:.85;direction:ltr}
 /* ---------- F2 cover ---------- */
 #f2 .logo{left:50%;transform:translateX(-50%);width:300px;--lw:300px}
 #f2 .head{top:430px;left:0;right:0;text-align:center;font-size:136px}
@@ -162,7 +166,7 @@ body.guides .safe{outline-color:rgba(255,80,80,.6)}
 <section class="frame" id="f1">
   <img class="abs hk-plate" src="assets/hook_plate.jpg" alt="">
   <div class="abs hk-win"><i></i><i></i><i></i><svg class="hk-ast" viewBox="0 0 24 24" fill="none" stroke="#00b3ff" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg></div>
-  <div class="abs hk-q ar"><span class="ln">هل يمكن أن تُدار</span><span class="ln">شركتك العقارية كلها</span><span class="ln acc">من مكان واحد؟</span></div>
+  <div class="abs hk-q ar"><div class="hk-h1"><span class="grad">الريـــــاض ..</span></div><div class="hk-h2">وجهتنا القادمة.</div><div class="hk-rule"></div><div class="hk-sub">كيف ستُحدث <span class="vm">VOOM</span> نقلة<br>في عالم التكنولوجيا العقارية؟</div></div>
   <div class="abs hk-by">Powered by VOOM.</div>
   <div class="safe"></div>
 </section>
