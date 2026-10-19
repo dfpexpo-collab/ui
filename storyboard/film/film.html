@@ -144,14 +144,14 @@ const TXT = {
   's2:t_h2': [['مدعومــة بالذكــاء الاصطنــاعي'], 'ar', 500, '', 'center'],
   's2:t_url': [['voom.ltd'], 'lat', 500, '', 'center'],
   's3:t_eyebrow': [['Your project. one interactive Experience'], 'lat', 600, 'silver', 'center'],
-  's3:t_h1': [['مستقبــل بيع العقـارات'], 'ar', 700, 'grad', 'center'],
-  's3:t_h2': [['يبـدأ من هنا'], 'ar', 500, '', 'center'],
+  's3:t_h1': [['مستقبـــل بيـــع العقـــارات'], 'ar', 700, 'grad', 'center', null, 1.5],
+  's3:t_h2': [['يبــدأ مــن هنا'], 'ar', 700, '', 'center'],
   's3:t_l1': [['Real time', 'availability'], 'lat', 600, 'grad', 'left', [1, .72]],
   's3:t_l2': [['From', 'master plan', 'to unit'], 'lat', 600, 'grad', 'left', [1, 1, .72]],
   's3:t_l3': [['Built for', 'smarter sales'], 'lat', 600, 'grad', 'left', [1, .72]],
-  's3:t_r1': [['مشروعــك', 'بطريقة مختلفة'], 'ar', 700, 'grad', 'right', [1, .62]],
+  's3:t_r1': [['مشروعــــك', 'بطريقة مختلفة'], 'ar', 700, 'grad', 'right', [1, .62]],
   's3:t_r2': [['كل التفاصيل', 'في تجربة واحدة'], 'ar', 700, 'grad', 'right', [1, .78]],
-  's3:t_r3': [['تقنيــة', 'تخدم مبيعاتك'], 'ar', 700, 'grad', 'right', [1, .62]],
+  's3:t_r3': [['تقنيــــة', 'تخدم مبيعاتك'], 'ar', 700, 'grad', 'right', [1, .62]],
   's6:t_title': [['AI Voice Sales Agent'], 'lat', 600, 'silver', 'center'],
   's6:t_sub': [['Smart conversations | Better experiences'], 'lat', 500, 'silver', 'center'],
   's6:t_ar1': [['يتفاعل، يتحدث، يتابع، يحلل محادثات'], 'ar', 600, 'grad', 'center'],
@@ -172,7 +172,7 @@ const FITS = [];
 function TX(cam, M, id) {
   const key = Object.keys(MAN).find(k => MAN[k] === M) + ':' + id, d = TXT[key], L = findL(M, id);
   if (!d) return spriteWords(cam, L);
-  const [lines, fam, wt, cls, align, rel] = d;
+  const [lines, fam, wt, cls, align, rel, cap] = d;
   const box = el('div', 'abs', cam, { left: L.x + 'px', top: L.y + 'px', width: L.w + 'px', display: 'flex', flexDirection: 'column',
     alignItems: align === 'center' ? 'center' : (align === 'right' ? 'flex-end' : 'flex-start') });
   const words = [], rows = [];
@@ -183,14 +183,14 @@ function TX(cam, M, id) {
       if (cls === 'silver') { wi.style.background = 'linear-gradient(180deg,#ffffff 15%,#aeb9cf 95%)'; wi.style.webkitBackgroundClip = 'text'; wi.style.backgroundClip = 'text'; wi.style.color = 'transparent'; }
       if (j < a.length - 1) r.appendChild(document.createTextNode(' ')); words.push(w); });
     rows.push([r, (rel || [])[i] ?? 1]); });
-  FITS.push({ box, rows, L, lines: lines.length }); return words;
+  FITS.push({ box, rows, L, lines: lines.length, cap: cap || 1.05 }); return words;
 }
 function fitAll() {
   for (const f of FITS) {
     const base = f.L.h / (f.lines * 1.3);
     f.rows.forEach(([r, k]) => { r.style.fontSize = (base * k) + 'px'; });
     const wmax = Math.max(...f.rows.map(([r]) => r.getBoundingClientRect().width / (r.closest('.scene').getBoundingClientRect().width / 1080 || 1)));
-    const sc = Math.min(1.05, f.L.w / Math.max(wmax, 1));
+    const sc = Math.min(f.cap, f.L.w / Math.max(wmax, 1));
     f.rows.forEach(([r, k]) => { r.style.fontSize = (base * k * sc) + 'px'; });
     const hh = f.box.offsetHeight; f.box.style.top = (f.L.y + (f.L.h - hh) / 2) + 'px';
   }
@@ -327,7 +327,10 @@ scene(beat(7), (cam, t0, s, bgl) => {
   cameraMove(cam, bgl, t0, beat(7), { from: { y: 50, scale: 1.05 }, to: { y: -20, scale: 1.0 }, origin: '50% 60%' });
   const bands = [1, 2, 3].map(i => { const d = sprite(cam, findL(M, 'band' + i)); d.style.transformOrigin = '36% 50%'; return d; });
   const fg = sprite(cam, findL(M, 'fg')); bottomFade(fg, M.pageBottom, parseFloat(fg.style.top), 200);
-  tl.fromTo(fg, { y: 230, opacity: 0, filter: 'blur(16px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.25, ease: eLaunch }, t0 - .05); drift(fg, t0 + 1.2, beat(7) - 1, { y: -14 }); sfx('rise', t0);
+  // storyboard frame 3: its blue gradient + light streaks behind, and its full-width landscape rising with the tower
+  const sbp = el('img', 'abs', bgl, { left: 0, top: 0, width: '1080px', height: '1920px' }); sbp.src = 'assets/s3/plate_sb.jpg';
+  const gnd = el('img', 'abs', cam, { left: 0, top: '1300px', width: '1080px', height: '720px' }); gnd.src = 'assets/s3/ground_sb.png';
+  [fg, gnd].forEach(e => { tl.fromTo(e, { y: 230, opacity: 0, filter: 'blur(16px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.25, ease: eLaunch }, t0 - .05); drift(e, t0 + 1.2, beat(7) - 1, { y: -14 }); }); sfx('rise', t0);
   maskRise(TX(cam, M, 't_eyebrow'), t0 + beat(.75));
   echoIn(TX(cam, M, 't_h1'), t0 + beat(1.25)); echoIn(TX(cam, M, 't_h2'), t0 + beat(2));
   bands.forEach((b, i) => { const t = t0 + beat(2.5) + i * beat(.25); tl.fromTo(b, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .7, ease: eLaunch }, t); sfx('swish', t, i); });
