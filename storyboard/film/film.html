@@ -266,13 +266,26 @@ scene(beat(6), (cam, t0, s, bgl) => {
   const dots = [34, 60, 86].map(x => el('i', 'abs', win, { left: x + 'px', top: '30px', width: '14px', height: '14px', borderRadius: '50%', border: '2px solid rgba(241,241,241,.75)' }));
   const ast = el('div', 'abs', win, { right: '30px', top: '22px', width: '34px', height: '34px' });
   ast.innerHTML = '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#00b3ff" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg>';
-  const q = el('div', 'abs ar', cam, { right: '116px', top: '1160px', textAlign: 'right', fontSize: '80px', fontWeight: 500, lineHeight: 1.24, color: '#f1f1f1' });
-  const lines = ['هل يمكن أن تُدار', 'شركتك العقارية كلها', 'من مكان واحد؟'].map((txt, i) => { const d = el('div', '', q); const r = liveLine(d, txt, 'ar', { position: 'relative' }); if (i === 2) r.line.style.color = '#00b3ff'; return r; });
-  const by = el('div', 'abs lat', cam, { right: '116px', top: '1478px', font: '500 28px Gabarito', color: '#f1f1f1', opacity: .85 }); by.textContent = 'Powered by VOOM.';
+  // storyboard frame 1: الريـــــاض.. / وجهتنا القادمة. / rule / question (VOOM in white Gabarito) / byline
+  const q = el('div', 'abs ar', cam, { right: '116px', bottom: '458px', width: '848px', textAlign: 'right', color: '#f1f1f1', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' });
+  const h1 = liveLine(el('div', '', q, { fontSize: '124px', fontWeight: 700, lineHeight: 1.08 }), 'الريـــــاض', 'ar', { position: 'relative', display: 'inline-block' });
+  h1.words[0].querySelector('.wi').classList.add('grad');
+  const rDots = el('span', 'tw', h1.line, { color: '#00b3ff', marginInlineStart: '.08em', letterSpacing: '-.02em' }); const dotsI = el('span', 'wi', rDots); dotsI.textContent = '..';
+  const h2 = liveLine(el('div', '', q, { fontSize: '80px', fontWeight: 500, lineHeight: 1.2, marginTop: '-4px' }), 'وجهتنا القادمة.', 'ar', { position: 'relative' });
+  const rule = el('div', '', q, { width: '120px', height: '4px', borderRadius: '4px', background: '#00b3ff', boxShadow: '0 0 18px rgba(0,179,255,.7)', margin: '44px 0 36px', transformOrigin: '100% 50%' });
+  const sub = el('div', '', q, { fontSize: '44px', fontWeight: 500, lineHeight: 1.45, color: '#b9c6f2' });
+  const s1 = liveLine(sub, 'كيف ستُحدث VOOM نقلة في عالم', 'ar', { position: 'relative' }), s2 = liveLine(sub, 'التكنولوجيا العقارية؟', 'ar', { position: 'relative' });
+  const vm = s1.words[2].querySelector('.wi'); Object.assign(vm.style, { fontFamily: 'Gabarito', fontWeight: 600, letterSpacing: '.01em', color: '#f1f1f1', direction: 'ltr', unicodeBidi: 'isolate' });
+  const byBox = el('div', 'abs lat', cam, { right: '116px', top: '1508px', font: '500 28px Gabarito', color: '#f1f1f1', opacity: .85 }); const by = el('span', 'tw', byBox); el('span', 'wi', by).textContent = 'Powered by VOOM.';
   tl.fromTo(win, { opacity: 0, clipPath: 'inset(0 0 100% 0 round 30px)' }, { opacity: 1, clipPath: 'inset(0 0 0% 0 round 30px)', duration: .9, ease: eLaunch }, t0 + .1);
   dots.forEach((d, i) => popIn(d, t0 + .45 + i * .06, .2, .4)); popIn(ast, t0 + .55, .2, .5); tl.to(ast, { rotation: 120, duration: beat(6), ease: 'sine.inOut' }, t0 + .55);
-  echoIn(lines[0].words, t0 + beat(1)); echoIn(lines[1].words, t0 + beat(1.75)); echoIn(lines[2].words, t0 + beat(2.5)); kashida(lines[2].words[2], 'واحد؟', 3, t0 + beat(3.25), { to: 3 });
-  maskRise([by], t0 + beat(3.5));
+  // hero: Riyadh rises, its kashida stretches and pushes the blue dots out; then the rest settles in order
+  maskRise(h1.words, t0 + beat(.75), { dur: .7 }); kashida(h1.words[0], 'الرياض', 4, t0 + beat(1.25), { from: 0, to: 5, dur: .75 });
+  maskRise([rDots], t0 + beat(1.1)); tl.fromTo(dotsI, { textShadow: '0 0 0 rgba(0,179,255,0)' }, { textShadow: '0 0 22px rgba(0,179,255,.9)', duration: .25, yoyo: true, repeat: 1, ease: 'sine.inOut' }, t0 + beat(2));
+  maskRise(h2.words, t0 + beat(1.75));
+  tl.fromTo(rule, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .5, ease: eLaunch }, t0 + beat(2.25));
+  maskRise(s1.words, t0 + beat(2.5)); maskRise(s2.words, t0 + beat(2.5) + .08);
+  maskRise([by], t0 + beat(3.25));
   sfx('whoosh_soft', t0 + .1); sfx('shimmer', t0 + beat(2.5));
 });
 function drawHook(t) {
@@ -560,8 +573,9 @@ scene(+(40 - T).toFixed(4), (cam, t0, s, bgl) => {
 const sparkC = el('canvas', 'abs', stage, { left: 0, top: 0, zIndex: 55, pointerEvents: 'none' }); sparkC.width = W; sparkC.height = H; const sx = sparkC.getContext('2d');
 const SP = []; const K = (t, x, y, s = 1, a = 1, snd = 0) => { SP.push({ t: +t, x, y, s, a }); if (snd) sfx('spark', Math.max(0, t - .1), SP.length); };
 { const t1 = 0, t2 = SC[1].t0, t3 = SC[2].t0, t4 = SC[3].t0, t5 = SC[4].t0, t6 = SC[5].t0, t7 = SC[6].t0, t8 = SC[7].t0, t9 = SC[8].t0, t10 = SC[9].t0;
-  // S1: lights the asterisk, then each line of the question as it lands, underlines the last, dives into the fingertips
-  K(.05, 1120, 170, .6, 0); K(.4, 982, 337, 1, 1, 1); K(beat(1) - .02, 966, 1212, 1, 1, 1); K(beat(1.75) - .02, 966, 1311, 1, 1, 1); K(beat(2.5) - .02, 966, 1410, 1, 1, 1);
+  // S1: lights the asterisk, lands on Riyadh, rides its kashida out to the blue dots, then the second line, the rule, the question; dives into the fingertips
+  K(.05, 1120, 170, .6, 0); K(.4, 982, 337, 1, 1, 1); K(beat(.75) - .02, 966, 1100, 1, 1, 1); K(beat(1.25), 860, 1112, 1, 1); K(beat(1.25) + .7, 560, 1112, 1.2, 1, 1);
+  K(beat(1.75) - .02, 966, 1222, 1, 1, 1); K(beat(2.25), 964, 1300, 1, 1, 1); K(beat(2.25) + .3, 846, 1300, 1, 1); K(beat(2.5) + .05, 966, 1392, 1, 1, 1);
   K(beat(3.3), 560, 1446, 1, 1); K(beat(4.3), 790, 905, 1.1, 1, 1); K(beat(5.4), 800, 900, 1.6, 1); K(t2 - .02, 800, 900, 3.2, 1);
   // S2: out of the AI core, round the wheel as each segment lands, leads the logo streak, back to the core, drops with the whip
   const cx = MAN.s2.wheel.cx, cy = MAN.s2.wheel.cy; K(t2 + .05, cx, cy, 3, 1); K(t2 + .3, cx, cy - 140, 1.2, 1);
