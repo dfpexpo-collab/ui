@@ -24,7 +24,7 @@
 
 | Skill | بيعمل إيه | ملفات |
 |---|---|---|
-| `art-director` | Creative / art director that leads every creative project and sits above every design, motion and content skill. | 805 |
+| `art-director` | Creative / art director that leads every creative project and sits above every design, motion and content skill. | 342 |
 | `motion-art-direction` | This skill should be used when the user asks to "direct a motion graphics video", "do creative/art direction for a video", "define a motion language", "set the tone and pacing", "make the animation feel consistent", "de… | 3 |
 | `motion-prompt-playbook` | Proven briefs and production rules for code-rendered motion graphics (SaaS / product launch films, UI motion loops, kinetic type, logo reveals), distilled from the most-shared Opus 5.5 motion videos. | 3 |
 | `prompt-motion-templates` | Fill-in motion-video brief templates (fields + defaults) for code-rendered videos - showreel, product launch film, one-shape UI morph, app walkthrough, beat-synced launch, slow polished teaser, logo reveal, kinetic type… | 2 |
@@ -108,3 +108,41 @@
 | `od-emil-design-eng` | This skill encodes Emil Kowalski's philosophy on UI polish, component design, animation decisions, and the invisible details that make software feel great. | 2 |
 | `od-impeccable-design-polish` | Follow-up design polish skill inspired by Impeccable. | 1 |
 | `od-mockup-device-3d` | Static iPhone and MacBook 3D-style showcase with real HTML embedded on screens, glass-lens refraction, and 360-degree turntable composition. | 3 |
+
+## جوه مكتبة الـ Art Director
+
+Skills مش متثبتة لوحدها في الريبو، محفوظة في `.claude/skills/art-director/library/` والـ Art Director بيقراها من هناك.
+
+| Skill | بيعمل إيه | ملفات |
+|---|---|---|
+| `accessibility-review` | Run a WCAG 2.1 AA accessibility audit on a design or page. | 1 |
+| `adobe-batch-edit-photos` | Apply consistent photo adjustments across a set of images so they look like they were edited together. | 1 |
+| `adobe-create-social-variations` | Resize, crop, or export any image or video into platform-ready social media assets using Adobe Creative Cloud tools. | 1 |
+| `adobe-design-from-template` | Create any visual design using Adobe Express templates — flyers, posters, social media posts (Instagram, Facebook, LinkedIn), business cards, invitations, greeting cards, resumes, cover letters, brochures, newsletters,… | 1 |
+| `adobe-design-to-pdf` | Find an Adobe Express template, customize its text or background color, and turn it into a print-ready PDF, packet, or shareable link. | 1 |
+| `adobe-edit-quick-cut` | Create a punchy highlight cut from a video with Adobe Quick Cut — for requests like "make a sizzle reel", "make a highlight reel", "quick cut this", "cut the best parts", "shorten this video", "make a highlight clip", o… | 1 |
+| `adobe-fonts` | Finds, searches, and previews real, licensable Adobe Fonts typefaces: contextual recommendations, direct lookup by name or facets (foundry, designer, style), metadata (language support, weight, foundry), style variants… | 1 |
+| `adobe-resize-photos-and-videos` | Resize photos and videos to exact pixel dimensions or aspect ratios using Adobe tools. | 2 |
+| `adobe-retouch-portraits` | Bulk-retouch a folder of portrait photos using Adobe tools — designed for wedding photographers and event photographers who need fast, walk-away batch processing. | 1 |
+| `algorithmic-art` | Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. | 4 |
+| `art-direction` | حزمة خارجية، فهرسها في `library/INDEX.md` | 2 |
+| `brand-guidelines` | Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. | 2 |
+| `brand-review` | Review content against your brand voice, style guide, and messaging pillars, flagging deviations by severity with specific before/after fixes. | 1 |
+| `campaign-plan` | Generate a full campaign brief with objectives, audience, messaging, channel strategy, content calendar, and success metrics. | 1 |
+| `canvas-design` | Create beautiful visual art in .png and .pdf documents using design philosophy. | 83 |
+| `competitive-brief` | Research competitors and generate a positioning and messaging comparison with content gaps, opportunities, and threats. | 1 |
+| `content-creation` | Draft marketing content across channels — blog posts, social media, email newsletters, landing pages, press releases, and case studies. | 1 |
+| `creative-brief-to-key-visuals` | Build an ad campaign creative brief and take it through idea generation, mood boarding, sketching and AI key-visual execution, following the Barn's workflow. | 1 |
+| `design-critique` | Get structured design feedback on usability, hierarchy, and consistency. | 1 |
+| `design-handoff` | Generate developer handoff specs from a design. | 1 |
+| `design-system` | Audit, document, or extend your design system. | 1 |
+| `designer-skills` | حزمة خارجية، فهرسها في `library/INDEX.md` | 205 |
+| `doc-coauthoring` | Guide users through a structured workflow for co-authoring documentation. | 1 |
+| `draft-content` | Draft blog posts, social media, email newsletters, landing pages, press releases, and case studies with channel-specific formatting and SEO recommendations. | 1 |
+| `email-sequence` | Design and draft multi-email sequences with full copy, timing, branching logic, exit conditions, and performance benchmarks. | 1 |
+| `performance-report` | Build a marketing performance report with key metrics, trend analysis, wins and misses, and prioritized optimization recommendations. | 1 |
+| `research-synthesis` | Synthesize user research into themes, insights, and recommendations. | 1 |
+| `seo-audit` | Run a comprehensive SEO audit — keyword research, on-page analysis, content gaps, technical checks, and competitor comparison. | 1 |
+| `theme-factory` | Toolkit for styling artifacts with a theme. | 13 |
+| `user-research` | Plan, conduct, and synthesize user research. | 1 |
+| `ux-copy` | Write or review UX copy — microcopy, error messages, empty states, CTAs. | 1 |
