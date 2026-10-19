@@ -125,7 +125,7 @@ Skills مش متثبتة لوحدها في الريبو، محفوظة في `.cl
 | `adobe-resize-photos-and-videos` | Resize photos and videos to exact pixel dimensions or aspect ratios using Adobe tools. | 2 |
 | `adobe-retouch-portraits` | Bulk-retouch a folder of portrait photos using Adobe tools — designed for wedding photographers and event photographers who need fast, walk-away batch processing. | 1 |
 | `algorithmic-art` | Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. | 4 |
-| `art-direction` |  | 2 |
+| `art-direction` | حزمة خارجية، فهرسها في `library/INDEX.md` | 2 |
 | `brand-guidelines` | Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. | 2 |
 | `brand-review` | Review content against your brand voice, style guide, and messaging pillars, flagging deviations by severity with specific before/after fixes. | 1 |
 | `campaign-plan` | Generate a full campaign brief with objectives, audience, messaging, channel strategy, content calendar, and success metrics. | 1 |

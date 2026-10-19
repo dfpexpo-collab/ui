@@ -139,7 +139,8 @@ def main():
         ]
         for d in extras:
             entry = d / "GUIDE.md"
-            desc = summary(frontmatter(entry).get("description")) if entry.is_file() else "حزمة خارجية، فهرسها في `library/INDEX.md`"
+            desc = summary(frontmatter(entry).get("description")) if entry.is_file() else ""
+            desc = desc or "حزمة خارجية، فهرسها في `library/INDEX.md`"
             files = sum(1 for f in d.rglob("*") if f.is_file())
             lines.append(f"| `{d.name}` | {desc} | {files} |")
         lines.append("")
