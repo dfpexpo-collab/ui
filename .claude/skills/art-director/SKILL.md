@@ -164,4 +164,5 @@ Never repeat these; add new ones here as they come.
 - Cut-outs kept splashes and skyline pieces → key only background blobs connected to the outside; never key enclosed colour (windows, suit lines).
 - Plate rectangles and empty bottoms → match the storyboard frame exactly, including background and ground; check the frame edges.
 - Synthesized SFX sounded cheap and dense → use a real library, ~1 sound per meaningful event, ≈30-45 cues per 40 s.
+- New copy on an existing scene: re-check the imagery against the storyboard frame (position and size), so the copy sits where the storyboard put it and nothing covers it. Keep the guide light calm: few, slow landings, never hopping over every line.
 - Don't change what the user didn't ask for; when a fix needs a judgement call, show the result and let them decide.

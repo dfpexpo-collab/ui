@@ -291,20 +291,21 @@ scene(beat(6), (cam, t0, s, bgl) => {
 function drawHook(t) {
   const c = hookCtx, s = SC[0]; if (!c || !hookImgs.hand_bw.complete) return;
   const lt = Math.max(0, Math.min(1, (t - s.t0) / (s.dur + .3))); const e = eGlide(lt);
-  const dx = -40 + 80 * e, dy = 16 - 30 * e, sc = 1 + .03 * e;
+  // slow drift that comes to rest exactly on the storyboard pose (hand 1080 px wide at 0, -150), clear of the copy
+  const dx = -40 + 40 * e, dy = 16 - 16 * e, sc = (1080 / hookImgs.hand_bw.width) * (.97 + .03 * e);
   c.globalAlpha = 1; c.fillStyle = '#000024'; c.fillRect(0, 0, W, H);
-  const iw = hookImgs.hand_bw.width * sc, ih = hookImgs.hand_bw.height * sc, ox = -50 + dx, oy = -150 + dy, a = Math.min(1, (t - s.t0) / .6);
+  const iw = hookImgs.hand_bw.width * sc, ih = hookImgs.hand_bw.height * sc, ox = dx, oy = -150 + dy, a = Math.min(1, (t - s.t0) / .6);
   c.globalAlpha = a; c.drawImage(hookImgs.hand_bw, ox, oy, iw, ih);
   const x0 = 470, rib = 52, k = .62;
   for (let x = x0; x < W; x += rib) { c.globalAlpha = a * Math.min(1, (x + rib / 2 - x0) / 120);
     c.drawImage(hookImgs.hand_glow, (x - 30 - ox) / sc, 0, rib * k / sc, hookImgs.hand_glow.height, x, oy, rib, ih); }
   const br = .75 + .25 * Math.sin((t - s.t0) * 2 * Math.PI / (2 * B));
   c.globalCompositeOperation = 'screen'; c.globalAlpha = a;
-  const gr = c.createRadialGradient(760 + dx * .5, 880 + dy, 0, 760 + dx * .5, 880 + dy, 330); gr.addColorStop(0, `rgba(0,179,255,${.34 * br})`); gr.addColorStop(1, 'rgba(0,179,255,0)');
-  c.fillStyle = gr; c.fillRect(400, 500, 680, 800); if (hookImgs.fx.complete) c.drawImage(hookImgs.fx, 0, 0);
+  const gr = c.createRadialGradient(760 + dx * .5, 830 + dy, 0, 760 + dx * .5, 830 + dy, 330); gr.addColorStop(0, `rgba(0,179,255,${.34 * br})`); gr.addColorStop(1, 'rgba(0,179,255,0)');
+  c.fillStyle = gr; c.fillRect(400, 450, 680, 800); if (hookImgs.fx.complete) c.drawImage(hookImgs.fx, 0, 0);
   c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1;
 }
-TRANS.push(['zoom', 1, { fx: 800, fy: 900 }]);      // into the glow of the fingertips → the AI core
+TRANS.push(['zoom', 1, { fx: 760, fy: 800 }]);      // into the glow of the fingertips → the AI core
 
 // ===== S2 cover (7 beats): logo streak, headline, wheel assembles, light runs round the wheel
 scene(beat(7), (cam, t0, s, bgl) => {
@@ -574,9 +575,8 @@ const sparkC = el('canvas', 'abs', stage, { left: 0, top: 0, zIndex: 55, pointer
 const SP = []; const K = (t, x, y, s = 1, a = 1, snd = 0) => { SP.push({ t: +t, x, y, s, a }); if (snd) sfx('spark', Math.max(0, t - .1), SP.length); };
 { const t1 = 0, t2 = SC[1].t0, t3 = SC[2].t0, t4 = SC[3].t0, t5 = SC[4].t0, t6 = SC[5].t0, t7 = SC[6].t0, t8 = SC[7].t0, t9 = SC[8].t0, t10 = SC[9].t0;
   // S1: lights the asterisk, lands on Riyadh, rides its kashida out to the blue dots, then the second line, the rule, the question; dives into the fingertips
-  K(.05, 1120, 170, .6, 0); K(.4, 982, 337, 1, 1, 1); K(beat(.75) - .02, 966, 1100, 1, 1, 1); K(beat(1.25), 860, 1112, 1, 1); K(beat(1.25) + .7, 560, 1112, 1.2, 1, 1);
-  K(beat(1.75) - .02, 966, 1222, 1, 1, 1); K(beat(2.25), 964, 1300, 1, 1, 1); K(beat(2.25) + .3, 846, 1300, 1, 1); K(beat(2.5) + .05, 966, 1392, 1, 1, 1);
-  K(beat(3.3), 560, 1446, 1, 1); K(beat(4.3), 790, 905, 1.1, 1, 1); K(beat(5.4), 800, 900, 1.6, 1); K(t2 - .02, 800, 900, 3.2, 1);
+  K(.05, 1120, 170, .6, 0); K(.5, 982, 337, 1, 1, 1); K(beat(.75) + .05, 966, 1100, 1, 1, 1); K(beat(1.25) + .8, 600, 1112, 1, 1, 1);
+  K(beat(4), 720, 830, 1, 1); K(beat(5.4), 760, 800, 1.5, 1); K(t2 - .02, 760, 800, 3.2, 1);
   // S2: out of the AI core, round the wheel as each segment lands, leads the logo streak, back to the core, drops with the whip
   const cx = MAN.s2.wheel.cx, cy = MAN.s2.wheel.cy; K(t2 + .05, cx, cy, 3, 1); K(t2 + .3, cx, cy - 140, 1.2, 1);
   for (let i = 0; i < 8; i++) { const a = (247.5 + 45 * i) * Math.PI / 180; K(t2 + beat(.5) + i * beat(.25), cx + 335 * Math.cos(a), cy + 335 * Math.sin(a), 1, 1, i % 2 === 0); }
