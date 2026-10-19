@@ -113,8 +113,11 @@ function fadeIn(e, t, dur = .6) { tl.fromTo(e, { opacity: 0 }, { opacity: 1, dur
 function bottomFade(e, pageBottom, topY, len = 240, topClear = 0) { const h = parseFloat(e.style.height); const cut = (pageBottom - topY) / h * 100, st = (pageBottom - len - topY) / h * 100;
   const head = topClear ? `transparent 0%,transparent ${topClear / h * 100}%,#000 ${(topClear + 70) / h * 100}%,` : '';
   e.style.webkitMaskImage = e.style.maskImage = `linear-gradient(180deg,${head}#000 ${st}%,transparent ${cut}%)`; }
+// counters keep the width of their final value, so the digits changing never pushes the words around them
+const LOCKS = [];
+function lockWidth(node, finalText, align = 'center', inner = node) { node.style.display = 'inline-block'; node.style.textAlign = align; node.style.fontVariantNumeric = 'tabular-nums'; LOCKS.push([node, finalText, inner]); }
 function countUp(node, t, target, { dur = .75, fmt = v => Math.round(v).toLocaleString('en-US'), rise = 14, blur = 14 } = {}) {
-  const box = { v: 0 }; node.textContent = fmt(0);
+  const box = { v: 0 }; lockWidth(node, fmt(target)); node.textContent = fmt(0);
   tl.fromTo(node, { opacity: 0, y: rise, filter: `blur(${blur}px)` }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: dur, ease: bez(.33, 0, .67, 1) }, t);
   tl.fromTo(box, { v: 0 }, { v: target, duration: dur, ease: bez(.33, 0, .67, 1), onUpdate: () => { node.textContent = fmt(box.v); } }, t);
   SFX.push(['tick', t, dur]);
@@ -216,6 +219,7 @@ function maskRise(words, t0, { stagger = 0, dur = .6 } = {}) {
 // kashida grows inside a featured word (Thmanyah swaps in its curved stretched forms)
 function kashida(w, base, at, t, { from = 0, to = 4, dur = .7 } = {}) {
   const wi = w.querySelector('.wi'), bx = { n: from }, set = () => { wi.textContent = base.slice(0, at) + 'ـ'.repeat(Math.round(bx.n)) + base.slice(at); };
+  lockWidth(w, base.slice(0, at) + 'ـ'.repeat(to) + base.slice(at), 'right', wi); w.style.fontVariantNumeric = '';
   set(); tl.fromTo(bx, { n: from }, { n: to, duration: dur, ease: eSettle, onUpdate: set, immediateRender: false }, t); SFX.push(['spark', +(t + .1).toFixed(3), 0]);
 }
 function cameraMove(cam, bgl, t0, dur, { from = {}, to = {}, origin = '50% 50%', par = .35 } = {}) {
@@ -454,7 +458,7 @@ scene(beat(7), (cam, t0, s, bgl) => {
   const t1 = liveLine(cam, 'توأم رقمي ذكي: يراقب، يتحكم، يحلل، يتنبأ', 'ar', { left: 0, right: 0, top: '520px', textAlign: 'center', fontSize: '54px', fontWeight: 700, color: '#f1f1f1' });
   const t2 = el('div', 'line ar', cam, { left: 0, right: 0, top: '600px', textAlign: 'center', fontSize: '90px', fontWeight: 700, color: '#f1f1f1' });
   const mk = txt => { const w = el('span', 'tw', t2); el('span', 'wi', w).textContent = txt; t2.appendChild(document.createTextNode(' ')); return w; };
-  const wa = mk('ويوفر'), wb = mk('حتى'); const wp = el('span', 'tw', t2); const pct = el('span', 'wi lat grad', wp, { fontWeight: 900, fontSize: '1.12em', direction: 'ltr', unicodeBidi: 'isolate' }); pct.textContent = '%25';
+  const wa = mk('ويوفر'), wb = mk('حتى'); const wp = el('span', 'tw', t2); const pct = el('span', 'wi lat grad', wp, { fontWeight: 900, fontSize: '1.12em', direction: 'ltr', unicodeBidi: 'isolate' }); pct.textContent = '%25'; lockWidth(pct, '%25');
   t2.appendChild(document.createTextNode(' ')); const wc = mk('من'), wd = mk('الطاقة');
   maskRise(t1.words, t0 + beat(1)); echoIn([wa, wb], t0 + beat(2)); echoIn([wc, wd], t0 + beat(2.75)); kashida(wa, 'ويوفر', 2, t0 + beat(3.5), { to: 3 });
   const box = { v: 0 }; const tc = t0 + beat(2.5);
@@ -672,7 +676,7 @@ window.TOTAL = TOTAL; window.SFX = SFX; window.SCENES = SC.map(c => [c.t0, c.dur
 window.seek = t => { tl.time(Math.min(t, TOTAL - 1e-3)); drawBG(t); drawHook(t); drawSpark(t); drawWaves(t); };
 const imgs = [...document.images];
 window.ready = Promise.all([document.fonts.ready, ...imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; })), ...Object.values(hookImgs).map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))]);
-window.ready.then(() => { fitAll(); document.body.dataset.ready = '1'; const p = new URLSearchParams(location.search); window.seek(+(p.get('t') || 0)); });
+window.ready.then(() => { fitAll(); for (const [n, txt, inner] of LOCKS) { const keep = inner.textContent; inner.textContent = txt; n.style.minWidth = Math.ceil(n.getBoundingClientRect().width / (n.closest('.scene').getBoundingClientRect().width / 1080 || 1)) + 'px'; inner.textContent = keep; } document.body.dataset.ready = '1'; const p = new URLSearchParams(location.search); window.seek(+(p.get('t') || 0)); });
 </script>
 </body>
 </html>
