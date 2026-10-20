@@ -2,6 +2,12 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-20: render speed and determinism
+- **User:** 25 min per render is too long.
+  **Fix:** the background shader now renders at 640×360 (it was ~75% of frame time), so a full render takes about 6 min. Added `SCENES=` partial re-render.
+- **Wrong:** found by `fresh_compare`: the square glow flash differed between a full render and fresh pages (a GSAP filter tween plus a set on the same element made it history-dependent).
+  **Fix:** the glow is computed from `t` in `seek`. `fresh_compare` now pulls exact frames by index (`select=eq(n,…)`); seeking with `-ss` was off by one frame.
+
 ## 2026-10-20: render-only ghosts
 - **Wrong:** in the encoded film (not the preview), F09's chip and sparkle icon showed stacked ghost copies with hard edges.
   **Cause:** the render browser's GPU compositing kept trails of earlier frames in some regions during long back-to-back captures.

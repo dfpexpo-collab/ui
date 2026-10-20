@@ -84,6 +84,7 @@
   // ---- scene build
   const scEls = [], FX = [], MORPHS = [];
   let uid = 0;
+  const GLOWS = [];
   const clickPoint = svg => { const r = svg && svg.querySelector('#PING_RING_1'); if (r) return [+r.getAttribute('cx'), +r.getAttribute('cy')];
     const c = svg && svg.querySelector('#CURSOR'); const m = c && /translate\(([\d.]+)[ ,]+([\d.]+)/.exec(c.getAttribute('transform') || ''); return m ? [+m[1], +m[2]] : null; };
   SCENES.forEach((sc, i) => {
@@ -238,9 +239,11 @@
         const cl = cells.filter(c => grid.contains(c.w)); if (!cl.length) return;
         const x0 = Math.min(...cl.map(c => c.cx)), y0 = Math.min(...cl.map(c => c.cy));
         const span = Math.max(...cl.map(c => c.cx - x0 + c.cy - y0)) || 1;
-        cl.forEach(c => tl.fromTo(c.inner, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%', filter: 'brightness(2.6) drop-shadow(0 0 8px #00b3ff)' },
-          { opacity: 1, scale: 1, filter: 'brightness(1) drop-shadow(0 0 0px #00b3ff)', duration: 0.5, ease: 'back.out(2.2)' }, at + 0.2 + 0.75 * (c.cx - x0 + c.cy - y0) / span));
-        tl.set(cl.map(c => c.inner), { filter: 'none' }, at + 1.5);
+        cl.forEach(c => {
+          const t0 = at + 0.2 + 0.75 * (c.cx - x0 + c.cy - y0) / span;
+          tl.fromTo(c.inner, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2.2)' }, t0);
+          GLOWS.push({ el: c.inner, t0 });   // glow flash is computed from t in seek (a GSAP filter tween + set depended on seek history)
+        });
       });
     });
 
@@ -439,6 +442,15 @@
       reset() { this.g.style.display = 'none'; } };
   }
 
+  function glowAt(t) {
+    GLOWS.forEach(g => {
+      const k = (t - g.t0) / 0.5;
+      if (k <= 0 || k >= 1) { if (g.on) { g.el.style.filter = ''; g.on = false; } return; }
+      const e = 1 - gsap.parseEase('power2.out')(k);
+      g.el.style.filter = `brightness(${(1 + 1.6 * e).toFixed(3)}) drop-shadow(0 0 ${(8 * e).toFixed(2)}px #00b3ff)`; g.on = true;
+    });
+  }
+
   function runFx(t) {
     FX.forEach(f => {
       if (t >= f.a && t <= f.b) { if (!f.ready) { f.init(); f.ready = true; } f.render(t); f.on = true; }
@@ -520,5 +532,5 @@ gl_FragColor=vec4(col,1.);}`;
   }
 
   window.TOTAL = TOTAL;
-  window.seek = t => { real.seek(t + PAD, false); proximity(t); runFx(t); BG.draw(t); };
+  window.seek = t => { real.seek(t + PAD, false); proximity(t); runFx(t); glowAt(t); BG.draw(t); };
 })();

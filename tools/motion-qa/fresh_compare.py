@@ -16,10 +16,12 @@ import numpy as np
 W, H, B = 960, 540, 24   # compare at half size; 24 px blocks = 48 px at 1080p
 
 
-def frame_from_video(path, t):
-    raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', f'{t:.4f}', '-i', path, '-frames:v', '1',
-                          '-vf', f'scale={W}:{H}', '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], capture_output=True).stdout
-    return np.frombuffer(raw, np.uint8).reshape(H, W).astype(np.float32)
+def frames_from_video(path, idx):
+    """Exact frames by index (select by frame number, one decode pass)."""
+    expr = '+'.join(f'eq(n\\,{f})' for f in idx)
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-vf', f"select='{expr}',scale={W}:{H}", '-vsync', '0',
+                          '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], capture_output=True).stdout
+    return dict(zip(sorted(idx), np.frombuffer(raw, np.uint8).reshape(-1, H, W).astype(np.float32)))
 
 
 def frame_from_jpg(path):
@@ -32,9 +34,13 @@ def main():
     video, fresh = sys.argv[1], Path(sys.argv[2])
     fps = float(sys.argv[3]) if len(sys.argv) > 3 else 30
     bad = 0
-    for jpg in sorted(fresh.glob('*.jpg')):
+    jpgs = sorted(fresh.glob('*.jpg'))
+    if not jpgs:
+        sys.exit(f'no fresh frames in {fresh}')
+    vid = frames_from_video(video, [int(j.stem) for j in jpgs])
+    for jpg in jpgs:
         f = int(jpg.stem)
-        a, b = frame_from_video(video, (f + 0.5) / fps), frame_from_jpg(jpg)
+        a, b = vid[f], frame_from_jpg(jpg)
         d = np.abs(a - b)[: H // B * B, : W // B * B].reshape(H // B, B, W // B, B).mean(axis=(1, 3))
         worst = float(d.max())
         hot = int((d > 18).sum())
