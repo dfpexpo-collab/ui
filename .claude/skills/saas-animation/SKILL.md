@@ -24,6 +24,10 @@ The method we use to turn a storyboard into a SaaS promo film. It is built from 
 
 ## Motion rules
 
+- **Action safe:** every content layer stays inside the 5% action-safe frame (96 px / 54 px at 1080p) on every frame, camera moves and entrances included.
+  - Exempt by design: transitions (zoom-through, push, dissolve particles, pixel reveal, F14 push-through, all on the scene wrapper), the background, full-bleed decor (walls, orbits) and soft drop shadows.
+  - `node tools/motion-qa/safe_area.js <film.html>` checks it in seconds without rendering, and must exit 0.
+  - Typical fixes: keep camera scale ≤ 1.04 on wide layouts (or < 1 for very tall ones), and keep entrance slides ≤ 40 px near the edges.
 - **The camera never stops.** Every shot gets a push, pan, pull or 3D tilt with `sine.inOut` across the whole shot.
   - Choose the transform origin per shot so the focal element stays in frame.
   - Keep pans small (scale ≤1.06, x ≤60 on dense UI) and check the edges.
@@ -91,6 +95,7 @@ Scenes have a transparent background (the shader sits behind everything). So any
 
 1. **Spot frames:** render with `ONLY=` at T±0.2s around every transition, at every click and at every count end. Make a contact sheet and look at it as an art director.
 2. **Full render:** `python3 tools/motion-qa/check_video.py <mp4> --cues cues.json` must exit 0. It flags FLASH (an old scene popping back), EMPTY (the picture going blank for more than 0.2s) and JUMP (a hard change away from a cut). An EMPTY you keep on purpose (a beat that waits for the VO) needs a one-line reason.
+2b. **Action-safe check** (`safe_area.js`, before rendering).
 3. **Fresh-page check:** re-render about 40 spread-out frames with `ONLY=` (fresh pages), then run `python3 tools/motion-qa/fresh_compare.py <mp4> <dir>/frames`. It must exit 0. It catches ghosts that only exist in the long render.
 4. Make a 1fps contact sheet of the final MP4 and check it before sending.
 

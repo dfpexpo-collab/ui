@@ -2,6 +2,11 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-20: action safe
+- **User:** no animation or element may leave the action-safe area. Transitions and the background are exempt.
+  **Tool:** `tools/motion-qa/safe_area.js` (every frame, no render).
+  **Fixes:** softer cameras (F02–F06 and F10–F12; F06 at 0.95–0.97 because the CRM sheet is tall), entrance slides 80 → 40 px, and F14's push-through moved onto the scene wrapper so it counts as a transition.
+
 ## 2026-10-20: render speed and determinism
 - **User:** 25 min per render is too long.
   **Fix:** the background shader now renders at 640×360 (it was ~75% of frame time), so a full render takes about 6 min. Added `SCENES=` partial re-render.
