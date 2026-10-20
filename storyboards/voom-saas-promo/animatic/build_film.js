@@ -58,7 +58,9 @@ async function renderRange(browser, htmlPath, frames) {
   await page.goto('file://' + htmlPath);
   await page.evaluate(() => document.fonts.ready);
   for (const f of frames) {
-    await page.evaluate(s => window.seek(s), f / FPS);
+    // seek, then wait two animation frames so every layer is repainted before the capture
+    // (without it, long-running pages kept stale raster tiles from earlier frames: hard-edged ghost pieces)
+    await page.evaluate(s => new Promise(res => { window.seek(s); requestAnimationFrame(() => requestAnimationFrame(res)); }), f / FPS);
     await page.screenshot({ path: path.join(OUT, 'frames', String(f).padStart(5, '0') + '.jpg'), type: 'jpeg', quality: 92 });
   }
   await page.close();
@@ -75,7 +77,7 @@ async function renderRange(browser, htmlPath, frames) {
   const n = Math.round(total * FPS);
   const only = process.env.ONLY ? process.env.ONLY.split(',').map(Number) : null;   // ONLY=frame,frame for spot checks
   const all = only || Array.from({ length: n }, (_, f) => f);
-  const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+  const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--disable-gpu-compositing'] });   // GPU compositing left trails of earlier frames in long runs
   const chunks = Array.from({ length: WORKERS }, (_, w) => all.filter((_, i) => i % WORKERS === w));
   await Promise.all(chunks.map(c => renderRange(browser, htmlPath, c)));
   await browser.close();

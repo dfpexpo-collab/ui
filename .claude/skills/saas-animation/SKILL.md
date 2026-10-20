@@ -79,6 +79,7 @@ Scenes have a transparent background (the shader sits behind everything). So any
 - Use `let`/`const` effect factories carefully. Anything called during the scene build must not touch a later-declared `const` (TDZ).
 - WebGL in headless Chromium needs `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist`, plus `preserveDrawingBuffer: true`.
 - Set `filter: 'none'` after every blur entrance or transition. A leftover `blur(0px)` paints a faint box around the group.
+- **Render-only ghosts:** a long render page with GPU compositing (SwiftShader) left trails of earlier frames in some regions: stacked copies of a chip or icon with hard edges, never in the live preview. Launch the render browser with `--disable-gpu-compositing` and wait two `requestAnimationFrame`s after each seek before the screenshot.
 - Wrap each scene's content in a group so masks can apply. Keep an unmasked fx group on top.
 
 ## QA loop (mandatory, every render)
@@ -87,7 +88,8 @@ Scenes have a transparent background (the shader sits behind everything). So any
 
 1. **Spot frames:** render with `ONLY=` at T±0.2s around every transition, at every click and at every count end. Make a contact sheet and look at it as an art director.
 2. **Full render:** `python3 tools/motion-qa/check_video.py <mp4> --cues cues.json` must exit 0. It flags FLASH (an old scene popping back), EMPTY (the picture going blank for more than 0.2s) and JUMP (a hard change away from a cut). An EMPTY you keep on purpose (a beat that waits for the VO) needs a one-line reason.
-3. Make a 1fps contact sheet of the final MP4 and check it before sending.
+3. **Fresh-page check:** re-render about 40 spread-out frames with `ONLY=` (fresh pages), then run `python3 tools/motion-qa/fresh_compare.py <mp4> <dir>/frames`. It must exit 0. It catches ghosts that only exist in the long render.
+4. Make a 1fps contact sheet of the final MP4 and check it before sending.
 
 ## Fonts
 
