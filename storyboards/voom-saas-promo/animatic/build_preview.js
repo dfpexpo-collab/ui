@@ -4,13 +4,15 @@
  * in a player with play/pause, VO, a scrubber with scene markers, frame steps and scene loop.
  * Plays in real time in the browser, so the user reviews motion and timing without a render.
  *
- * Usage: node build_preview.js <film.html> <vo.mp3> <out.html>
+ * Usage: node build_preview.js <film.html> <vo.mp3> <out.html> [render.mp4]
+ *   render.mp4: a published file name; adds a Render mode that plays the rendered video with the same scrubber,
+ *   so issues that only show in the encoded film can be marked by timecode.
  */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const [filmPath, voPath, outPath] = process.argv.slice(2);
+const [filmPath, voPath, outPath, renderSrc] = process.argv.slice(2);
 const CUES = JSON.parse(fs.readFileSync(path.join(__dirname, 'cues.json'), 'utf8'));
 const film = fs.readFileSync(filmPath, 'utf8');
 const style = film.match(/<style>([\s\S]*?)<\/style>/)[1].replace(/html,body\{[^}]*\}/, '');
@@ -47,6 +49,10 @@ button { font: 600 14px var(--ui); color: var(--text); background: var(--panel);
 button:hover { border-color: var(--accent); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #play { background: var(--brand); border-color: var(--brand); min-width: 84px; }
+#rv { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
+.mode { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.mode button { border: 0; border-radius: 0; }
+.mode button[aria-pressed="true"] { background: var(--accent); color: var(--ink); }
 .time { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--muted); }
 .time b { color: var(--text); font-weight: 600; }
 .loop { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
@@ -63,7 +69,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 </style>
 <div class="wrap">
   <header><h1>VOOM promo · live preview</h1><span class="hint">Space play/pause · ← → one frame · Shift+← → one second</span></header>
-  <div class="viewport" id="vp"><div id="stage">${body}</div></div>
+  <div class="viewport" id="vp"><div id="stage">${body}</div>${renderSrc ? `<video id="rv" src="${renderSrc}" preload="auto" playsinline hidden></video>` : ""}</div>
   <div class="track" id="track"><div class="rail"></div><div class="fill" id="fill"></div><div class="head" id="head"></div></div>
   <div class="bar">
     <button id="play" type="button">Play</button>
@@ -72,6 +78,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     <span class="time"><b id="now">0.00</b> / ${total.toFixed(2)} s · <b id="scene">F01</b> · frame <b id="frame">0</b></span>
     <label class="loop"><input type="checkbox" id="loop"> Loop this scene</label>
     <button id="copy" type="button">Copy timecode</button>
+    ${renderSrc ? '<span class="mode" role="group" aria-label="What plays"><button id="mLive" type="button" aria-pressed="true">Live</button><button id="mRender" type="button" aria-pressed="false">Render</button></span>' : ''}
   </div>
   <div class="scenes" id="scenes"></div>
 </div>
@@ -88,10 +95,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   const strip = document.getElementById('scenes');
   MARKS.forEach(m => { const b = document.createElement('button'); b.type = 'button'; b.textContent = m.id + ' · ' + m.start.toFixed(1) + 's';
     b.onclick = () => { go(m.start); }; strip.appendChild(b); });
-  let t = 0, playing = false, last = 0;
+  let t = 0, playing = false, last = 0, render = false;
+  const rv = document.getElementById('rv');
+  const clock = () => render ? rv : vo;
   const sceneAt = x => MARKS.find(m => x < m.end) || MARKS[MARKS.length - 1];
   function show(x) {
-    t = Math.max(0, Math.min(TOTAL - 0.001, x)); window.seek(t);
+    t = Math.max(0, Math.min(TOTAL - 0.001, x)); if (!render) window.seek(t);
     const p = t / TOTAL * 100; fill.style.width = p + '%'; head.style.left = p + '%';
     const sc = sceneAt(t);
     document.getElementById('now').textContent = t.toFixed(2);
@@ -99,18 +108,18 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     document.getElementById('frame').textContent = Math.round(t * FPS);
     Array.from(strip.children).forEach((b, i) => b.classList.toggle('on', MARKS[i] === sc));
   }
-  function go(x) { show(x); try { vo.currentTime = t; } catch (e) {} }
+  function go(x) { show(x); try { clock().currentTime = t; } catch (e) {} }
   function tick(now) {
     if (!playing) return;
-    let x = vo.paused ? t + (now - last) / 1000 : vo.currentTime; last = now;
+    const c = clock(); let x = c.paused ? t + (now - last) / 1000 : c.currentTime; last = now;
     const sc = sceneAt(t);
-    if (document.getElementById('loop').checked && x >= sc.end) { x = sc.start; try { vo.currentTime = x; } catch (e) {} }
+    if (document.getElementById('loop').checked && x >= sc.end) { x = sc.start; try { c.currentTime = x; } catch (e) {} }
     if (x >= TOTAL) { pause(); show(TOTAL - 0.001); return; }
     show(x); requestAnimationFrame(tick);
   }
   function play() { playing = true; last = performance.now(); document.getElementById('play').textContent = 'Pause';
-    try { vo.currentTime = t; } catch (e) {} vo.play().catch(() => {}); requestAnimationFrame(tick); }
-  function pause() { playing = false; vo.pause(); document.getElementById('play').textContent = 'Play'; }
+    const c = clock(); try { c.currentTime = t; } catch (e) {} c.play().catch(() => {}); requestAnimationFrame(tick); }
+  function pause() { playing = false; vo.pause(); if (rv) rv.pause(); document.getElementById('play').textContent = 'Play'; }
   document.getElementById('play').onclick = () => playing ? pause() : play();
   document.getElementById('back').onclick = () => { pause(); go(t - 1 / FPS); };
   document.getElementById('fwd').onclick = () => { pause(); go(t + 1 / FPS); };
@@ -125,6 +134,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     if (e.code === 'Space') { e.preventDefault(); playing ? pause() : play(); }
     if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') { e.preventDefault(); pause(); go(t + (e.code === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 1 / FPS)); }
   });
+  if (rv) {
+    const setMode = r => { pause(); render = r; rv.hidden = !r; stage.style.visibility = r ? 'hidden' : '';
+      document.getElementById('mLive').setAttribute('aria-pressed', String(!r)); document.getElementById('mRender').setAttribute('aria-pressed', String(r)); go(t); };
+    document.getElementById('mLive').onclick = () => setMode(false);
+    document.getElementById('mRender').onclick = () => setMode(true);
+  }
   show(0);
 })();
 </script>`;
