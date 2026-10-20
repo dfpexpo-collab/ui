@@ -40,14 +40,14 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000024
 .scene{position:absolute;inset:0;visibility:hidden;overflow:hidden;perspective:1600px}
 .whip,.cam{position:absolute;inset:0;transform-style:preserve-3d}
 .scene svg{width:1920px;height:1080px;display:block;overflow:visible}
-#bg{position:absolute;inset:0;z-index:0}
+#bg{position:absolute;inset:0;z-index:0;width:100%;height:100%}
 #fxtop{position:absolute;inset:0;z-index:500;pointer-events:none}
 .slate{width:1920px;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
   color:#f1f1f1;font-family:'IBM Plex Sans Arabic'}
 .slate .tag{font-family:Gabarito;font-weight:600;letter-spacing:.3em;color:#00b3ff;font-size:28px;border:2px dashed #00b3ff;padding:14px 34px;border-radius:999px}
 .slate .ar{font-size:96px;font-weight:600;direction:rtl}
 .slate .list{font-size:30px;opacity:.7;direction:rtl;max-width:1500px;text-align:center;line-height:1.6}
-</style></head><body>${scenesHtml}<canvas id="bg" width="1920" height="1080"></canvas><svg id="fxtop" viewBox="0 0 1920 1080"></svg>
+</style></head><body>${scenesHtml}<canvas id="bg" width="640" height="360"></canvas><svg id="fxtop" viewBox="0 0 1920 1080"></svg>
 <script>${gsapSrc}</script><script>${textfx}</script>
 <script>window.FILM = ${JSON.stringify({ scenes: CUES.scenes, settings: SETTINGS })};</script>
 <script>${runtime}</script></body></html>`;
@@ -67,16 +67,33 @@ async function renderRange(browser, htmlPath, frames) {
 }
 
 (async () => {
-  fs.rmSync(path.join(OUT, 'frames'), { recursive: true, force: true });
-  fs.mkdirSync(path.join(OUT, 'frames'), { recursive: true });
+  fs.mkdirSync(OUT, { recursive: true });
   const htmlPath = path.join(OUT, 'film.html');
+  // the background shader is a soft gradient: drawing it at 640x360 and scaling up is visually identical and ~3x faster per frame
   // BG_ONLY=1: the animated gradient background alone (same timeline, same dark/light changes), no scenes or effects
   fs.writeFileSync(htmlPath, process.env.BG_ONLY ? html.replace('</style>', '.scene,#fxtop{display:none!important}</style>') : html);
   if (process.env.HTML_ONLY) { console.log('wrote', htmlPath); return; }   // page only, no frames (used by the live preview)
   const total = CUES.scenes[CUES.scenes.length - 1].end;
   const n = Math.round(total * FPS);
   const only = process.env.ONLY ? process.env.ONLY.split(',').map(Number) : null;   // ONLY=frame,frame for spot checks
-  const all = only || Array.from({ length: n }, (_, f) => f);
+  // SCENES=F09,F10: re-render only those scenes (plus their transition overlap) into the frames of the last full render
+  const scenes = process.env.SCENES ? process.env.SCENES.split(',') : null;
+  const framesDir = path.join(OUT, 'frames');
+  let all;
+  if (scenes) {
+    const have = fs.existsSync(framesDir) ? fs.readdirSync(framesDir).length : 0;
+    if (have < n) throw new Error(`SCENES needs a full render in ${framesDir} first (${have}/${n} frames)`);
+    const set = new Set();
+    CUES.scenes.filter(sc => scenes.includes(sc.id)).forEach(sc => {
+      for (let f = Math.max(0, Math.floor((sc.start - 0.7) * FPS)); f <= Math.min(n - 1, Math.ceil((sc.end + 0.7) * FPS)); f++) set.add(f);
+    });
+    all = [...set].sort((a, b) => a - b);
+    console.log('re-rendering', all.length, 'frames of', scenes.join(','));
+  } else {
+    if (!only) fs.rmSync(framesDir, { recursive: true, force: true });
+    all = only || Array.from({ length: n }, (_, f) => f);
+  }
+  fs.mkdirSync(framesDir, { recursive: true });
   const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--disable-gpu-compositing'] });   // GPU compositing left trails of earlier frames in long runs
   const chunks = Array.from({ length: WORKERS }, (_, w) => all.filter((_, i) => i % WORKERS === w));
   await Promise.all(chunks.map(c => renderRange(browser, htmlPath, c)));

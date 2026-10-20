@@ -80,6 +80,9 @@ Scenes have a transparent background (the shader sits behind everything). So any
 - WebGL in headless Chromium needs `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist`, plus `preserveDrawingBuffer: true`.
 - Set `filter: 'none'` after every blur entrance or transition. A leftover `blur(0px)` paints a faint box around the group.
 - **Render-only ghosts:** a long render page with GPU compositing (SwiftShader) left trails of earlier frames in some regions: stacked copies of a chip or icon with hard edges, never in the live preview. Launch the render browser with `--disable-gpu-compositing` and wait two `requestAnimationFrame`s after each seek before the screenshot.
+- **Render must not depend on seek history.** Never put two GSAP tweens or sets on the same property of one element (e.g. a filter `fromTo` plus a later `set: none`). The result changes with the order frames are seeked: full render, fresh page and preview disagree. Compute such effects from `t` in `seek` instead (like `glowAt` for the square glow).
+- **Speed:** draw the background shader at 640×360, CSS-scaled to full frame. It is a soft gradient, so the result is visually identical (max block difference 0.6) and about 3× faster per frame. A full 50s render takes about 6 min on 4 cores.
+  - `SCENES=F09,F10 node build_film.js …` re-renders only those scenes (±0.7s) into the last full render's frames, then re-encodes. Use it for small fixes.
 - Wrap each scene's content in a group so masks can apply. Keep an unmasked fx group on top.
 
 ## QA loop (mandatory, every render)
