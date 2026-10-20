@@ -2,6 +2,12 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-20: final review
+- **User:** F10's tablet must not move before the transition, so F10→F11 is now a fade. The F07 status bar shows early. The F13 badge sits above the chart line, which was flattened so it never crosses the badge.
+- **Art-director gate:** the VO peaked at −0.6 dB.
+  **Rule:** the mux runs a limiter (true peak ≤ −1 dBTP), built into `build_film.js`.
+- **Gate method:** when comparing tiles in a contact sheet, compare in-tile coordinates. A "jump" seen across tiles was a misread.
+
 ## 2026-10-17: preview review 3
 - **Wrong:** the morph target lost its inner build (the unit squares).
   **Rule:** a morphed layer skips only its own entrance. Its inner animations still run, starting as the shape lands.
