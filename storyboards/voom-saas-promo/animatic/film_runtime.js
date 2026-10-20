@@ -39,7 +39,7 @@
   };
   // how each scene comes in (varied: pixel reveal, particle dissolve, zoom-through, push + blur, element morph)
   const TRANS = { F02: 'zoom', F03: 'push', F04: 'pixel', F05: 'morph', F06: 'dissolve', F07: 'push', F08: 'zoom', F09: 'push',
-    F10: 'pixel', F11: 'push', F12: 'zoom', F13: 'push', F14: 'fade', SLATE: 'cut', F15: 'push', F16: 'zoom', F17: 'fade', F18: 'dissolve', F19: 'zoom' };
+    F10: 'pixel', F11: 'fade', F12: 'zoom', F13: 'push', F14: 'fade', SLATE: 'cut', F15: 'push', F16: 'zoom', F17: 'fade', F18: 'dissolve', F19: 'zoom' };
   const PUSH_DIR = { F07: [0, -1], F03: [0, 1], F09: [1, 0], F11: [-1, 0], F13: [0, 1], F15: [1, 0] };
   const MORPH = { F05: ['L05_CARD_UNITS', 'L05_DASHBOARD'] };
   const OUT = { push: 0.45, zoom: 0.45, pixel: 0.45, dissolve: 0.5, morph: 0.35, fade: 0.3, cut: 0 };   // when the old scene starts leaving, before the cut
@@ -215,7 +215,7 @@
       const at = morphed ? start + 0.35 : enter + 0.06 + ei * 0.1; if (!morphed) ei++;
       layerAt[id] = at;
       let from;
-      if (/STATUS_PILL/.test(id) && sc.id === 'F07') { const T = byId('F07').click + 0.45; layerAt[id] = T; tl.from(layer, { opacity: 0, scale: 0.85, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(1.7)' }, T); return; }
+      if (/STATUS_PILL/.test(id) && sc.id === 'F07') { const T = sc.start + 0.32; layerAt[id] = T; /* status bar fully in by 12.62s (user) */ tl.from(layer, { opacity: 0, scale: 0.85, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(1.7)' }, T); return; }
       if (/CHIP|PILL|ICON_TILE/.test(id)) from = { opacity: 0, scale: 0.8, transformOrigin: '50% 50%', ease: 'back.out(1.7)', duration: 0.55 };
       else if (/DEVICE/.test(id)) from = { opacity: 0, y: 140, scale: 0.9, filter: 'blur(12px)', transformOrigin: '50% 100%', ease: LAUNCH, duration: 1.0 };
       else if (/SHEET|PLAN|CRM/.test(id)) from = { opacity: 0, x: -80, filter: 'blur(10px)', ease: LAUNCH, duration: 0.85 };

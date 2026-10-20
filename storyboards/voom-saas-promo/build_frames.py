@@ -624,7 +624,8 @@ def f13():
         out += f'<circle cx="{x+320}" cy="{404}" r="9" fill="{col}"/>' + text(x + 300, 414, lab, 30, 500, OFF, "start")
         out += text(x + 180, 532, num, 96, 600, OFF, "middle", LAT, False)
     ch = glass(490, 620, 1160, 300)
-    pts = [(530 + i * 80, 860 - v) for i, v in enumerate([40, 60, 50, 90, 80, 120, 110, 150, 140, 175, 170, 200, 210, 220])]
+    # line peaks below the "live" badge (y 650-714) so the badge sits clearly above the chart
+    pts = [(530 + i * 80, 880 - v * 0.6) for i, v in enumerate([40, 60, 50, 90, 80, 120, 110, 150, 140, 175, 170, 200, 210, 220])]
     d = "M" + " L".join(f"{x} {y}" for x, y in pts)
     ch += f'<path id="CHART_AREA" d="{d} L{pts[-1][0]} 900 L530 900Z" fill="url(#gArea)"/>'
     ch += f'<path id="CHART_LINE" d="{d}" fill="none" stroke="{LBLUE}" stroke-width="4" stroke-linejoin="round"/>'
