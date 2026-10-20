@@ -88,7 +88,7 @@ async function renderRange(browser, htmlPath, frames) {
   if (VO) {
     const segs = CUES.audio.segments, fd = CUES.audio.fade;
     const parts = segs.map((s, i) => `[1:a]atrim=${s.from}:${s.to},asetpts=PTS-STARTPTS,afade=t=in:d=${fd},afade=t=out:st=${(s.to - s.from - fd).toFixed(3)}:d=${fd},adelay=${Math.round(s.at * 1000)}:all=1[a${i}]`);
-    const mix = `${parts.join(';')};${segs.map((_, i) => `[a${i}]`).join('')}amix=inputs=${segs.length}:normalize=0,apad=whole_dur=${total}[aout]`;
+    const mix = `${parts.join(';')};${segs.map((_, i) => `[a${i}]`).join('')}amix=inputs=${segs.length}:normalize=0,alimiter=limit=0.82:level=false:attack=2:release=60,apad=whole_dur=${total}[aout]`;   // true peak <= -1 dBTP (art-director gate F)
     execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', video, '-i', VO, '-filter_complex', mix, '-map', '0:v', '-map', '[aout]',
       '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', String(total), '-movflags', '+faststart', mp4]);
   } else {
