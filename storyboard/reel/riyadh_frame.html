@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+:root{--deep:#000024;--blue:#0012d6;--light:#00b3ff;--off:#f1f1f1;--mute:#b9c6f2}
+html,body{margin:0;background:#000}
+#f{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"thmanyah sans";color:var(--off);
+  background:radial-gradient(55% 32% at 50% 30%,#06208e 0%,#020a4a 45%,var(--deep) 80%)}
+.abs{position:absolute}
+.ar{direction:rtl}
+.grad{background:linear-gradient(180deg,#eaf7ff 10%,#7fd0ff 95%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-block:.12em .3em;margin-block:-.12em -.3em}
+/* 1. the Arabic word, over the tower: the font's curved kashida crosses the lit arch arm and the opening */
+#ar{left:0;right:0;top:314px;transform:translateX(-102px);filter:drop-shadow(0 6px 18px rgba(0,0,40,.55));text-align:center;font-weight:700;font-size:198px;line-height:1;letter-spacing:0;white-space:nowrap}
+/* 2. the tower */
+#tw{left:-274px;top:-159px;width:1600px;height:2400px}
+#halo{left:290px;top:180px;width:500px;height:520px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,179,255,.38),transparent);filter:blur(10px)}
+/* 3. the English word, in front of the tower */
+#en{left:0;right:0;top:540px;text-align:center;transform:translateX(70px);font-family:"thmanyah serif display";font-weight:500;font-size:180px;line-height:1;color:var(--light);letter-spacing:-.01em;text-shadow:0 0 40px rgba(0,179,255,.35)}
+/* 4. under them, above the glass */
+#sub{left:0;right:0;top:790px;text-align:center;transform:translateX(150px);font-size:64px;font-weight:500}
+#sub .dash{display:inline-block;width:70px;height:3px;background:var(--light);vertical-align:middle;margin-inline-start:22px;box-shadow:0 0 14px rgba(0,179,255,.7)}
+/* 5. horizontal glass, middle → bottom, feathered top edge */
+#glass{left:0;top:900px;width:1080px;height:1020px;backdrop-filter:blur(22px) saturate(1.25);-webkit-backdrop-filter:blur(22px) saturate(1.25);
+  background:linear-gradient(180deg,rgba(0,60,190,.10),rgba(0,18,90,.42) 60%,rgba(0,0,36,.72)),
+    repeating-linear-gradient(180deg,rgba(255,255,255,.07) 0 1.5px,transparent 1.5px 44px);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 170px);mask-image:linear-gradient(180deg,transparent 0,#000 170px)}
+#gline{left:0;top:1070px;width:1080px;height:1px;background:linear-gradient(90deg,transparent,rgba(127,208,255,.55),transparent)}
+/* 6. the question, on the glass */
+#q{left:0;right:0;top:1170px;text-align:center;font-size:52px;font-weight:500;line-height:1.5;color:var(--mute)}
+#q .vm{font-family:Gabarito;font-weight:600;color:var(--off);direction:ltr;unicode-bidi:isolate}
+/* frame language from our hook */
+#win{left:48px;top:150px;width:984px;height:1620px;border:2px solid rgba(241,241,241,.45);border-radius:30px}
+#win i{position:absolute;top:28px;width:14px;height:14px;border-radius:50%;border:2px solid rgba(241,241,241,.75)}
+#ast{position:absolute;top:20px;right:28px}
+#by{right:96px;bottom:186px;font:500 28px Gabarito;opacity:.85;direction:ltr}
+</style></head><body>
+<div id="f">
+  <div class="abs" id="halo"></div>
+  <img class="abs" id="tw" src="assets/kc_tower_voom.png" alt="">
+  <div class="abs ar" id="ar"><span class="grad" id="arw">الريـــــاض</span></div>
+  <div class="abs" id="en">Riyadh</div>
+  <div class="abs ar" id="sub">وجهتنا القادمة.<span class="dash"></span></div>
+  <div class="abs" id="glass"></div><div class="abs" id="gline"></div>
+  <div class="abs ar" id="q">كيف ستُحدث <span class="vm">VOOM</span> نقلة في عالم<br>التكنولوجيا العقارية؟</div>
+  <div class="abs" id="win"><i style="left:32px"></i><i style="left:58px"></i><i style="left:84px"></i>
+    <svg id="ast" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#00b3ff" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg></div>
+  <div class="abs" id="by">Powered by VOOM.</div>
+</div></body></html>
