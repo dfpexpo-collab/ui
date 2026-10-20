@@ -2,6 +2,13 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-20: render-only ghosts
+- **Wrong:** in the encoded film (not the preview), F09's chip and sparkle icon showed stacked ghost copies with hard edges.
+  **Cause:** the render browser's GPU compositing kept trails of earlier frames in some regions during long back-to-back captures.
+  **Fix:** `--disable-gpu-compositing`, plus two rAFs after each seek.
+  **Tool:** `tools/motion-qa/fresh_compare.py` compares the video against fresh-page frames block by block.
+- **Change:** F09 lost its glow-pixel click FX, which read as a grey square right before the pixel reveal.
+
 ## 2026-10-20: final review
 - **User:** F10's tablet must not move before the transition, so F10→F11 is now a fade. The F07 status bar shows early. The F13 badge sits above the chart line, which was flattened so it never crosses the badge.
 - **Art-director gate:** the VO peaked at −0.6 dB.

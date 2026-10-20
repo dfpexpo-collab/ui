@@ -47,7 +47,7 @@
   const LEAD = { pixel: 0.4, dissolve: 0.45, zoom: 0.3, push: 0.3, morph: 0.12, fade: 0.2, cut: 0 };   // how early elements start entering before the cut
   const PIXEL_FROM = { F04: [960, 540], F10: [440, 660] };
   // click visual effects (from the reference): halftone ripple or glowing pixels
-  const CLICK_FX = { F02: 'halftone', F05: 'halftone', F07: 'halftone', F09: 'glow', F10: 'glow', F17: 'glow' };
+  const CLICK_FX = { F02: 'halftone', F05: 'halftone', F07: 'halftone', F10: 'glow', F17: 'glow' };
   // cursor click times live in cues.json (scene.click); default near the middle
 
   // ---- text settings (from Text Studio)
