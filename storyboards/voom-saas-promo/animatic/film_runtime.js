@@ -19,17 +19,17 @@
   // ---- camera per scene: [transform-origin, from, to]
   const CAM = {
     F01: ['50% 50%', { scale: 1.0, y: 10 }, { scale: 1.07, y: -10 }],
-    F02: ['50% 50%', { scale: 1.06, x: 35 }, { scale: 1.09, x: -35 }],
-    F03: ['50% 62%', { scale: 1.0 }, { scale: 1.12 }],
-    F04: ['50% 55%', { scale: 1.06, x: -40 }, { scale: 1.06, x: 40 }],
-    F05: ['50% 60%', { scale: 1.14 }, { scale: 1.03 }],
-    F06: ['50% 55%', { scale: 1.03, x: 25 }, { scale: 1.05, x: -25 }],
+    F02: ['50% 50%', { scale: 1.0, x: 8 }, { scale: 1.025, x: -8 }],
+    F03: ['50% 62%', { scale: 1.0 }, { scale: 1.06 }],
+    F04: ['50% 55%', { scale: 1.0, x: -15 }, { scale: 1.02, x: 15 }],
+    F05: ['50% 60%', { scale: 1.06 }, { scale: 1.0 }],
+    F06: ['50% 55%', { scale: 0.95, x: 8 }, { scale: 0.97, x: -8 }],
     F07: ['50% 50%', { scale: 1.0 }, { scale: 1.14 }],
     F08: ['50% 50%', { scale: 1.0 }, { scale: 1.05 }],
     F09: ['50% 62%', { scale: 1.0 }, { scale: 1.1 }],
-    F10: ['50% 62%', { scale: 1.1, rotationY: -6, x: 20 }, { scale: 1.08, rotationY: 5, x: -20 }],
-    F11: ['70% 55%', { scale: 1.05, x: 30 }, { scale: 1.1, x: -30 }],
-    F12: ['50% 62%', { scale: 1.06, x: 60 }, { scale: 1.06, x: -60 }],
+    F10: ['50% 62%', { scale: 1.03, rotationY: -6, x: 10 }, { scale: 1.02, rotationY: 5, x: -10 }],
+    F11: ['70% 55%', { scale: 1.0, x: 12 }, { scale: 1.04, x: -12 }],
+    F12: ['50% 62%', { scale: 1.0, x: 20 }, { scale: 1.02, x: -20 }],
     F13: ['50% 50%', { scale: 1.0 }, { scale: 1.08 }],
     F15: ['50% 60%', { scale: 1.0 }, { scale: 1.1 }],
     F16: ['50% 50%', { scale: 1.08, rotation: -1.2 }, { scale: 1.12, rotation: 1.2 }],
@@ -219,8 +219,8 @@
       if (/STATUS_PILL/.test(id) && sc.id === 'F07') { const T = sc.start + 0.32; layerAt[id] = T; /* status bar fully in by 12.62s (user) */ tl.from(layer, { opacity: 0, scale: 0.85, transformOrigin: '50% 50%', duration: 0.5, ease: 'back.out(1.7)' }, T); return; }
       if (/CHIP|PILL|ICON_TILE/.test(id)) from = { opacity: 0, scale: 0.8, transformOrigin: '50% 50%', ease: 'back.out(1.7)', duration: 0.55 };
       else if (/DEVICE/.test(id)) from = { opacity: 0, y: 140, scale: 0.9, filter: 'blur(12px)', transformOrigin: '50% 100%', ease: LAUNCH, duration: 1.0 };
-      else if (/SHEET|PLAN|CRM/.test(id)) from = { opacity: 0, x: -80, filter: 'blur(10px)', ease: LAUNCH, duration: 0.85 };
-      else if (/DASHBOARD|DATA/.test(id)) from = { opacity: 0, x: 80, filter: 'blur(10px)', ease: LAUNCH, duration: 0.85 };
+      else if (/SHEET|PLAN|CRM/.test(id)) from = { opacity: 0, x: -40, filter: 'blur(10px)', ease: LAUNCH, duration: 0.85 };
+      else if (/DASHBOARD|DATA/.test(id)) from = { opacity: 0, x: 40, filter: 'blur(10px)', ease: LAUNCH, duration: 0.85 };
       else if (/LINK|LEADER|ARROWS/.test(id)) from = { opacity: 0, duration: 0.4, ease: 'none' };
       else from = [{ opacity: 0, y: 60, filter: 'blur(10px)' }, { opacity: 0, scale: 0.92, filter: 'blur(10px)', transformOrigin: '50% 50%' }, { opacity: 0, y: -40, filter: 'blur(10px)' }][ei % 3];
       if (!morphed) tl.from(layer, Object.assign({ ease: LAUNCH, duration: 0.85 }, from), at);
@@ -256,7 +256,7 @@
         q(tile, 'rect').slice(0, 1).forEach(r => tl.to(r, { attr: { 'fill-opacity': 0.6 }, duration: 0.2, yoyo: true, repeat: 1 }, byId('F17').click));
       }
     }
-    if (sc.id === 'F14') tl.to(svg, { scale: 2.7, transformOrigin: '50% 50%', duration: 1.0, ease: 'power2.in' }, end - 1.0);
+    if (sc.id === 'F14') tl.to(whip, { scale: 2.7, transformOrigin: '50% 50%', duration: 1.0, ease: 'power2.in' }, end - 1.0);   // push-through = transition (on the wrapper)
     if (sc.id === 'F15' && sc.big) tl.to(cam, { scale: '+=0.05', duration: 0.12, yoyo: true, repeat: 1, ease: 'power2.out' }, sc.big + 0.55);
 
     // ---- text (Text Studio settings)
