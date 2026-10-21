@@ -45,7 +45,7 @@ def logo_svg(name):
 
     def place(x, y, w):
         k = w / vw
-        return f'<g id="LOGO_FULL" transform="translate({x:.1f},{y:.1f}) scale({k:.5f}) translate({-vx},{-vy})">{body}</g>'
+        return f'<g id="LOGO_FULL" data-bbox="{vx} {vy} {vw} {vh}" transform="translate({x:.1f},{y:.1f}) scale({k:.5f}) translate({-vx},{-vy})">{body}</g>'
     return place, vw / vh
 
 
