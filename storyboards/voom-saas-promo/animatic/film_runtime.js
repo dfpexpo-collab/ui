@@ -141,6 +141,8 @@
     }
     // camera
     const c = CAM[sc.id];
+    // 3D tilt carries its own perspective: the scene's CSS perspective flattens away as soon as a fade drops the wrapper's opacity (a one-frame jump)
+    if (c && (c[1].rotationY || c[1].rotationX)) { cam.closest('.scene').style.perspective = 'none'; gsap.set(cam, { transformPerspective: 1600 }); }
     if (c) { gsap.set(cam, { transformOrigin: c[0] }); tl.fromTo(cam, c[1], Object.assign({ duration: dur + 0.35, ease: GLIDE }, c[2]), start - 0.05); }
 
     const layers = Array.from(svg.children).filter(n => n.tagName === 'g' && /^L\d/.test(n.id));
