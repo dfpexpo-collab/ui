@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>VOOM Lift-off sting</title>
+<style>
+  html, body { margin: 0; background: #000024; overflow: hidden; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<!-- VOOM "Lift-off" logo sting. The rocket flare is the guide object: it ignites, its light writes V-O,
+     switches the screen-O on, climbs the M and becomes the swoosh. render(t) is deterministic: ?t=1.2 freezes. -->
+<svg id="stage" width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#0012d6" stop-opacity="1"/>
+      <stop offset=".55" stop-color="#0012d6" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#0012d6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gVig" cx="50%" cy="50%" r="75%">
+      <stop offset=".55" stop-color="#000024" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000010" stop-opacity=".85"/>
+    </radialGradient>
+    <radialGradient id="gFlare" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset=".18" stop-color="#9fe2ff" stop-opacity=".9"/>
+      <stop offset=".45" stop-color="#00b3ff" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gBokeh" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#00b3ff" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#00b3ff" stop-opacity="0"/>
+    </radialGradient>
+    <!-- soft-edged reveal masks: a white body plus a feathered edge, positioned per frame -->
+    <linearGradient id="gEdgeR" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+    <linearGradient id="gEdgeU" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+    <mask id="mH" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="9000" height="6000">
+      <rect id="mHBody" x="-2000" y="-2000" height="6000" fill="#fff"/>
+      <rect id="mHEdge" y="-2000" height="6000" fill="url(#gEdgeR)"/>
+    </mask>
+    <mask id="mM" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="9000" height="6000">
+      <rect id="mMBody" x="-2000" width="9000" height="6000" fill="#fff"/>
+      <rect id="mMEdge" x="-2000" width="9000" fill="url(#gEdgeU)"/>
+    </mask>
+    <mask id="mS" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="9000" height="6000">
+      <rect id="mSBody" x="-2000" y="-2000" height="6000" fill="#fff"/>
+      <rect id="mSEdge" y="-2000" height="6000" fill="url(#gEdgeR)"/>
+    </mask>
+    <mask id="mT" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="9000" height="6000">
+      <rect id="mTBody" x="-2000" y="-2000" height="6000" fill="#fff"/>
+      <rect id="mTEdge" y="-2000" height="6000" fill="url(#gEdgeR)"/>
+    </mask>
+    <filter id="fBlur20" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="20"/></filter>
+    <filter id="fBlur60" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="fBlur6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#000024"/>
+  <g id="bg">
+    <ellipse id="glow" cx="960" cy="560" rx="900" ry="520" fill="url(#gGlow)"/>
+    <g id="bokeh"></g>
+    <g id="dust"></g>
+  </g>
+
+  <g id="cam">
+    <g id="logo">
+      <g id="pV" mask="url(#mH)"></g>
+      <g id="pO1" mask="url(#mH)"></g>
+      <g id="o2wrap">
+        <rect id="o2flash" x="1769" y="341" width="901" height="487" rx="150" fill="#00b3ff" filter="url(#fBlur20)"/>
+        <g id="pO2"></g>
+      </g>
+      <g id="pM" mask="url(#mM)"></g>
+      <g id="pS" mask="url(#mS)"></g>
+      <g id="pR"></g>
+      <g id="pT" mask="url(#mT)"></g>
+      <rect id="tagLine" height="10" fill="#00b3ff"/>
+      <g id="fx" style="mix-blend-mode:screen">
+        <g id="trail"></g>
+        <circle id="ring" fill="none" stroke="#00b3ff"/>
+        <g id="flare">
+          <circle r="190" fill="url(#gFlare)"/>
+          <path id="starH" fill="#bfeeff" d="M-300 0 L0 -9 L300 0 L0 9Z"/>
+          <path id="starV" fill="#bfeeff" d="M0 -150 L8 0 L0 150 L-8 0Z"/>
+          <circle r="16" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <rect width="1920" height="1080" fill="url(#gVig)" pointer-events="none"/>
+</svg>
+
+<script src="logo-parts.js"></script>
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const OFF_WHITE = '#f1f1f1', LIGHT_BLUE = '#00b3ff';
+const DUR = 4.0;
+const $ = id => document.getElementById(id);
+const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; };
+
+// logo pieces, logo space = traced 2x coords, centred in frame at k = 0.32
+const K = 0.32, OX = 960 - 2000.5 * K, OY = 540 - 705 * K;
+$('logo').setAttribute('transform', `translate(${OX} ${OY}) scale(${K})`);
+const pieceIds = { v: 'pV', o1: 'pO1', o2: 'pO2', m: 'pM', swoosh: 'pS', reg: 'pR', tag: 'pT' };
+for (const key in pieceIds) for (const p of VOOM_PARTS[key]) el('path', { d: p.d, transform: p.t, fill: OFF_WHITE }, $(pieceIds[key]));
+
+// easing (voom tokens)
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = t => ((ax * t + bx) * t + cx) * t, sy = t => ((ay * t + by) * t + cy) * t, dx = t => (3 * ax * t + 2 * bx) * t + cx;
+  return x => { if (x <= 0) return 0; if (x >= 1) return 1; let t = x; for (let i = 0; i < 8; i++) { const d = dx(t); if (Math.abs(d) < 1e-6) break; t -= (sx(t) - x) / d; } return sy(Math.min(1, Math.max(0, t))); };
+}
+const launch = bezier(.16, 1, .3, 1), settle = bezier(.22, 1, .36, 1), glide = bezier(.45, 0, .15, 1), exit = bezier(.55, 0, 1, .45);
+const prog = (t, a, b, e = x => x) => e(Math.min(1, Math.max(0, (t - a) / (b - a))));
+const lerp = (a, b, u) => a + (b - a) * u;
+const mixHex = (a, b, u) => { const pa = [1, 3, 5].map(i => parseInt(a.substr(i, 2), 16)), pb = [1, 3, 5].map(i => parseInt(b.substr(i, 2), 16)); return 'rgb(' + pa.map((v, i) => Math.round(lerp(v, pb[i], u))).join(',') + ')'; };
+
+// guide path: Catmull-Rom through waypoints, sampled by arc length
+function track(pts) {
+  const s = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    for (let j = 0; j < 60; j++) {
+      const u = j / 60, u2 = u * u, u3 = u2 * u;
+      s.push([0, 1].map(c => 0.5 * (2 * p1[c] + (-p0[c] + p2[c]) * u + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * u2 + (-p0[c] + 3 * p1[c] - 3 * p2[c] + p3[c]) * u3)));
+    }
+  }
+  s.push(pts[pts.length - 1]);
+  const L = [0]; for (let i = 1; i < s.length; i++) L.push(L[i - 1] + Math.hypot(s[i][0] - s[i - 1][0], s[i][1] - s[i - 1][1]));
+  return u => { const d = u * L[L.length - 1]; let i = 1; while (i < L.length - 1 && L[i] < d) i++; const f = (d - L[i - 1]) / ((L[i] - L[i - 1]) || 1); return [lerp(s[i - 1][0], s[i][0], f), lerp(s[i - 1][1], s[i][1], f)]; };
+}
+const O2C = [2219, 585];
+const legs = [
+  { a: 0.45, b: 0.95, e: glide,  p: track([[-260, 640], [400, 600], [1250, 560], O2C]) },          // writes V, O
+  { a: 1.20, b: 1.45, e: glide,  p: track([O2C, [2600, 760], [2915, 905]]) },                      // dives to the M foot
+  { a: 1.50, b: 1.80, e: bezier(.35, 0, .25, 1), p: track([[2915, 905], [2915, 560], [2915, 300]]) },             // charges at the foot, climbs the M
+  { a: 1.80, b: 2.02, e: bezier(.5, 0, .7, 1), p: track([[2915, 300], [3150, 240], [3500, 185], [3850, 78]]) } // lift-off along the swoosh
+];
+function flarePos(t) {
+  if (t < legs[0].a) return [-260, 640];
+  for (let i = 0; i < legs.length; i++) {
+    const L = legs[i];
+    if (t <= L.b) return L.p(prog(t, L.a, L.b, L.e));
+    if (i + 1 < legs.length && t < legs[i + 1].a) return L.p(1);
+  }
+  return legs[legs.length - 1].p(1);
+}
+
+// ambient: dust and bokeh, seeded
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const dust = Array.from({ length: 60 }, () => ({ x: rnd() * 1920, y: rnd() * 1080, r: 0.8 + rnd() * 1.8, o: 0.05 + rnd() * 0.22, v: 10 + rnd() * 22, e: el('circle', { fill: '#9fe2ff' }, $('dust')) }));
+const bokeh = [[300, 260, 140], [1650, 820, 180], [1500, 200, 90], [420, 880, 110]].map(([x, y, r], i) => ({ x, y, r, d: i % 2 ? 1 : -1, e: el('circle', { r, fill: 'url(#gBokeh)', filter: 'url(#fBlur20)' }, $('bokeh')) }));
+const TRAIL_N = 22, trail = Array.from({ length: TRAIL_N }, () => el('line', { 'stroke-linecap': 'round', stroke: LIGHT_BLUE }, $('trail')));
+
+function setH(prefix, edgeX, feather) {          // reveal everything left of edgeX
+  $(prefix + 'Body').setAttribute('width', Math.max(0, edgeX - feather + 2000));
+  $(prefix + 'Edge').setAttribute('x', edgeX - feather); $(prefix + 'Edge').setAttribute('width', feather);
+}
+
+function render(t) {
+  // camera: slow 3% push over the whole sting
+  const push = 1 + 0.03 * prog(t, 0, DUR, x => Math.sin(x * Math.PI / 2));
+  $('cam').setAttribute('transform', `translate(960 540) scale(${push}) translate(-960 -540)`);
+
+  // background glow: dim, blooms when the rocket docks, breathes once in the hold
+  const glow = 0.22 + 0.25 * prog(t, 0.9, 1.3, settle) + 0.35 * Math.max(0, 1 - Math.abs(t - 2.03) / 0.45) + 0.06 * Math.sin(Math.max(0, t - 2.4) / 1.6 * Math.PI);
+  $('glow').setAttribute('opacity', Math.min(1, glow));
+  dust.forEach(d => { const y = ((d.y - d.v * t) % 1080 + 1080) % 1080; d.e.setAttribute('cx', d.x + 6 * Math.sin(t + d.x)); d.e.setAttribute('cy', y); d.e.setAttribute('r', d.r); d.e.setAttribute('opacity', d.o * prog(t, 0, 0.6)); });
+  bokeh.forEach(b => { b.e.setAttribute('cx', b.x + b.d * 12 * t); b.e.setAttribute('cy', b.y - 8 * t); b.e.setAttribute('opacity', 0.22 * prog(t, 0, 1.0)); });
+
+  const [fx, fy] = flarePos(t);
+
+  // V and O: written by the flare's light (edge follows the flare)
+  const leg0 = t < 0.45 ? -400 : fx;
+  setH('mH', t >= 0.95 ? 2000 : leg0 + 40, 140);
+
+  // screen O switches on: a light-blue scanline opens vertically, a flash fills the screen, cools to off-white
+  const on = prog(t, 0.95, 1.40, launch);
+  $('o2wrap').setAttribute('opacity', t < 0.95 ? 0 : 1);
+  $('o2wrap').setAttribute('transform', `translate(${O2C[0]} ${O2C[1]}) scale(1 ${lerp(0.035, 1, on)}) translate(${-O2C[0]} ${-O2C[1]})`);
+  for (const p of $('pO2').children) p.setAttribute('fill', mixHex(LIGHT_BLUE, OFF_WHITE, prog(t, 1.12, 1.70, settle)));
+  $('o2flash').setAttribute('opacity', 0.7 * prog(t, 0.95, 1.08) * (1 - prog(t, 1.18, 1.7, settle)));
+
+  // M: revealed bottom-up as the flare climbs its stem
+  const mEdge = t < 1.50 ? 1100 : (t >= 1.80 ? -200 : fy - 30);
+  $('mMBody').setAttribute('y', mEdge + 90); $('mMBody').setAttribute('height', 6000);
+  $('mMEdge').setAttribute('y', mEdge); $('mMEdge').setAttribute('height', 90);
+  $('mMBody').setAttribute('y', mEdge + 89);
+
+  // swoosh: the flare's last flight leaves the rocket behind it
+  setH('mS', t < 1.80 ? 3000 : (t > 2.02 ? 5000 : fx + 20), 120);
+
+  // flare: ignites, hero-hit inside the screen, docks into the swoosh tip with a flash
+  const ign = prog(t, 0.18, 0.45, launch);
+  let fs = ign * (1 + 0.6 * Math.max(0, 1 - Math.abs(t - 0.3) / 0.12));
+  fs *= 1 + 1.1 * Math.max(0, 1 - Math.abs(t - 1.0) / 0.18);            // hero hit in the screen O
+  fs *= 1 + 0.5 * Math.max(0, 1 - Math.abs(t - 1.50) / 0.06);           // charge at the M foot before lift-off
+  fs *= 1 + 1.4 * Math.max(0, 1 - Math.abs(t - 2.02) / 0.08);           // 80 ms flare at the tip
+  fs *= 1 - prog(t, 2.05, 2.3, exit);
+  // flare sits at its ignition point before the first leg
+  const fpos = t < 0.45 ? [ -260 + 0, 640 ] : [fx, fy];
+  $('flare').setAttribute('transform', `translate(${fpos[0]} ${fpos[1]}) scale(${fs})`);
+  $('flare').setAttribute('opacity', fs > 0.001 ? 1 : 0);
+
+  // trail: the last 0.24 s of the flight path, tapering
+  for (let i = 0; i < TRAIL_N; i++) {
+    const t0 = t - i * 0.011, t1 = t - (i + 1) * 0.011;
+    const a = t0 < 0.45 ? [-260, 640] : flarePos(t0), b = t1 < 0.45 ? [-260, 640] : flarePos(t1);
+    const fade = (1 - i / TRAIL_N) * (1 - prog(t, 2.05, 2.25));
+    trail[i].setAttribute('x1', a[0]); trail[i].setAttribute('y1', a[1]); trail[i].setAttribute('x2', b[0]); trail[i].setAttribute('y2', b[1]);
+    trail[i].setAttribute('stroke-width', 26 * fade + 2);
+    trail[i].setAttribute('opacity', 0.85 * fade);
+  }
+
+  // shock ring from the swoosh tip on dock
+  const rp = prog(t, 2.0, 2.5, launch);
+  $('ring').setAttribute('cx', 3850); $('ring').setAttribute('cy', 78);
+  $('ring').setAttribute('r', 20 + 360 * rp); $('ring').setAttribute('stroke-width', 14 * (1 - rp));
+  $('ring').setAttribute('opacity', t < 2.0 ? 0 : 0.8 * (1 - rp));
+
+  // (R) ticks in, tagline is written by a thin light line
+  const rg = prog(t, 2.05, 2.35, settle);
+  $('pR').setAttribute('opacity', rg);
+  $('pR').setAttribute('transform', `translate(3852 866) scale(${lerp(0.92, 1, rg)}) translate(-3852 -866)`);
+  const tw = prog(t, 2.1, 2.65, settle), tx = lerp(220, 3900, tw);
+  setH('mT', tx, 160);
+  const lx = Math.max(260, tx - 700);
+  $('tagLine').setAttribute('x', lx); $('tagLine').setAttribute('y', 1372);
+  $('tagLine').setAttribute('width', Math.max(0, tx - lx));
+  $('tagLine').setAttribute('opacity', t < 2.1 ? 0 : 0.9 * (1 - prog(t, 2.4, 2.8)));
+}
+
+const q = new URLSearchParams(location.search).get('t');
+window.render = render;
+if (q !== null) render(parseFloat(q));
+else { const t0 = performance.now(); (function loop() { const t = ((performance.now() - t0) / 1000) % (DUR + 1); render(Math.min(t, DUR)); requestAnimationFrame(loop); })(); }
+window.__ready = true;
+</script>
+</body>
+</html>
