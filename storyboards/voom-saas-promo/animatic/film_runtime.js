@@ -184,14 +184,11 @@
       }
       if (/BIG_10X|COUNTER/.test(id)) { layerAt[id] = start; return; }   // counted by TextFX
       if (id === 'L05_STREAK') { tl.fromTo(layer, { x: -1100, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: LAUNCH }, start + 0.05); return; }
-      if (/LOGO/.test(id)) {     // mask reveal left → right
-        const img = layer.querySelector('#LOGO_FULL, image'), bb = img.dataset.bbox;   // getBBox is 0 while the page is not rendered yet
-        const b = bb ? (([x, y, width, height]) => ({ x, y, width, height }))(bb.split(' ').map(Number)) : img.getBBox();
-        const cp = document.createElementNS(NS, 'clipPath'); cp.id = 'logoclip' + i;
-        const r = document.createElementNS(NS, 'rect'); r.setAttribute('x', b.x - 10); r.setAttribute('y', b.y - 20); r.setAttribute('height', b.height + 40);
-        cp.appendChild(r); svg.appendChild(cp); img.setAttribute('clip-path', `url(#${cp.id})`);
-        tl.fromTo(r, { attr: { width: 0 } }, { attr: { width: b.width + 20 }, duration: 0.85, ease: LAUNCH }, enter + 0.12);
-        tl.fromTo(layer, { scale: 0.97, transformOrigin: '50% 50%' }, { scale: 1.02, duration: dur, ease: GLIDE }, start);
+      if (/LOGO/.test(id)) {     // blur-in: fades up out of focus while it settles from a slight scale-up
+        const img = layer.querySelector('#LOGO_FULL, image');
+        tl.fromTo(img, { opacity: 0, filter: 'blur(18px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: LAUNCH }, enter + 0.12);
+        tl.set(img, { filter: 'none' }, enter + 1.04);
+        tl.fromTo(layer, { scale: 1.08, transformOrigin: '50% 50%' }, { scale: 1.0, duration: dur, ease: 'power3.out' }, start);
         return;
       }
       if (/WALL/.test(id)) {     // F16/F17 project wall: tiles fly in with depth
