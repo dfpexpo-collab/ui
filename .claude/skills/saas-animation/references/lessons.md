@@ -2,6 +2,10 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-21: new logo invisible in the preview
+- **Wrong:** the swapped-in vector logo showed in local checks but not in the published preview. The artifact viewer loads the page hidden, so `getBBox()` at build time returned 0 and the logo's reveal clip stayed at width 0.
+  **Rule:** never size a build-time mask or clip from `getBBox()`. Write the box into the SVG (`data-bbox`) from the generator. Test the preview loaded inside a hidden iframe that is shown later.
+
 ## 2026-10-20: action safe
 - **User:** no animation or element may leave the action-safe area. Transitions and the background are exempt.
   **Tool:** `tools/motion-qa/safe_area.js` (every frame, no render).
