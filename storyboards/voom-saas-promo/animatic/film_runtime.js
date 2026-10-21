@@ -185,7 +185,7 @@
       if (/BIG_10X|COUNTER/.test(id)) { layerAt[id] = start; return; }   // counted by TextFX
       if (id === 'L05_STREAK') { tl.fromTo(layer, { x: -1100, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: LAUNCH }, start + 0.05); return; }
       if (/LOGO/.test(id)) {     // mask reveal left → right
-        const img = layer.querySelector('image'), b = img.getBBox();
+        const img = layer.querySelector('#LOGO_FULL, image'), b = img.getBBox();
         const cp = document.createElementNS(NS, 'clipPath'); cp.id = 'logoclip' + i;
         const r = document.createElementNS(NS, 'rect'); r.setAttribute('x', b.x - 10); r.setAttribute('y', b.y - 20); r.setAttribute('height', b.height + 40);
         cp.appendChild(r); svg.appendChild(cp); img.setAttribute('clip-path', `url(#${cp.id})`);

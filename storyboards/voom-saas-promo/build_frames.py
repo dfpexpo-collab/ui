@@ -38,10 +38,15 @@ def logo_data(name, width):
 
 
 def logo_svg(name):
-    """Vector logo as a data URI; ratio from the viewBox (tight to the artwork)."""
-    src = open(os.path.join(LOGO_DIR, name + ".svg"), "rb").read()
-    vb = [float(v) for v in re.search(rb'viewBox="([^"]+)"', src).group(1).split()]
-    return "data:image/svg+xml;base64," + base64.b64encode(src).decode(), vb[2] / vb[3]
+    """Vector logo inlined as paths (no data URI): returns a placer and the viewBox ratio."""
+    src = open(os.path.join(LOGO_DIR, name + ".svg")).read()
+    vx, vy, vw, vh = [float(v) for v in re.search(r'viewBox="([^"]+)"', src).group(1).split()]
+    body = src[src.index("<g"):src.rindex("</svg>")]
+
+    def place(x, y, w):
+        k = w / vw
+        return f'<g id="LOGO_FULL" transform="translate({x:.1f},{y:.1f}) scale({k:.5f}) translate({-vx},{-vy})">{body}</g>'
+    return place, vw / vh
 
 
 import re
@@ -526,10 +531,7 @@ def f07():
 def f08():
     w = 980
     h = w / LOGO_FULL_R
-    streak = f'<rect id="STREAK" x="360" y="{540+h/2+22}" width="1200" height="6" rx="3" fill="url(#gStreak)"/>'
-    streak += f'<ellipse id="STREAK_GLOW" cx="960" cy="{540+h/2+25}" rx="520" ry="40" fill="url(#gGlowSoftLight)"/>'
-    return [bg_signature(), g("L05_STREAK", streak),
-            g("L10_LOGO", f'<image id="LOGO_FULL" x="{960-w/2}" y="{540-h/2}" width="{w}" height="{h:.1f}" href="{LOGO_FULL}"/>')]
+    return [bg_signature(), g("L10_LOGO", LOGO_FULL(960 - w / 2, 540 - h / 2, w))]
 
 
 @frame("F09", "منصة PropTech مدعومة بالذكاء الاصطناعي")
@@ -728,7 +730,7 @@ def f19():
     h = w / LOGO_FULL_R
     url = pill(960, 800, "www.voomproptech.com", 520, True, None, 30, LAT, False)
     return [bg_signature(),
-            g("L10_LOGO", f'<image id="LOGO_FULL" x="{960-w/2}" y="{430-h/2}" width="{w}" height="{h:.1f}" href="{LOGO_FULL}"/>'),
+            g("L10_LOGO", LOGO_FULL(960 - w / 2, 430 - h / 2, w)),
             g("L11_URL", url), g("L12_HANDLE", text(960, 930, "@voomproptech", 26, 400, OFF, "middle", LAT, False, 0.75))]
 
 
