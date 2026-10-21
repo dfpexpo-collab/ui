@@ -2,6 +2,10 @@
 
 Add one entry per feedback round: what was wrong, then the rule. Fold any lasting rule into `../SKILL.md`.
 
+## 2026-10-21: one-frame camera jump at a fade
+- **Wrong:** F10 (3D tilt camera) jumped on the first frame of its fade out. Opacity below 1 on a `preserve-3d` wrapper flattens it, so the scene's CSS `perspective` stopped reaching the camera.
+  **Rule:** a camera with rotationX/Y carries its own `transformPerspective` (and the scene's CSS perspective is off). Catch it with a frame-to-frame diff around each cut.
+
 ## 2026-10-21: new logo invisible in the preview
 - **Wrong:** the swapped-in vector logo showed in local checks but not in the published preview. The artifact viewer loads the page hidden, so `getBBox()` at build time returned 0 and the logo's reveal clip stayed at width 0.
   **Rule:** never size a build-time mask or clip from `getBBox()`. Write the box into the SVG (`data-bbox`) from the generator. Test the preview loaded inside a hidden iframe that is shown later.

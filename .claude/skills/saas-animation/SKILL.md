@@ -87,6 +87,8 @@ Scenes have a transparent background (the shader sits behind everything). So any
 - **Render must not depend on seek history.** Never put two GSAP tweens or sets on the same property of one element (e.g. a filter `fromTo` plus a later `set: none`). The result changes with the order frames are seeked: full render, fresh page and preview disagree. Compute such effects from `t` in `seek` instead (like `glowAt` for the square glow).
 - **Speed:** draw the background shader at 640×360, CSS-scaled to full frame. It is a soft gradient, so the result is visually identical (max block difference 0.6) and about 3× faster per frame. A full 50s render takes about 6 min on 4 cores.
   - `SCENES=F09,F10 node build_film.js …` re-renders only those scenes (±0.7s) into the last full render's frames, then re-encodes. Use it for small fixes.
+- **3D cameras:** opacity < 1 on a `preserve-3d` wrapper flattens it, so a fade makes a tilted camera jump. Give rotating cameras their own `transformPerspective` instead of the scene's CSS perspective.
+- **Never size masks or clips from `getBBox()` at build time.** The artifact viewer loads the page hidden, so it returns 0. Write the box into the SVG (`data-bbox`).
 - Wrap each scene's content in a group so masks can apply. Keep an unmasked fx group on top.
 
 ## QA loop (mandatory, every render)
