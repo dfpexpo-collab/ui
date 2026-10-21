@@ -37,7 +37,15 @@ def logo_data(name, width):
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode(), im.width / im.height
 
 
-LOGO_FULL, LOGO_FULL_R = logo_data("voom-logo-full-white", 1400)
+def logo_svg(name):
+    """Vector logo as a data URI; ratio from the viewBox (tight to the artwork)."""
+    src = open(os.path.join(LOGO_DIR, name + ".svg"), "rb").read()
+    vb = [float(v) for v in re.search(rb'viewBox="([^"]+)"', src).group(1).split()]
+    return "data:image/svg+xml;base64," + base64.b64encode(src).decode(), vb[2] / vb[3]
+
+
+import re
+LOGO_FULL, LOGO_FULL_R = logo_svg("voom-logo-full-white")
 WM_W, WM_R = logo_data("voom-wordmark-white", 500)
 WM_B, _ = logo_data("voom-wordmark-black", 500)
 
@@ -518,8 +526,8 @@ def f07():
 def f08():
     w = 980
     h = w / LOGO_FULL_R
-    streak = f'<rect id="STREAK" x="360" y="{540+h/2-30}" width="1200" height="6" rx="3" fill="url(#gStreak)"/>'
-    streak += f'<ellipse id="STREAK_GLOW" cx="960" cy="{540+h/2-27}" rx="520" ry="40" fill="url(#gGlowSoftLight)"/>'
+    streak = f'<rect id="STREAK" x="360" y="{540+h/2+22}" width="1200" height="6" rx="3" fill="url(#gStreak)"/>'
+    streak += f'<ellipse id="STREAK_GLOW" cx="960" cy="{540+h/2+25}" rx="520" ry="40" fill="url(#gGlowSoftLight)"/>'
     return [bg_signature(), g("L05_STREAK", streak),
             g("L10_LOGO", f'<image id="LOGO_FULL" x="{960-w/2}" y="{540-h/2}" width="{w}" height="{h:.1f}" href="{LOGO_FULL}"/>')]
 
