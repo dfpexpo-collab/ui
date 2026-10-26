@@ -13,6 +13,15 @@ Read this first when picking the project up in a new session or account. It hold
   - thmanyah fonts (licensed: never commit them).
 - Live preview of the last session: https://claude.ai/artifact/VH7k3LFU2jYK2YqkV5c8Cu (owned by the old account; a new account publishes its own).
 
+## Local machine setup (once)
+- Install Git, Node 18+, Python 3.10+, ffmpeg, and Claude Code (`npm i -g @anthropic-ai/claude-code`).
+- `git clone https://github.com/dfpexpo-collab/ui.git && cd ui`, then run `claude` in that folder. The skills in `.claude/` load automatically.
+- `pip install pillow numpy fonttools uharfbuzz`
+- `npm i --prefix ~/voom-node playwright gsap && npx --prefix ~/voom-node playwright install chromium`, then `export NODE_PATH=~/voom-node/node_modules`.
+- Fonts: `bash tools/fonts/install_voom_fonts.sh` (Linux and macOS). On Windows, install the `.ttf` files in `.claude/skills/voom-brand/assets/fonts/` by hand.
+- Put `Vo_Z1.mp3` somewhere outside the repo and pass its path to the build commands.
+- Windows: use WSL or Git Bash for the shell commands.
+
 ## Rebuild from scratch
 ```bash
 bash tools/fonts/install_voom_fonts.sh
