@@ -5,7 +5,7 @@
 set -euo pipefail
 root="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 src="$root/.claude/skills/voom-brand/assets/fonts"
-dst="$HOME/.fonts/voom"
+case "$(uname -s)" in Darwin) dst="$HOME/Library/Fonts" ;; *) dst="$HOME/.fonts/voom" ;; esac   # Windows: right-click the .ttf files > Install for all users
 [ -d "$src" ] || exit 0
 mkdir -p "$dst"
 cp -u "$src"/*.ttf "$dst"/
