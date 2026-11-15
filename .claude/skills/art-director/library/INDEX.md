@@ -121,6 +121,12 @@ Read the linked file for the craft, then judge with the gate in ../SKILL.md.
 | [`od-impeccable-design-polish`](../../od-impeccable-design-polish/SKILL.md) |  Follow-up design polish skill inspired by Impeccable |
 | [`design-qa`](../../design-qa/SKILL.md) | Mandatory self-review for any designed frame, storyboard, slide, social post or UI mockup before showing it to the user - automated layout check (overlapping pills/cards, colliding… |
 
+## Production chores (agent)
+
+| Agent | What it covers |
+|---|---|
+| [`routine-worker`](../../../agents/routine-worker.md) | Haiku agent for mechanical, verifiable chores with no taste involved: file housekeeping, ffprobe/loudness numbers, frame extraction and contact sheets, conversions, manifests/SRT from given data, running scripts, polling Magnific jobs. Never designs, writes, judges or spends credits. |
+
 ## Content & marketing
 
 | Skill | What it covers |
