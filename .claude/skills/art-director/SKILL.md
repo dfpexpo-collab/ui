@@ -72,6 +72,7 @@ Load what the piece needs; the art director judges, the specialists know the cra
 | Adobe production (needs the Adobe connector) | `adobe-design-from-template`, `adobe-create-social-variations`, `adobe-fonts`, `adobe-batch-edit-photos`, `adobe-retouch-portraits`, `adobe-resize-photos-and-videos`, `adobe-edit-quick-cut`, `adobe-design-to-pdf` |
 | Ads / key visuals | `ad-creative-video`, `creative-brief-to-key-visuals`, `canvas-design` |
 | Music sync | `beat-sync-editing` |
+| Mechanical chores (measure, convert, extract frames/contact sheets, manifests, SRT from given timings, poll Magnific jobs) | `routine-worker` agent (Haiku). Hand it only steps with no taste in them; the measurements it returns feed your gate (§5) and the build skills above. Never route design, copy, direction or verdicts to it. |
 
 ## 3. The quality gate (zero tolerance)
 

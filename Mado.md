@@ -12,13 +12,14 @@
 2. لو الجلسة على ريبو تاني: هينسخ فولدرات الـ skills والـ agents اللي تحت لـ `.claude/skills/` و`.claude/agents/` في الريبو ده.
 3. لو عايزهم في claude.ai (Customize > Skills): هيعمل zip لكل skill ترفعه هناك.
 
-**الإجمالي:** 49 skill و1 agent.
+**الإجمالي:** 49 skill و2 agent.
 
 ## Agents
 
 | Agent | بيعمل إيه | المكان |
 |---|---|---|
 | `art-director` | Creative/art director agent that leads every creative project. | `.claude/agents/art-director.md` |
+| `routine-worker` | Cheap, fast assistant (Haiku) for routine production chores that need no taste and no creative execution - file and folder housekeeping, renaming, format conversions, ffprobe/loudness measurements, frame extraction and… | `.claude/agents/routine-worker.md` |
 
 ## الإخراج الفني والتخطيط
 
